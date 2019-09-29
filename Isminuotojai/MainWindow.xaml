@@ -1,0 +1,122 @@
+﻿<Window x:Class="Isminuotojai.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Isminuotojai"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="320" Width="296">
+    <Grid>
+        <WrapPanel >
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+            <Button Width="48" Height="48" Padding="0" BorderThickness="1" BorderBrush="Black">
+                <Image Source="Images/WrongTNT.png"></Image>
+            </Button>
+
+        </WrapPanel>
+    </Grid>
+</Window>
