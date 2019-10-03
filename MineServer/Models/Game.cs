@@ -8,9 +8,16 @@ namespace MineServer.Models
 	{
 		int gameId;
 		
-		Map gameMap;
+		public Map gameMap;
+
+        Player[] players;
 		
 		float duration;
+
+        public Game()
+        {
+            gameMap = new Map(10, 10);           
+        }
 
 		public void ReceiveChanges()
 		{
@@ -19,8 +26,14 @@ namespace MineServer.Models
 
 		public void SetPlayers(Player player1, Player player2)
 		{
-			throw new System.NotImplementedException();
+            players[0] = player1;
+            players[1] = player2;
 		}
+
+        public void ChangeMap(string action)
+        {
+
+        }
 	}
 	
 }

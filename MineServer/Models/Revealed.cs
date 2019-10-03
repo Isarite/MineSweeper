@@ -10,12 +10,12 @@ namespace MineServer.Models
 
         public Revealed()
         {
-            distance = 0;
+            bombs = 0;
         }
 
-        public Revealed(int distance)
+        public Revealed(int bombs)
         {
-            this.distance = distance;
+            this.bombs = bombs;
         }
     }
 }

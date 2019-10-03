@@ -18,6 +18,8 @@ namespace MineServer.Models
                     return new WrongTNT();
                 case "TNT":
                     return new TNT();
+                case "Revealed":
+                    return new Revealed();
                 default:
                     return new Unknown();
             }

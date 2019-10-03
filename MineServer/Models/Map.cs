@@ -27,15 +27,19 @@ namespace MineServer.Models
 
          public string RevealCell(int index1, int index2)
         {
-            if(cells[index1, index2] is TNT)
+            if (cells[index1, index2].marked == false)
             {
+                if (cells[index1, index2] is TNT)
+                {
 
+                }
+                else
+                {
+                    RevealMoreCells(index1, index2);
+                }
+                return "";//TODO return
             }
-            else
-            {
-                RevealMoreCells(index1, index2);
-            }
-            return "";
+            return "";//TODO return
         }
 
         /// <summary>
@@ -152,7 +156,10 @@ namespace MineServer.Models
         /// <returns></returns>
         public string MarkCell(int index1, int index2)
         {
-            cells[index1, index2].marked = true;
+            if(!cells[index1, index2].marked)
+                cells[index1, index2].marked = true;
+            else
+                cells[index1, index2].marked = false;
             return "Marked";
         }
 
