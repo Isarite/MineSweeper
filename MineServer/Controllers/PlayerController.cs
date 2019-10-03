@@ -3,7 +3,10 @@
  */
 
 using MineServer.Models;
-
+//TODO player handling
+//TODO context class
+//TODO REST request handling
+//TODO edit model
 namespace MineServer.Controllers
 {
 	public class PlayerController

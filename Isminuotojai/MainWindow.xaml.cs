@@ -13,7 +13,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+//TODO add all images
+//TODO finish button click logic
+//TODO add REST api interaction
+//TODO add  modelled classes
 namespace Isminuotojai
 {
     /// <summary>
