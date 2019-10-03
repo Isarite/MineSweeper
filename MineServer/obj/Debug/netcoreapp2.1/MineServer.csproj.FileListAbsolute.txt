@@ -1,0 +1,14 @@
+E:\group\MineSweeper\MineServer\bin\Debug\netcoreapp2.1\MineServer.deps.json
+E:\group\MineSweeper\MineServer\bin\Debug\netcoreapp2.1\MineServer.runtimeconfig.json
+E:\group\MineSweeper\MineServer\bin\Debug\netcoreapp2.1\MineServer.runtimeconfig.dev.json
+E:\group\MineSweeper\MineServer\bin\Debug\netcoreapp2.1\MineServer.dll
+E:\group\MineSweeper\MineServer\obj\Debug\netcoreapp2.1\MineServer.csprojAssemblyReference.cache
+E:\group\MineSweeper\MineServer\obj\Debug\netcoreapp2.1\MineServer.csproj.CoreCompileInputs.cache
+E:\group\MineSweeper\MineServer\obj\Debug\netcoreapp2.1\MineServer.RazorAssemblyInfo.cache
+E:\group\MineSweeper\MineServer\obj\Debug\netcoreapp2.1\MineServer.RazorAssemblyInfo.cs
+E:\group\MineSweeper\MineServer\obj\Debug\netcoreapp2.1\MineServer.AssemblyInfoInputs.cache
+E:\group\MineSweeper\MineServer\obj\Debug\netcoreapp2.1\MineServer.AssemblyInfo.cs
+E:\group\MineSweeper\MineServer\obj\Debug\netcoreapp2.1\MineServer.RazorTargetAssemblyInfo.cache
+E:\group\MineSweeper\MineServer\bin\Debug\netcoreapp2.1\MineServer.pdb
+E:\group\MineSweeper\MineServer\obj\Debug\netcoreapp2.1\MineServer.dll
+E:\group\MineSweeper\MineServer\obj\Debug\netcoreapp2.1\MineServer.pdb

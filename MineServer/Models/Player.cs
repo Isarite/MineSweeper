@@ -1,12 +1,13 @@
 
 
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 /**
 * @(#) Player.cs
 */
 namespace MineServer.Models
 {
-	public class Player
+	public class Player : IdentityUser
 	{
 		int name;
 		
