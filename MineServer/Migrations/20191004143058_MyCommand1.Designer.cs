@@ -10,7 +10,7 @@ using MineServer.Models;
 namespace MineServer.Migrations
 {
     [DbContext(typeof(MineSweeperContext))]
-    [Migration("20191003190046_MyCommand1")]
+    [Migration("20191004143058_MyCommand1")]
     partial class MyCommand1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
