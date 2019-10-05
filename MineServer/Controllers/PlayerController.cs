@@ -151,7 +151,7 @@ namespace MineServer.Controllers
         {
             var accessToken = Request.Headers["Authorization"];
             string userId =  User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            return UnprocessableEntity(await _userManager.FindByIdAsync(userId));
+            return UnprocessableEntity((await _userManager.FindByIdAsync(userId)).UserName);
         }
 
         [Route("[action]")]
@@ -162,9 +162,23 @@ namespace MineServer.Controllers
             var accessToken = Request.Headers["Authorization"];
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             Player player = await _userManager.FindByIdAsync(userId);
-            //actions
+            //TODO actions
             return Ok();
         }
+
+        [Route("[action]")]
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> StartGame()//[FromBody] Action action
+        {
+            var accessToken = Request.Headers["Authorization"];
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Player player = await _userManager.FindByIdAsync(userId);
+            //TODO create or join game
+            return Ok();
+        }
+
+
 
         //// PUT api/values/5
         //[HttpPut("{id}")]
