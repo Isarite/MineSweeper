@@ -2,11 +2,13 @@
  * @(#) PlayerController.cs
  */
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using MineServer.Models;
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 //TODO player handling
 //TODO context class
@@ -14,18 +16,20 @@ using System.Threading.Tasks;
 //TODO edit model
 namespace MineServer.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/player")]
     public class PlayerController : ControllerBase
 	{
-        //private readonly SignInManager<Player> _signManager;
+        private readonly SignInManager<Player> _signManager;
         private readonly UserManager<Player> _userManager;
         private readonly MineSweeperContext _context;
 
-        public PlayerController(MineSweeperContext context, UserManager<Player> userManager)
+        public PlayerController(MineSweeperContext context, UserManager<Player> userManager, SignInManager<Player> signInManager)
         {
             context.Database.EnsureCreated();
             _context = context;
             _userManager = userManager;
+            _signManager = signInManager;
+
         }
 
         Player players;
@@ -125,6 +129,43 @@ namespace MineServer.Controllers
             return Ok();
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetToken([FromBody] PlayerData player)
+        {
+            var user = await _userManager.FindByNameAsync(player.userName);
+            var result = await _signManager.PasswordSignInAsync(user, player.password, false, false);
+            byte[] token;
+            if (result.Succeeded)
+            {
+                token = await _userManager.CreateSecurityTokenAsync(user);
+                await _userManager.SetAuthenticationTokenAsync(user,TokenOptions.DefaultProvider,"token", token.ToString());
+                return Ok(token);
+            }
+            return UnprocessableEntity();
+        }
+
+        [Route("[action]")]
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> ConfirmToken()
+        {
+            var accessToken = Request.Headers["Authorization"];
+            string userId =  User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            return UnprocessableEntity(await _userManager.FindByIdAsync(userId));
+        }
+
+        [Route("[action]")]
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> DoAction()//[FromBody] Action action
+        {
+            var accessToken = Request.Headers["Authorization"];
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Player player = await _userManager.FindByIdAsync(userId);
+            //actions
+            return Ok();
+        }
+
         //// PUT api/values/5
         //[HttpPut("{id}")]
         //public IActionResult Update(long id, [FromBody] Player p)
@@ -185,5 +226,5 @@ namespace MineServer.Controllers
         //    return NoContent();
         //}
     }
-	
+
 }

@@ -36,7 +36,7 @@ namespace MineServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<MineSweeperContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
-            services.AddIdentity<Player, IdentityRole>().AddEntityFrameworkStores<MineSweeperContext>().AddDefaultTokenProviders();
+            services.AddIdentity<Player, IdentityRole>(options => { options.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultProvider; }).AddEntityFrameworkStores<MineSweeperContext>().AddDefaultTokenProviders();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
 
@@ -53,7 +53,6 @@ namespace MineServer
             {
                 app.UseHsts();
             }
-
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();
