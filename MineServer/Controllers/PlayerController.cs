@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using MineServer.Models;
+using MineServer.Resources;
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 //TODO player handling
@@ -29,16 +31,10 @@ namespace MineServer.Controllers
             _context = context;
             _userManager = userManager;
             _signManager = signInManager;
-
+            games = new List<Game>();
         }
-
-        Player players;
 		
-		int playerCount;
-		
-		PlayerController instance;
-		
-		ICommand games;
+		List<Game> games;
 
         //public void StartGame(  )
         //{
@@ -51,7 +47,7 @@ namespace MineServer.Controllers
 
         //}
 
-        //public void DoAction(  )
+        //public void DoMove(  )
         //{
 
         //}
@@ -84,7 +80,7 @@ namespace MineServer.Controllers
 
         //      // GET api/player
         //      [HttpGet]
-        //      public ActionResult<IEnumerable<Player>> GetAll()
+        //      public MoveResult<IEnumerable<Player>> GetAll()
         //      {
         //          return _context.Players.ToList();
         //      }
@@ -96,7 +92,7 @@ namespace MineServer.Controllers
 
         //      // GET api/player/5
         //      [HttpGet("{id}", Name = "GetPlayer")]
-        //      public ActionResult<Player> GetById(long id)
+        //      public MoveResult<Player> GetById(long id)
         //      {
         //          Player p = _context.Players.Find(id);
         //          if (p == null)
@@ -156,26 +152,42 @@ namespace MineServer.Controllers
 
         [Route("[action]")]
         [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> DoAction()//[FromBody] Action action
+        [HttpPost("{id}")]
+        public async Task<IActionResult> DoMove([FromBody] Move move, int id)
         {
             var accessToken = Request.Headers["Authorization"];
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             Player player = await _userManager.FindByIdAsync(userId);
-            //TODO actions
-            return Ok();
+            if (games[id].Authorize(userId))
+            {
+                var result = player.DoMove(move);
+                return Ok(result);
+            }
+            return Unauthorized();
+            //TODO moves
         }
 
         [Route("[action]")]
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> StartGame()//[FromBody] Action action
+        public async Task<IActionResult> StartGame()//[FromBody] Move move
         {
             var accessToken = Request.Headers["Authorization"];
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             Player player = await _userManager.FindByIdAsync(userId);
+            if(games[games.Count-1].started)
+            {
+                games.Add(new Game());
+                games[games.Count - 1].AddPlayer(player);
+                player.AddMoves(MoveSet.MineSetter);
+            }
+            else
+            {
+                games[games.Count - 1].AddPlayer(player);
+                player.AddMoves(MoveSet.MineSweeper);
+            }
             //TODO create or join game
-            return Ok();
+            return Ok(games.Count-1);
         }
 
 

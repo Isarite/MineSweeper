@@ -12,3 +12,4 @@ E:\group\MineSweeper\MineServer\obj\Debug\netcoreapp2.1\MineServer.RazorTargetAs
 E:\group\MineSweeper\MineServer\bin\Debug\netcoreapp2.1\MineServer.pdb
 E:\group\MineSweeper\MineServer\obj\Debug\netcoreapp2.1\MineServer.dll
 E:\group\MineSweeper\MineServer\obj\Debug\netcoreapp2.1\MineServer.pdb
+E:\group\MineSweeper\MineServer\obj\Debug\netcoreapp2.1\UserSecretsAssemblyInfo.cs

@@ -15,12 +15,12 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 //TODO add all images
 //TODO finish button click logic
-//TODO add REST api interaction
+//TODO add REST api intermove
 //TODO add  modelled classes
 namespace Isminuotojai
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Intermove logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {

@@ -1,6 +1,7 @@
 
 
 using Microsoft.AspNetCore.Identity;
+using MineServer.Resources;
 using System.Collections.Generic;
 /**
 * @(#) Player.cs
@@ -13,69 +14,58 @@ namespace MineServer.Models
 		
 		Game currentGame;
 
-        List<PlayerStrategy> moves = new List<PlayerStrategy>();
+        List<PlayerStrategy> strategies = new List<PlayerStrategy>();
 
-        public void AddMoves(string name)
+        public void AddMoves(MoveSet move)
         {
-            switch (name)
+            switch (move)
             {
-                case "mineSetter":
-                    moves.Add(new SetMine());
-                    moves.Add(new UnsetMine());
+                case MoveSet.MineSetter:
+                    strategies.Add(new SetMine());
+                    strategies.Add(new UnsetMine());
                     break;
-                case "mineSweeper":
-                    moves.Add(new RevealCell());
-                    moves.Add(new MarkCell());
+                case MoveSet.MineSweeper:
+                    strategies.Add(new RevealCell());
+                    strategies.Add(new MarkCell());
                     break;
             }
             
         }
 
-        public void DoAction(string name, string data)
+        public Result DoMove(Move move)
         {
-            switch (name)
+            switch (move.Type)
             {
-                case "reveal":
-                    foreach(PlayerStrategy move in moves)
+                case MoveType.Reveal:
+                    foreach(PlayerStrategy strategy in strategies)
                     {
-                        if (move is RevealCell)
-                        {
-                            move.OnActivation(data, ref currentGame);
-                            break;
-                        }
+                        if (strategy is RevealCell)
+                            return strategy.OnActivation(move.X,move.Y, ref currentGame);
                     }
                     break;
-                case "mark":
-                    foreach (PlayerStrategy move in moves)
+                case MoveType.Mark:
+                    foreach (PlayerStrategy strategy in strategies)
                     {
-                        if (move is MarkCell)
-                        {
-                            move.OnActivation(data, ref currentGame);
-                            break;
-                        }
+                        if (strategy is MarkCell)
+                            return strategy.OnActivation(move.X, move.Y, ref currentGame);
                     }
                     break;
-                case "set":
-                    foreach (PlayerStrategy move in moves)
+                case MoveType.Set:
+                    foreach (PlayerStrategy strategy in strategies)
                     {
-                        if (move is SetMine)
-                        {
-                            move.OnActivation(data, ref currentGame);
-                            break;
-                        }
+                        if (strategy is SetMine)
+                            return strategy.OnActivation(move.X, move.Y, ref currentGame);
                     }
                     break;
-                case "unset":
-                    foreach (PlayerStrategy move in moves)
+                case MoveType.Unset:
+                    foreach (PlayerStrategy strategy in strategies)
                     {
-                        if (move is UnsetMine)
-                        {
-                            move.OnActivation(data, ref currentGame);
-                            break;
-                        }
+                        if (strategy is UnsetMine)
+                            return strategy.OnActivation(move.X, move.Y, ref currentGame);
                     }
                     break;
             }
+            return new Result();
         }
 		
 	}

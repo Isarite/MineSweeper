@@ -35,8 +35,12 @@ namespace MineServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<MineSweeperContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
-            services.AddIdentity<Player, IdentityRole>(options => { options.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultProvider; }).AddEntityFrameworkStores<MineSweeperContext>().AddDefaultTokenProviders();
+            //services.AddDbContext<MineSweeperContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
+            //string connectionString = Environment.GetEnvironmentVariable("MYSQLCONNSTR_localdb").ToString();
+
+            //services.AddDbContext<MineSweeperContext>(options => options.UseSqlServer(connectionString));
+
+            //services.AddIdentity<Player, IdentityRole>(options => { options.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultProvider; }).AddEntityFrameworkStores<MineSweeperContext>().AddDefaultTokenProviders();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
 

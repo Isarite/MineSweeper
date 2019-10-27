@@ -1,15 +1,19 @@
-/**
- * @(#) UnsetMine.cs
- */
 
+
+using MineServer.Resources;
+/**
+* @(#) UnsetMine.cs
+*/
 namespace MineServer.Models
 {
 	public class UnsetMine : PlayerStrategy
 	{
 
 
-        public override void OnActivation(string data, ref Game game)
+        public override Result OnActivation(int X, int Y, ref Game game)
         {
+            return game.gameMap.UnsetMine(X, Y);
+            //TODO UnsetMine
             //throw new System.NotImplementedException();
         }
     }

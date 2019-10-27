@@ -1,16 +1,19 @@
-/**
- * @(#) MarkCell.cs
- */
 
+
+using MineServer.Resources;
+/**
+* @(#) MarkCell.cs
+*/
 namespace MineServer.Models
 {
 	public class MarkCell : PlayerStrategy
 	{
 
 
-        public override void OnActivation(string data, ref Game game)
+        public override Result OnActivation(int X, int Y, ref Game game)
         {
-            //throw new System.NotImplementedException();
+            return null;
+            //TODO MarkCell
         }
     }
 	

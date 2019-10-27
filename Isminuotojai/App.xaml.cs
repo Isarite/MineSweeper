@@ -9,7 +9,7 @@ using System.Windows;
 namespace Isminuotojai
 {
     /// <summary>
-    /// Interaction logic for App.xaml
+    /// Intermove logic for App.xaml
     /// </summary>
     public partial class App : Application
     {

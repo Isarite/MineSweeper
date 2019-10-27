@@ -1,5 +1,6 @@
 
 
+using MineServer.Resources;
 using System;
 /**
 * @(#) Map.cs
@@ -9,37 +10,42 @@ namespace MineServer.Models
 	public class Map
 	{
 		Cell[,] cells;
-        CellFactory factory;
-
-		int size;
+        private CellFactory factory = new CellFactory();
+        private static readonly Object obj = new Object();
 
 		 public Map(int index1, int index2)
         {
-            cells = new Cell[index1, index2];
-            for(int i = 0; i < index1; i++)
+            lock (obj)
             {
-                for(int j = 0; j < index2; i++)
+                cells = new Cell[index1, index2];
+                for (int i = 0; i < index1; i++)
                 {
-                    cells[i, j] = factory.Create("Empty");
+                    for (int j = 0; j < index2; i++)
+                    {
+                        cells[i, j] = factory.Create("Empty");
+                    }
                 }
             }
         }
 
-         public string RevealCell(int index1, int index2)
+         public Result RevealCell(int index1, int index2)
         {
-            if (cells[index1, index2].marked == false)
+            lock (obj)
             {
-                if (cells[index1, index2] is TNT)
+                if (cells[index1, index2].marked == false)
                 {
-
+                    if (cells[index1, index2] is TNT)
+                    {
+                        //TODO explode
+                    }
+                    else
+                    {
+                        RevealMoreCells(index1, index2);
+                    }
+                    return new Result();//TODO return
                 }
-                else
-                {
-                    RevealMoreCells(index1, index2);
-                }
-                return "";//TODO return
+                return new Result();//TODO return
             }
-            return "";//TODO return
         }
 
         /// <summary>
@@ -154,22 +160,60 @@ namespace MineServer.Models
         /// <param name="index1"></param>
         /// <param name="index2"></param>
         /// <returns></returns>
-        public string MarkCell(int index1, int index2)
+        public Result MarkCell(int index1, int index2)
         {
-            if(!cells[index1, index2].marked)
-                cells[index1, index2].marked = true;
-            else
-                cells[index1, index2].marked = false;
-            return "Marked";
+            lock (obj)
+            {
+                if (!cells[index1, index2].marked)
+                    cells[index1, index2].marked = true;
+                else
+                    cells[index1, index2].marked = false;
+                return null;//TODO return marked cell
+            }
         }
 
+        public Result SetMine(int X, int Y)
+        {
+            lock (obj)
+            {
+                return null;
+            }
+            //TODO SetMine
+        }
 
+        public Result UnsetMine(int X, int Y)
+        {
+            lock (obj)
+            {
+                return null;
+            }
+            //TODO SetMine
+        }
 
-		public void ToJSON(  )
-		{
-			
-		}
-		
-	}
+        private Result BuildMap(Result result, bool mineSweeper = true)
+        {
+            result.map = new char[cells.GetLength(0), cells.GetLength(1)];
+            result.status = GameStatus.Ongoing;
+            for (int i = 0; i < cells.GetLength(0); i++)
+            {
+                for (int j = 0; j < cells.GetLength(1); j++)
+                {
+                    var cell = cells[i, j];
+                    if (cell is TNT)
+                        result.map[i, j] = mineSweeper ? 'u' : 't';// unknown or TNT
+                    else if (cell is Revealed)
+                        result.map[i, j] = cell.bombs.ToString()[0];// max number is 6
+                    else if (cell is ExplodedTNT)
+                    {
+                        result.map[i, j] = 'e';// Exploded
+                        result.status = mineSweeper ? GameStatus.Lost : GameStatus.Won;//status changed to lost or won
+                    }else if(cell is Unknown)
+                        result.map[i, j] =  'u';// empty cell
+
+                }
+            } 
+            return result;//TODO build char map
+        }
+    }
 	
 }
