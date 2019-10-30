@@ -11,7 +11,7 @@ namespace MineServer.Models
 	{
 		public override Result OnActivation(int x, int y, ref Game game)
 		{
-            return game.gameMap.RevealCell(x,y);
+            return game.GameMap.RevealCell(x,y);
 		}
 	}
 	

@@ -12,9 +12,7 @@ namespace MineServer.Models
 
         public override Result OnActivation(int x, int y, ref Game game)
         {
-            return game.gameMap.UnsetMine(x, y);
-            //TODO UnsetMine
-            //throw new System.NotImplementedException();
+            return game.GameMap.UnsetMine(x, y);
         }
     }
 	

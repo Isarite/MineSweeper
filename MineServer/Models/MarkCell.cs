@@ -12,8 +12,7 @@ namespace MineServer.Models
 
         public override Result OnActivation(int x, int y, ref Game game)
         {
-	        return game.gameMap.MarkCell(index1: x, index2: y);
-            //TODO MarkCell
+	        return game.GameMap.MarkCell(index1: x, index2: y);
         }
     }
 	

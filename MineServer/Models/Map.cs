@@ -1,5 +1,4 @@
 
-//TODO locks
 using MineServer.Resources;
 using System;
 /**
@@ -239,6 +238,7 @@ namespace MineServer.Models
             //The default game status is 0 aka Ongoing
             //result.status = GameStatus.Ongoing;
             result.success = true;
+            bool finished = true;
             lock (obj)
             {
                 result.map = new char[_cells.GetLength(0), _cells.GetLength(1)];
@@ -255,13 +255,24 @@ namespace MineServer.Models
                         {
                             result.map[i, j] = 'e';// Exploded
                             result.status = mineSweeper ? GameStatus.Lost : GameStatus.Won;//status changed to lost or won
-                        }else if(cell is Unknown)
-                            result.map[i, j] =  'u';// empty cell
+                        }else if (cell is Unknown)
+                        {
+                            result.map[i, j] = 'u'; // empty cell
+                            finished = false;
+                        }
 
                     }
                 }
-            } 
+            }
+            //If all empty cells are revealed and the game is not finished yet, the minesweeper wins
+            if (result.status.Equals(GameStatus.Ongoing) && finished)
+                result.status = mineSweeper ? GameStatus.Won : GameStatus.Lost;
             return result;
+        }
+
+        public Result Update(bool mineSweeper)
+        {
+            return BuildMap(new Result());
         }
     }
 	
