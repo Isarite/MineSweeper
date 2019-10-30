@@ -11,13 +11,13 @@ namespace MineServer.Models
             switch (type)
             {
                 case "ExplodedTNT":
-                    return new ExplodedTNT();
+                    return new ExplodedTnt();
                 case "Marker":
                     return new Marker();
                 case "WrongTNT":
-                    return new WrongTNT();
+                    return new WrongTnt();
                 case "TNT":
-                    return new TNT();
+                    return new Tnt();
                 case "Revealed":
                     return new Revealed();
                 default:

@@ -161,7 +161,7 @@ namespace MineServer.Controllers
             if (games[id].Authorize(userId))
             {
                 var result = player.DoMove(move);
-                return Ok(result);
+                return Ok(result);//TODO Turn mechanics
             }
             return Unauthorized();
             //TODO moves
@@ -187,31 +187,17 @@ namespace MineServer.Controllers
                 player.AddMoves(MoveSet.MineSweeper);
             }
             //TODO create or join game
-            return Ok(games.Count-1);
+            return Ok(games.Count-1);//TODO get role
         }
+        
+        // PUT api/values/5
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] Player p)
+        {
+            //Update map
 
-
-
-        //// PUT api/values/5
-        //[HttpPut("{id}")]
-        //public IActionResult Update(long id, [FromBody] Player p)
-        //{
-        //    var pp = _context.Players.Find(id);
-        //    if (pp == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    pp.Name = p.Name;
-        //    pp.PosX = p.PosX;
-        //    pp.PosY = p.PosY;
-        //    pp.Score = p.Score;
-
-        //    _context.Players.Update(pp);
-        //    _context.SaveChanges();
-
-        //    return Ok(); //NoContent();
-        //}
+            return Ok(); //NoContent();
+        }
 
         //[HttpPatch]
         //public IActionResult PartialUpdate([FromBody] Coordinates request)

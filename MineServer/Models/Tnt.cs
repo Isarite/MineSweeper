@@ -4,7 +4,7 @@
 
 namespace MineServer.Models
 {
-	public class TNT : Cell
+	public class Tnt : Cell
 	{
 
 	}

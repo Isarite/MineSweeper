@@ -8,7 +8,7 @@ namespace MineServer.Models
 {
 	public abstract class PlayerStrategy
 	{
-		public abstract Result OnActivation(int X, int Y, ref Game game);
+		public abstract Result OnActivation(int x, int y, ref Game game);
 		
 	}
 	

@@ -9,9 +9,9 @@ namespace MineServer.Models
 {
 	public class RevealCell : PlayerStrategy
 	{
-		public override Result OnActivation(int X, int Y, ref Game game)
+		public override Result OnActivation(int x, int y, ref Game game)
 		{
-            return game.gameMap.RevealCell(X,Y);
+            return game.gameMap.RevealCell(x,y);
 		}
 	}
 	

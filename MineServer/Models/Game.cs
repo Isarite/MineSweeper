@@ -15,7 +15,7 @@ namespace MineServer.Models
         public bool started;
 
         Player[] players;
-
+        //TODO turn mechanics
         float duration;
 
         public Game()

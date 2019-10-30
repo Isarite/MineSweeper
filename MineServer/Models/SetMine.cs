@@ -10,10 +10,10 @@ namespace MineServer.Models
 	{
 
 
-        public override Result OnActivation(int X, int Y, ref Game game)
+        public override Result OnActivation(int x, int y, ref Game game)
         {
-            return null;
-            //throw new System.NotImplementedException();
+	        return game.gameMap.SetMine(x, y);
+	        //throw new System.NotImplementedException();
         }
     }
 	
