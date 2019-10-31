@@ -47,9 +47,9 @@ namespace Isminuotojai
             string message = (string)clicked.Tag;//gets tag which stores button position "{0};{1}" , e.g "0;1"
 
             MouseButtonEventArgs mouse = (MouseButtonEventArgs)e;
-            if (mouse.LeftButton == MouseButtonState.Pressed)
+            if (mouse.LeftButton == MouseButtonState.Pressed)//If  left button pressed
                 ShowPosition(message, clicked);
-            else if (mouse.RightButton == MouseButtonState.Pressed)
+            else if (mouse.RightButton == MouseButtonState.Pressed)//If right button pressed
             {
                 string[] vars = message.Split(';');
                 MakeNumberCell(Int32.Parse(vars[0]), Int32.Parse(vars[1]));
@@ -69,6 +69,11 @@ namespace Isminuotojai
             codePopup.IsOpen = true;
         }
 
+        /// <summary>
+        /// Creates a new grid
+        /// </summary>
+        /// <param name="ii">Size of X</param>
+        /// <param name="jj">Size of Y</param>
         private void SetGrid(int ii, int jj)
         {
             for (int i = 0; i < ii; i++)//Create Rows and Columns
@@ -134,8 +139,8 @@ namespace Isminuotojai
             Grid.SetColumn(b, jj);
             mineGrid.Children.Add(b);
         }
-
-    
+        
+        
   
     }
 }

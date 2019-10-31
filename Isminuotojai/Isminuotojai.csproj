@@ -55,6 +55,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Resources\GameStatus.cs" />
+    <Compile Include="Resources\Move.cs" />
+    <Compile Include="Resources\MoveSet.cs" />
+    <Compile Include="Resources\MoveType.cs" />
+    <Compile Include="Resources\Result.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -63,6 +68,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Classes\APIHandler.cs" />
     <Compile Include="Classes\PlayerData.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
