@@ -139,8 +139,15 @@ namespace Isminuotojai
             Grid.SetColumn(b, jj);
             mineGrid.Children.Add(b);
         }
-        
-        
+
+        /// <summary>
+        /// Remakes a grid according to  the result of the update
+        /// </summary>
+        /// <param name="result"></param>
+        private void RemakeGrid(Result result)
+        {
+            //TODO Remake grid
+        }
   
     }
 }
