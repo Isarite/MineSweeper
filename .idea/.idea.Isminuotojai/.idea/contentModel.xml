@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$USER_HOME$/.Rider2019.2/system/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2019.2/system/resharper-host/local/Transient/ReSharperHost/v192/SolutionCaches/_Isminuotojai.917290895.00" t="ExcludeRecursive" />
+    <e p="$PROJECT_DIR$" t="IncludeFlat">
+      <e p="Isminuotojai" t="IncludeRecursive">
+        <e p="App.config" t="Include" />
+        <e p="App.xaml" t="Include" />
+        <e p="App.xaml.cs" t="Include" />
+        <e p="Classes" t="Include">
+          <e p="APIHandler.cs" t="Include" />
+          <e p="PlayerData.cs" t="Include" />
+        </e>
+        <e p="Images" t="Include">
+          <e p="TNT.svg" t="Include" />
+          <e p="WrongTNT.png" t="Include" />
+        </e>
+        <e p="Isminuotojai.csproj" t="IncludeRecursive" />
+        <e p="MainWindow.xaml" t="Include" />
+        <e p="MainWindow.xaml.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+          <e p="Resources.Designer.cs" t="Include" />
+          <e p="Resources.resx" t="Include" />
+          <e p="Settings.Designer.cs" t="Include" />
+          <e p="Settings.settings" t="Include" />
+        </e>
+        <e p="Resources" t="Include">
+          <e p="GameStatus.cs" t="Include" />
+          <e p="Move.cs" t="Include" />
+          <e p="MoveSet.cs" t="Include" />
+          <e p="MoveType.cs" t="Include" />
+          <e p="PlayerData.cs" t="Include" />
+          <e p="Result.cs" t="Include" />
+        </e>
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive" />
+      </e>
+      <e p="Isminuotojai.sln" t="IncludeFlat" />
+      <e p="MineServer" t="IncludeRecursive">
+        <e p="Controllers" t="Include">
+          <e p="PlayerController.cs" t="Include" />
+          <e p="ValuesController.cs" t="Include" />
+        </e>
+        <e p="Migrations" t="Include">
+          <e p="20191004143058_MyCommand1.Designer.cs" t="Include" />
+          <e p="20191004143058_MyCommand1.cs" t="Include" />
+          <e p="MineSweeperContextModelSnapshot.cs" t="Include" />
+        </e>
+        <e p="MineServer.csproj" t="IncludeRecursive" />
+        <e p="Models" t="Include">
+          <e p="Cell.cs" t="Include" />
+          <e p="CellFactory.cs" t="Include" />
+          <e p="ExplodedTNT.cs" t="Include" />
+          <e p="Factory.cs" t="Include" />
+          <e p="Game.cs" t="Include" />
+          <e p="I.cs" t="Include" />
+          <e p="ICommand.cs" t="Include" />
+          <e p="Map.cs" t="Include" />
+          <e p="MarkCell.cs" t="Include" />
+          <e p="Marker.cs" t="Include" />
+          <e p="MineSweeperContext.cs" t="Include" />
+          <e p="Player.cs" t="Include" />
+          <e p="PlayerStrategy.cs" t="Include" />
+          <e p="RevealCell.cs" t="Include" />
+          <e p="Revealed.cs" t="Include" />
+          <e p="Server.cs" t="Include" />
+          <e p="SetMine.cs" t="Include" />
+          <e p="Tnt.cs" t="Include" />
+          <e p="Unknown.cs" t="Include" />
+          <e p="UnsetMine.cs" t="Include" />
+          <e p="WrongTnt.cs" t="Include" />
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="PublishProfiles" t="Include">
+            <e p="MineServer20191008030835 - Web Deploy.pubxml" t="Include" />
+          </e>
+          <e p="launchSettings.json" t="Include" />
+        </e>
+        <e p="Resources" t="Include">
+          <e p="GameStatus.cs" t="Include" />
+          <e p="Move.cs" t="Include" />
+          <e p="MoveSet.cs" t="Include" />
+          <e p="MoveType.cs" t="Include" />
+          <e p="PlayerData.cs" t="Include" />
+          <e p="Result.cs" t="Include" />
+        </e>
+        <e p="Startup.cs" t="Include" />
+        <e p="appsettings.Development.json" t="Include" />
+        <e p="appsettings.json" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp2.1" t="Include">
+              <e p="MineServer.AssemblyInfo.cs" t="Include" />
+              <e p="UserSecretsAssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="wwwroot" t="Include" />
+      </e>
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>
