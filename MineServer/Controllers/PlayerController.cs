@@ -153,8 +153,7 @@ namespace MineServer.Controllers
                     var game = _games.Games1[id];
                     player = game.FindPlayer(userId);
                     var result = player.DoMove(move, ref game);
-                    if (player.TurnsLeft == 0)
-                        result.turn = false;
+                    result.turn = player.TurnsLeft != 0;
                     return Ok(result);
                 }
             }
@@ -224,6 +223,7 @@ namespace MineServer.Controllers
                 if (_games.Games1[id].Authorize(userId))
                 {
                     var result = _games.Games1[id].Update(userId);
+                    result.turn = _games.Games1[id].FindPlayer(userId).TurnsLeft != 0;
                     //if (result.status != GameStatus.Ongoing)
                     //    player.CurrentGame = null;
                     return Ok();

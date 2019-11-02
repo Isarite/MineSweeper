@@ -53,35 +53,47 @@ namespace MineServer.Models
                 case MoveType.Reveal:
                     foreach(PlayerStrategy strategy in strategies)
                     {
-                        if (strategy is RevealCell)
-                            return strategy.OnActivation(move.X,move.Y, ref CurrentGame);
+                            if (strategy is RevealCell)
+                            {
+                                TurnsLeft--;
+                                return strategy.OnActivation(move.X, move.Y, ref CurrentGame);
+                            }
                     }
                     break;
                 case MoveType.Mark:
                     foreach (PlayerStrategy strategy in strategies)
                     {
-                        if (strategy is MarkCell)
-                            return strategy.OnActivation(move.X, move.Y, ref CurrentGame);
+                            if (strategy is MarkCell)
+                            {
+                                TurnsLeft--;
+                                return strategy.OnActivation(move.X, move.Y, ref CurrentGame);
+                            }
                     }
                     break;
                 case MoveType.Set:
                     foreach (PlayerStrategy strategy in strategies)
                     {
-                        if (strategy is SetMine)
-                            return strategy.OnActivation(move.X, move.Y, ref CurrentGame);
+                            if (strategy is SetMine)
+                            {
+                                TurnsLeft--;
+                                return strategy.OnActivation(move.X, move.Y, ref CurrentGame);
+                            }
                     }
                     break;
                 case MoveType.Unset:
                     foreach (PlayerStrategy strategy in strategies)
                     {
-                        if (strategy is UnsetMine)
-                            return strategy.OnActivation(move.X, move.Y, ref CurrentGame);
+                            if (strategy is UnsetMine)
+                            {
+                                TurnsLeft--;
+                                return strategy.OnActivation(move.X, move.Y, ref CurrentGame);
+                            }
                     }
                     break;
                 }
             else
                 result.turn = false;
-            result.success = false;
+            result.success = true;
             return result;
         }
 		
