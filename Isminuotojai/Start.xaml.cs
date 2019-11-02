@@ -33,5 +33,10 @@ namespace Isminuotojai
         {
 
         }
+
+        private void btn_play_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

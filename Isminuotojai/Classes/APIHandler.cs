@@ -1,7 +1,8 @@
-using Isminuotojai.Resources.Result;
+using Isminuotojai.Resources;
 using System;
 using System.Net.Http;
 
+/*
 namespace Isminuotojai.Classes
 {
     public class ApiHandler
@@ -65,4 +66,4 @@ namespace Isminuotojai.Classes
         }
         
     }
-}
+}*/
