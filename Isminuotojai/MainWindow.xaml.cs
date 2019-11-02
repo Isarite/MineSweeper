@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Isminuotojai.Resources;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -144,10 +145,10 @@ namespace Isminuotojai
         /// Remakes a grid according to  the result of the update
         /// </summary>
         /// <param name="result"></param>
-        /*private void RemakeGrid(Result result)
+        private void RemakeGrid(MineResult result)
         {
             //TODO Remake grid
-        }*/
+        }
   
     }
 }
