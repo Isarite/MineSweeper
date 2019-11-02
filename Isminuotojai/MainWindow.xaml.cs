@@ -144,10 +144,10 @@ namespace Isminuotojai
         /// Remakes a grid according to  the result of the update
         /// </summary>
         /// <param name="result"></param>
-        private void RemakeGrid(Result result)
+        /*private void RemakeGrid(Result result)
         {
             //TODO Remake grid
-        }
+        }*/
   
     }
 }
