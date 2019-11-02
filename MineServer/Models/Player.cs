@@ -13,7 +13,7 @@ namespace MineServer.Models
 	public class Player : IdentityUser
     {
 
-        public Game CurrentGame;
+        //public int CurrentGame;
         public int TurnsLeft { get; set; }
         
 
@@ -44,7 +44,7 @@ namespace MineServer.Models
         /// </summary>
         /// <param name="move"></param>
         /// <returns>Result of the move</returns>
-        public Result DoMove(Move move)
+        public Result DoMove(Move move, ref  Game CurrentGame)
         {
             Result result = new Result();
             if(TurnsLeft>0)

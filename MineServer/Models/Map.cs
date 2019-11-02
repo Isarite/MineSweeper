@@ -19,7 +19,7 @@ namespace MineServer.Models
                 _cells = new Cell[index1, index2];
                 for (int i = 0; i < index1; i++)
                 {
-                    for (int j = 0; j < index2; i++)
+                    for (int j = 0; j < index2; j++)
                     {
                         _cells[i, j] = _factory.Create("Empty");
                     }

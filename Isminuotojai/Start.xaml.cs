@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Isminuotojai.Classes;
+using Isminuotojai.Resources;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +24,14 @@ namespace Isminuotojai
         public Start()
         {
             InitializeComponent();
+            ApiHandler gg = new ApiHandler();
+            var user = new PlayerData();
+            user.userName = "user0";
+            user.password = "he;;p";
+            var a =  gg.CreatePlayerAsync(user);
+            var d = Task.Run(async () => await gg.GetToken(user));
+            d.Wait();
+            var c = gg.StartGame();
         }
 
         private void btn_login_Click(object sender, RoutedEventArgs e)

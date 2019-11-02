@@ -11,11 +11,13 @@ namespace Isminuotojai.Classes
 {
     public class ApiHandler
     {
-        private const string Site = "https://mineserver20191008030835.azurewebsites.net";
+        //private const string Site = "https://mineserver20191008030835.azurewebsites.net";
+        private const string Site = "https://localhost:44397";
         private string _token;//Token assigned on login
         private int _gameId;//Game Id assigned on starting game
-        static HttpClient client = new HttpClient();
-        static string apipath = "api/player/";
+        static WinHttpHandler handler = new WinHttpHandler();
+        static HttpClient client = new HttpClient(handler);
+        static string apipath = "/api/player/";
         static string mediaType = "application/json";
         private static string requestUri = Site + apipath;
 
@@ -27,15 +29,23 @@ namespace Isminuotojai.Classes
         /// </summary>
         /// <param name="player">Player username and password</param>
         /// <returns>If player got created</returns>
-        static async Task<bool> CreatePlayerAsync(PlayerData player)
+        public  async Task<bool> CreatePlayerAsync(PlayerData player)
         {
             var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(player));
 
             // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
-            var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
-
-            HttpResponseMessage response = await client.PostAsync(
+            var httpContent = new StringContent(stringPayload, Encoding.UTF8, mediaType);
+            HttpResponseMessage response = new HttpResponseMessage();
+            try
+            {
+                response = await client.PostAsync(
                 requestUri, httpContent);
+            }
+            catch
+            {
+                return false;
+            }
+
             return response.StatusCode.Equals(HttpStatusCode.OK);
         }
 
@@ -45,7 +55,7 @@ namespace Isminuotojai.Classes
             var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(move));
 
             // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
-            var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
+            var httpContent = new StringContent(stringPayload, Encoding.UTF8, mediaType);
 
             HttpResponseMessage response = await client.PostAsync(
                 requestUri, httpContent);
@@ -74,12 +84,19 @@ namespace Isminuotojai.Classes
             var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(player));
 
             // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
-            var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
+            //var httpContent = new StringContent(stringPayload, Encoding.UTF8, mediaType);
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri(requestUri),
+                Content = new StringContent(stringPayload, Encoding.UTF8, mediaType),
+            };
 
-            HttpResponseMessage response = await client.PostAsync(
-                requestUri, httpContent);
+            HttpResponseMessage response;
             try
             {
+                 response = await client.SendAsync(
+                request);
                 response.EnsureSuccessStatusCode();
             }
             catch
@@ -87,7 +104,8 @@ namespace Isminuotojai.Classes
                 return false;
             }
             string responseBody = await response.Content.ReadAsStringAsync();
-            _token = responseBody;
+            _token = JsonConvert.DeserializeObject<string>(responseBody);
+            //_token = _token.Substring(1, _token.Length - 2);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
             return response.StatusCode.Equals(HttpStatusCode.OK);
         }
@@ -97,8 +115,16 @@ namespace Isminuotojai.Classes
             //TODO Assign game id
             //TODO Start game
             //TODO Recognize role
-            var httpContent = new StringContent("", Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await client.PostAsync(requestUri, httpContent);
+            HttpResponseMessage response = new HttpResponseMessage();
+            var httpContent = new StringContent("", Encoding.UTF8, mediaType);
+            try
+            {
+                response = await client.PostAsync(requestUri + "/StartGame", httpContent);
+            }
+            catch
+            {
+                return MoveSet.MineSetter;
+            }
             //JSON deserialization
             GameData data = new GameData();
             string responseBody = await response.Content.ReadAsStringAsync();

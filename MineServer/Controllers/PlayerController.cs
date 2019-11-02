@@ -24,19 +24,21 @@ namespace MineServer.Controllers
         private readonly SignInManager<Player> _signManager;
         private readonly UserManager<Player> _userManager;
         private readonly MineSweeperContext _context;
+        private readonly Games _games;
         private int gameCount;
 
-        public PlayerController(MineSweeperContext context, UserManager<Player> userManager, SignInManager<Player> signInManager)
+        public PlayerController(MineSweeperContext context, UserManager<Player> userManager, SignInManager<Player> signInManager, Games games)
         {
             context.Database.EnsureCreated();
             _context = context;
             _userManager = userManager;
             _signManager = signInManager;
-            games = new List<Game>();
+            //this.games = new List<Game>();
+            _games = games;
             gameCount = 0;
         }
 		
-		List<Game> games;
+		//List<Game> games;
         
 
         //public void GetInstance(  )
@@ -144,14 +146,17 @@ namespace MineServer.Controllers
             var accessToken = Request.Headers["Authorization"];
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             Player player = await _userManager.FindByIdAsync(userId);
-            if (games[id].Authorize(userId))
+            lock (_games)
             {
-                var result = player.DoMove(move);
-                if (player.TurnsLeft == 0)
-                    result.turn = false;
-                if (result.status != GameStatus.Ongoing)
-                    player.CurrentGame = null;
-                return Ok(result);
+                if (_games.Games1[id].Authorize(userId))
+                {
+                    var game = _games.Games1[id];
+                    player = game.FindPlayer(userId);
+                    var result = player.DoMove(move, ref game);
+                    if (player.TurnsLeft == 0)
+                        result.turn = false;
+                    return Ok(result);
+                }
             }
             return Unauthorized();
         }
@@ -169,23 +174,41 @@ namespace MineServer.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             MoveSet role;
             var player = await _userManager.FindByIdAsync(userId);
-            if(games[games.Count-1].Started)
+            try
             {
-                games.Add(new Game(gameCount++));
-                games[games.Count - 1].AddPlayer(player);
-                player.AddMoves(MoveSet.MineSetter);
-                role = MoveSet.MineSetter;
-                player.TurnsLeft = games[games.Count - 1].Turns();
+                lock (_games)
+                {
+                    if (_games.Games1.Count == 0 || _games.Games1[_games.Games1.Count - 1].Started)
+                    {
+                        lock (_games)
+                        {
+                            //games.Add(new Game(gameCount++));
+                            _games.Games1.Add(new Game(gameCount++));
+                            _games.Games1[_games.Games1.Count - 1].AddPlayer(player);
+                            player.AddMoves(MoveSet.MineSetter);
+                            role = MoveSet.MineSetter;
+                            player.TurnsLeft = _games.Games1[_games.Games1.Count - 1].Turns();
+                        }
+
+                    }
+                    else
+                    {
+                        _games.Games1[_games.Games1.Count - 1].AddPlayer(player);
+                        player.AddMoves(MoveSet.MineSweeper);
+                        role = MoveSet.MineSweeper;
+                        player.TurnsLeft = 0;
+                    }
+                }
             }
-            else
+            catch(Exception exception)
             {
-                games[games.Count - 1].AddPlayer(player);
-                player.AddMoves(MoveSet.MineSweeper);
-                role = MoveSet.MineSweeper;
-                player.TurnsLeft = 0;
+                return NotFound(exception);
             }
-            player.CurrentGame = games[games.Count - 1];
-            return Ok(new GameData{GameId = games.Count-1, Role = role});//returns gameid and player role
+            lock (_games)
+            {
+               // player.CurrentGame = _games.Games1[_games.Games1.Count - 1];
+                return Ok(new GameData { GameId = _games.Games1.Count - 1, Role = role });//returns gameid and player role
+            }
         }
         
         // PUT api/Update/values/5
@@ -196,12 +219,15 @@ namespace MineServer.Controllers
             var accessToken = Request.Headers["Authorization"];
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             Player player = await _userManager.FindByIdAsync(userId);
-            if (games[id].Authorize(userId))
+            lock (_games)
             {
-                var result = games[id].Update(userId);
-                if (result.status != GameStatus.Ongoing)
-                    player.CurrentGame = null;
-                return Ok();
+                if (_games.Games1[id].Authorize(userId))
+                {
+                    var result = _games.Games1[id].Update(userId);
+                    //if (result.status != GameStatus.Ongoing)
+                    //    player.CurrentGame = null;
+                    return Ok();
+                }
             }
 
             return Unauthorized();

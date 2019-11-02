@@ -79,10 +79,14 @@ namespace Isminuotojai
         {
             for (int i = 0; i < ii; i++)//Create Rows and Columns
             {
-                RowDefinition row = new RowDefinition();
-                row.SharedSizeGroup = "FirstRow";//equal size rows
-                ColumnDefinition col = new ColumnDefinition();
-                col.SharedSizeGroup = "FirstColumn";
+                RowDefinition row = new RowDefinition()
+                {
+                    SharedSizeGroup = "FirstRow"//equal size rows
+                };
+                ColumnDefinition col = new ColumnDefinition
+                {
+                    SharedSizeGroup = "FirstColumn"
+                };
                 mineGrid.ColumnDefinitions.Add(col);
                 mineGrid.RowDefinitions.Add(row);
             }

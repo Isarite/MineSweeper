@@ -2,6 +2,7 @@
  * @(#) Game.cs
  */
 
+using System;
 using MineServer.Resources;
 
 namespace MineServer.Models
@@ -40,7 +41,7 @@ namespace MineServer.Models
                 Started = true;
             else
                 player.TurnsLeft = TurnCount;
-            _players[_count - 1] = player;
+            _players[_count] = player;
             _count++;
         }
 
@@ -83,6 +84,15 @@ namespace MineServer.Models
                 result.success = false;
 
             return result;
+        }
+
+        public Player FindPlayer(string id)
+        {
+            if (_players[0].Id.Equals(id))
+                return _players[0];
+            if (_players[1].Id.Equals(id))
+                return _players[1];
+            return null;
         }
     }
 	

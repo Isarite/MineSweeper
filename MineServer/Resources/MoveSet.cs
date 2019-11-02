@@ -7,7 +7,7 @@ namespace MineServer.Resources
 {
     public enum MoveSet
     {
-        MineSweeper,
-        MineSetter
+        MineSetter,
+        MineSweeper
     }
 }

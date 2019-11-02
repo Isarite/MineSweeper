@@ -42,7 +42,7 @@ namespace MineServer
 
             services.AddIdentity<Player, IdentityRole>(options => { options.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultProvider; }).AddEntityFrameworkStores<MineSweeperContext>().AddDefaultTokenProviders();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
+            services.AddSingleton<Games>();
 
         }
 
