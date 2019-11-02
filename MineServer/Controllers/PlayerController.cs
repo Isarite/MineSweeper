@@ -185,7 +185,7 @@ namespace MineServer.Controllers
                 player.TurnsLeft = 0;
             }
             player.CurrentGame = games[games.Count - 1];
-            return Ok(new{GameId = games.Count-1, PlayerRole = role});//returns gameid and player role
+            return Ok(new GameData{GameId = games.Count-1, Role = role});//returns gameid and player role
         }
         
         // PUT api/Update/values/5

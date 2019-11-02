@@ -171,16 +171,8 @@ namespace MineServer.Models
         {
             lock (obj)
             {
-<<<<<<< Updated upstream
                 _cells[index1, index2].marked = !_cells[index1, index2].marked;
                 return BuildMap(new Result());//Returns new result
-=======
-                if (!cells[index1, index2].marked)
-                    cells[index1, index2].marked = true;
-                else
-                    cells[index1, index2].marked = false;
-                return BuildMap(BuildMap(new Result()));
->>>>>>> Stashed changes
             }
         }
 
@@ -243,18 +235,11 @@ namespace MineServer.Models
         /// <returns></returns>
         private Result BuildMap(Result result, bool mineSweeper = true)
         {
-<<<<<<< Updated upstream
             //The default game status is 0 aka Ongoing
             //result.status = GameStatus.Ongoing;
             result.success = true;
             bool finished = true;
             lock (obj)
-=======
-            result.map = new char[cells.GetLength(0), cells.GetLength(1)];
-            result.status = GameStatus.Ongoing;
-            result.success = true;
-            for (int i = 0; i < cells.GetLength(0); i++)
->>>>>>> Stashed changes
             {
                 result.map = new char[_cells.GetLength(0), _cells.GetLength(1)];
                 for (int i = 0; i < _cells.GetLength(0); i++)

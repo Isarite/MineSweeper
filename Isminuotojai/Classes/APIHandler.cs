@@ -2,25 +2,25 @@ using Isminuotojai.Resources;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Isminuotojai.Classes
 {
     public class ApiHandler
     {
-        private const string Site = "localhost:8080";
+        private const string Site = "https://mineserver20191008030835.azurewebsites.net";
         private string _token;//Token assigned on login
         private int _gameId;//Game Id assigned on starting game
         static HttpClient client = new HttpClient();
-        static string requestUri = "api/player/";
+        static string apipath = "api/player/";
         static string mediaType = "application/json";
+        private static string requestUri = Site + apipath;
 
 
-        public Result DoMove(Move move)
-        {
-            return new Result();//TODO DoMove
-        }
+
         
         /// <summary>
         /// Creates Player
@@ -29,7 +29,7 @@ namespace Isminuotojai.Classes
         /// <returns>If player got created</returns>
         static async Task<bool> CreatePlayerAsync(PlayerData player)
         {
-            var stringPayload = await Task.Run(() => Newtonsoft.Json.JsonConvert.SerializeObject(player));
+            var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(player));
 
             // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
             var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
@@ -39,26 +39,74 @@ namespace Isminuotojai.Classes
             return  response.StatusCode.Equals(HttpStatusCode.OK);
         }
 
+        public static async Task<MineResult> DoMove(Move move)
+        {
+            MineResult result = new MineResult();
+            var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(move));
+
+            // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
+            var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync(
+                requestUri, httpContent);
+            try
+            {
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                result = JsonConvert.DeserializeObject<MineResult>(responseBody);
+            }
+            catch
+            {
+                //Catching
+            }
+
+            return result;
+        }
+
         public void Surrender()
         {
             //TODO Surrender
         }
 
-        public void CreateAccount()
+
+        public async Task<bool> GetToken(PlayerData player)
         {
-            //TODO Create Account
+            var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(player));
+
+            // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
+            var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync(
+                requestUri, httpContent);
+            try
+            {
+                response.EnsureSuccessStatusCode();
+            }
+            catch
+            {
+                return false;
+            }
+            string responseBody = await response.Content.ReadAsStringAsync();
+            _token = responseBody;
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
+            return response.StatusCode.Equals(HttpStatusCode.OK);
         }
 
-        public string GetToken()
-        {
-            return "token";//TODO Get Token
-        }
-
-        public void StartGame()
+        public async Task<MoveSet> StartGame()
         {
             //TODO Assign game id
             //TODO Start game
             //TODO Recognize role
+            var httpContent = new StringContent("", Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await client.PostAsync(requestUri, httpContent);
+            //JSON deserialization
+            GameData data = new GameData();
+            string responseBody = await response.Content.ReadAsStringAsync();
+            data = JsonConvert.DeserializeObject<GameData>(responseBody);
+            //Assignment of game id
+            _gameId = data.GameId;
+
+            return data.Role;
         }
         
     }
