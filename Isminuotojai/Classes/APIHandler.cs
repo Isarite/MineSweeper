@@ -1,6 +1,9 @@
 using Isminuotojai.Resources;
 using System;
+using System.Net;
 using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 
 /*
 namespace Isminuotojai.Classes
@@ -17,30 +20,24 @@ namespace Isminuotojai.Classes
 
         public Result DoMove(Move move)
         {
-            Result result = null;
-            HttpResponseMessage response = await client.GetAsync(path);
-            if (response.IsSuccessStatusCode)
-            {
-                product = await response.Content.ReadAsAsync<Product>();
-            }
-            return product;
             return new Result();//TODO DoMove
         }
         
-        static async Task<Uri> CreatePlayerAsync(PlayerData player)
+        /// <summary>
+        /// Creates Player
+        /// </summary>
+        /// <param name="player">Player username and password</param>
+        /// <returns>If player got created</returns>
+        static async Task<bool> CreatePlayerAsync(PlayerData player)
         {
-            HttpResponseMessage response = await client.PostAsJsonAsync(
-                requestUri, player);
-            response.EnsureSuccessStatusCode();
+            var stringPayload = await Task.Run(() => Newtonsoft.Json.JsonConvert.SerializeObject(player));
 
-            // Deserialize the updated product from the response body.
-            Player player2 = await response.Content.ReadAsAsync<Player>();
-            if(player2 != null){
-                ShowProduct(player2);
-            } 
+            // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
+            var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
 
-            // return URI of the created resource.
-            return response.Headers.Location;
+            HttpResponseMessage response = await client.PostAsync(
+                requestUri, httpContent);
+            return  response.StatusCode.Equals(HttpStatusCode.OK);
         }
 
         public void Surrender()
