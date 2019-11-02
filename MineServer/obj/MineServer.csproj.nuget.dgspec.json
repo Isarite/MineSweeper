@@ -1,28 +1,32 @@
 {
   "format": 1,
   "restore": {
-    "/home/isarite/SoftwareProjects/MineSweeper/MineServer/MineServer.csproj": {}
+    "C:\\Users\\vytmik2\\Documents\\minesweeper\\MineServer\\MineServer.csproj": {}
   },
   "projects": {
-    "/home/isarite/SoftwareProjects/MineSweeper/MineServer/MineServer.csproj": {
+    "C:\\Users\\vytmik2\\Documents\\minesweeper\\MineServer\\MineServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/isarite/SoftwareProjects/MineSweeper/MineServer/MineServer.csproj",
+        "projectUniqueName": "C:\\Users\\vytmik2\\Documents\\minesweeper\\MineServer\\MineServer.csproj",
         "projectName": "MineServer",
-        "projectPath": "/home/isarite/SoftwareProjects/MineSweeper/MineServer/MineServer.csproj",
-        "packagesPath": "/home/isarite/.nuget/packages/",
-        "outputPath": "/home/isarite/SoftwareProjects/MineSweeper/MineServer/obj/",
+        "projectPath": "C:\\Users\\vytmik2\\Documents\\minesweeper\\MineServer\\MineServer.csproj",
+        "packagesPath": "C:\\Users\\vytmik2\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\vytmik2\\Documents\\minesweeper\\MineServer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "/usr/share/dotnet/sdk/NuGetFallbackFolder"
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "/home/isarite/.config/NuGet/NuGet.Config"
+          "C:\\Users\\vytmik2\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp2.1"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -66,10 +70,16 @@
             }
           },
           "imports": [
-            "net461"
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
           ],
           "assetTargetFallback": true,
-          "warn": true
+          "warn": true,
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }
