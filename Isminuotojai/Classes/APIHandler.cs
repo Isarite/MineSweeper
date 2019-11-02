@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
+/*
 namespace Isminuotojai.Classes
 {
     public class ApiHandler
@@ -110,4 +111,4 @@ namespace Isminuotojai.Classes
         }
         
     }
-}
+}*/
