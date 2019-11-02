@@ -12530,27 +12530,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\vytmik2\\.nuget\\packages\\": {},
-    "C:\\Microsoft\\Xamarin\\NuGet\\": {},
+    "C:\\Users\\Naudotojas\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\vytmik2\\Documents\\minesweeper\\MineServer\\MineServer.csproj",
+      "projectUniqueName": "E:\\group\\MineSweeper\\MineServer\\MineServer.csproj",
       "projectName": "MineServer",
-      "projectPath": "C:\\Users\\vytmik2\\Documents\\minesweeper\\MineServer\\MineServer.csproj",
-      "packagesPath": "C:\\Users\\vytmik2\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\vytmik2\\Documents\\minesweeper\\MineServer\\obj\\",
+      "projectPath": "E:\\group\\MineSweeper\\MineServer\\MineServer.csproj",
+      "packagesPath": "C:\\Users\\Naudotojas\\.nuget\\packages\\",
+      "outputPath": "E:\\group\\MineSweeper\\MineServer\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Microsoft\\Xamarin\\NuGet\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\vytmik2\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        "C:\\Users\\Naudotojas\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.1"
@@ -12600,16 +12597,10 @@
           }
         },
         "imports": [
-          "net461",
-          "net462",
-          "net47",
-          "net471",
-          "net472",
-          "net48"
+          "net461"
         ],
         "assetTargetFallback": true,
-        "warn": true,
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
+        "warn": true
       }
     }
   }

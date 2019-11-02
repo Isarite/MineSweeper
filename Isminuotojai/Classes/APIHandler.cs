@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-/*
 namespace Isminuotojai.Classes
 {
     public class ApiHandler
@@ -22,7 +21,7 @@ namespace Isminuotojai.Classes
 
 
 
-        
+
         /// <summary>
         /// Creates Player
         /// </summary>
@@ -37,7 +36,7 @@ namespace Isminuotojai.Classes
 
             HttpResponseMessage response = await client.PostAsync(
                 requestUri, httpContent);
-            return  response.StatusCode.Equals(HttpStatusCode.OK);
+            return response.StatusCode.Equals(HttpStatusCode.OK);
         }
 
         public static async Task<MineResult> DoMove(Move move)
@@ -109,6 +108,6 @@ namespace Isminuotojai.Classes
 
             return data.Role;
         }
-        
+
     }
-}*/
+}
