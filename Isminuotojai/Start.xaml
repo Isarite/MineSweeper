@@ -4,19 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Isminuotojai"
+        xmlns:viewmodels="clr-namespace:Isminuotojai.ViewModels"
+        xmlns:view="clr-namespace:Isminuotojai.Views"
+        
         mc:Ignorable="d"
-        Title="Išminuotojai" Height="300" Width="300"
-        Background="PaleGoldenrod"
+        Title="Išminuotojai" Height="400" Width="300"
+        Background="YellowGreen"
         FontSize="16"
         >
     <Grid>
-        <StackPanel x:Name="startScreen" Visibility="Visible">
-            <Button x:Name="btn_login" Click="btn_login_Click" Margin="5" Padding="5">Prisijungti</Button>
-            <Button x:Name="btn_register" Click="btn_register_Click" Margin="5" Padding="5">Registruotis</Button>
-            <Button x:Name="btn_play" Click="btn_play_Click" Visibility="Hidden">Žaisti</Button>
-        </StackPanel>
-        <Grid x:Name="loginForm" Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="16"/>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
@@ -32,7 +29,8 @@
                 <RowDefinition Height="16"/>
             </Grid.RowDefinitions>
 
-            <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" FontWeight="Bold">Prisijunkite</Label>
+            <Label Grid.Row="1" Grid.Column="1" FontWeight="Bold" x:Name="header1" MouseLeftButtonUp="header1_MouseDoubleClick">Prisijunkite</Label>
+        <Label Grid.Row="1" Grid.Column="2" x:Name="header2" MouseLeftButtonUp="header2_MouseDoubleClick">Užsiregistruokite</Label>
             
             <Label Grid.Column="1" Grid.Row="2">Vardas</Label>
             <TextBox Margin="5" x:Name="txt_username" Grid.Column="2" Grid.Row="2"></TextBox>
@@ -40,36 +38,6 @@
             <Label Grid.Column="1" Grid.Row="3">Slaptažodis</Label>
             <TextBox Margin="5" x:Name="txt_password" Grid.Column="2" Grid.Row="3"></TextBox>
 
-            <Button Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2" Margin="0,3,0,5" Padding="2">Prisijungti</Button>
-        </Grid>
-
-        <Grid x:Name="registerForm" Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="16"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="16"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="16"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="16"/>
-            </Grid.RowDefinitions>
-
-            <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" FontWeight="Bold">Užsiregistruokite</Label>
-
-            <Label Grid.Column="1" Grid.Row="2">Vardas</Label>
-            <TextBox Margin="5" x:Name="txt_username_reg" Grid.Column="2" Grid.Row="2"></TextBox>
-
-            <Label Grid.Column="1" Grid.Row="3">Slaptažodis</Label>
-            <TextBox Margin="5" x:Name="txt_password_reg" Grid.Column="2" Grid.Row="3"></TextBox>
-
-            <Button Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2" Margin="5" Padding="0,3,0,5">Registruotis</Button>
-        </Grid>
-
+        <Button Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2" Margin="5" Padding="2" x:Name="btn_header" Click="btn_header_Click">Pirmyn</Button>
     </Grid>
 </Window>
