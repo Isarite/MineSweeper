@@ -60,20 +60,36 @@ namespace Isminuotojai
             Button clicked = (Button)sender;
 
             string message = (string)clicked.Tag;//gets tag which stores button position "{0};{1}" , e.g "0;1"
-
+            string[] vars = message.Split(';');
+            Move move = new Move();
+            move.X = Int32.Parse(vars[0]);
+            move.Y = Int32.Parse(vars[1]);
             MouseButtonEventArgs mouse = (MouseButtonEventArgs)e;
-            if (mouse.LeftButton == MouseButtonState.Pressed)//If  left button pressed
-                ShowPosition(message, clicked);
+            if (mouse.LeftButton == MouseButtonState.Pressed)
+            {//If  left button pressed
+                //ShowPosition(message, clicked);
+                move.Type = (role == MoveSet.MineSetter) ? MoveType.Set : MoveType.Reveal;
+                DoMove(move);
+            }
             else if (mouse.RightButton == MouseButtonState.Pressed)//If right button pressed
             {
-                string[] vars = message.Split(';');
-                MakeNumberCell(Int32.Parse(vars[0]), Int32.Parse(vars[1]));
+                move.Type = (role == MoveSet.MineSetter) ? MoveType.Unset : MoveType.Mark;
+                DoMove(move);
+                //MakeNumberCell(Int32.Parse(vars[0]), Int32.Parse(vars[1]));
             }
         }
 
+        /// <summary>
+        /// Does a move, then changes map accordingly
+        /// </summary>
+        /// <param name="move">move to do</param>
         private void DoMove(Move move)
         {
-
+                var response = Task.Run(async () => await api.DoMove(move));
+                MineResult result = response.Result;
+                RemakeGrid(result);
+                //TODO Lose game
+                //TODO Win game
         }
 
         private void ShowPosition(string message, Button clicked)
