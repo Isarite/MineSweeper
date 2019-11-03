@@ -30,6 +30,12 @@ namespace Isminuotojai
     public partial class MainWindow : Window
     {
         PlayerData pd;
+        MoveSet role = MoveSet.MineSetter;
+
+
+        private const string TntUri = "pack://application:,,,/Isminuotojai;component/Images/TNT.png";
+        private const string WrongTntUri = "pack://application:,,,/Isminuotojai;component/Images/WrongTNT.png";
+
         public MainWindow(PlayerData pd)
         {
             InitializeComponent();
@@ -118,6 +124,92 @@ namespace Isminuotojai
                     Grid.SetRow(b, i);
                     Grid.SetColumn(b, j);
                     mineGrid.Children.Add(b);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Remakes the grid
+        /// </summary>
+        /// <param name="ii">Size of X</param>
+        /// <param name="jj">Size of Y</param>
+        private void RemakeGrid(int ii, int jj, MineResult result)
+        {
+            mineGrid.ColumnDefinitions.Clear();
+            mineGrid.RowDefinitions.Clear();
+            mineGrid.Children.Clear();
+
+            for (int i = 0; i < ii; i++)//Create Rows and Columns
+            {
+                RowDefinition row = new RowDefinition()
+                {
+                    SharedSizeGroup = "FirstRow"//equal size rows
+                };
+                ColumnDefinition col = new ColumnDefinition
+                {
+                    SharedSizeGroup = "FirstColumn"
+                };
+                mineGrid.ColumnDefinitions.Add(col);
+                mineGrid.RowDefinitions.Add(row);
+            }
+            for (int i = 0; i < jj; i++)//set buttons in cells
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    //Button b = new Button();                  
+                    //b.Content = string.Format("Row: {0}, Column: {1}", i, j);
+                    Object content = new Object();
+                    bool enableButton = !(result.turn || (result.status != GameStatus.Ongoing)) ;//disables button if not player's turn, or the game is over
+
+                    char c = result.map[i,j];
+                    switch (c)
+                    {
+                        case 'u':
+                        break;
+                        case 't':
+                        content = new Image
+                        {
+                           Source = new BitmapImage(new Uri(TntUri)),//image source path
+                           VerticalAlignment = VerticalAlignment.Center
+                        };
+                        if(role == MoveSet.mineSweeper)
+                            enableButton = false;
+                        break;
+                        case 'w':
+                        content = new Image
+                        {
+                           Source = new BitmapImage(new Uri(WrongTntUri)),//image source path
+                           VerticalAlignment = VerticalAlignment.Center
+                        };
+                        enableButton = false;
+                        break;
+                        case 'e':
+                        content = new Image
+                        {
+                           Source = new BitmapImage(new Uri(TntUri)),//image source path
+                           Background = Brushes.Red,
+                           VerticalAlignment = VerticalAlignment.Center
+                        };                        
+                        break;
+                        default:
+                            content = c;
+                            enableButton = false;
+                    }
+                    
+
+                    Button b = new Button//button with image
+                    {
+                        //Width = 24,
+                        //Height = 24,
+                        Tag = string.Format("{0};{1}", i, j),//for testing mostly
+                        IsEnabled = enableButton,//change to false to disable
+                        
+                        Content = content;                     
+                    };
+                    Grid.SetRow(b, i);//set row
+                    Grid.SetColumn(b, j);//set column
+                    mineGrid.Children.Add(b);//add to grid
                 }
             }
         }
