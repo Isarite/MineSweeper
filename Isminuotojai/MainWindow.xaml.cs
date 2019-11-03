@@ -324,6 +324,22 @@ namespace Isminuotojai
             left_menu_not_in_game.Visibility = Visibility.Collapsed;
             left_menu_game_started.Visibility = Visibility.Visible;
             mineGrid.Visibility = Visibility.Visible;
+            if (role == MoveSet.MineSweeper)
+            {
+                yourTurn = false;
+                Update();
+                Task.Run(async () => await Updater());
+            }
+
+        }
+
+        private async Task<bool> Updater()
+        {
+            while (!yourTurn)
+            {
+                Update();
+            }
+            return true;
         }
 
         private void btn_surrend_Click(object sender, RoutedEventArgs e)

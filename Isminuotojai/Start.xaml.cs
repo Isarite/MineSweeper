@@ -63,7 +63,6 @@ namespace Isminuotojai
             PlayerData pd = new PlayerData();
             pd.userName = txt_username.Text;
             pd.password = txt_password.Text;
-
             if (loginForm)
             {
                 // TODO login
@@ -76,9 +75,9 @@ namespace Isminuotojai
                     return;
                 }
 
-                d = Task.Run(async () => await api.StartGame());
-                // Perjungiam į žaidimą
-                MoveSet role = d.Result;
+                var f = Task.Run(async () => await api.StartGame());
+                //Starting game
+                MoveSet role = f.Result;
                 Window MainWindow = new MainWindow(pd, api, role);
                 MainWindow.Show();
                 this.Close();
