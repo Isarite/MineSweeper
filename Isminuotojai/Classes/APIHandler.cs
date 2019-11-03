@@ -11,8 +11,8 @@ namespace Isminuotojai.Classes
 {
     public class ApiHandler
     {
-        private const string Site = "https://mineserver20191008030835.azurewebsites.net";
-        //private const string Site = "https://localhost:44397";
+        //private const string Site = "https://mineserver20191008030835.azurewebsites.net";
+        private const string Site = "https://localhost:44397";
         private string _token;//Token assigned on login
         private int _gameId;//Game Id assigned on starting game
         static WinHttpHandler handler = new WinHttpHandler();
@@ -82,8 +82,8 @@ namespace Isminuotojai.Classes
             // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
             var httpContent = new StringContent(stringPayload, Encoding.UTF8, mediaType);
 
-            HttpResponseMessage response = await client.PutAsync(
-                requestUri + "Update/" + _gameId, httpContent);
+            HttpResponseMessage response = await client.GetAsync(
+                requestUri + "Update/" + _gameId);
             try
             {
                 response.EnsureSuccessStatusCode();

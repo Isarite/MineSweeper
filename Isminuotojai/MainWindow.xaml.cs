@@ -108,6 +108,11 @@ namespace Isminuotojai
                             //TODO Lost game
                         }
                     }
+                    else if(!yourTurn)
+                    {
+                        Update();
+                        Task.Run(async () => await Updater());
+                    }
                 }
                 else
                 {

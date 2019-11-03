@@ -33,63 +33,10 @@ namespace MineServer.Controllers
             _context = context;
             _userManager = userManager;
             _signManager = signInManager;
-            //this.games = new List<Game>();
             _games = games;
             gameCount = 0;
         }
-		
-		//List<Game> games;
-        
 
-        //public void GetInstance(  )
-        //{
-        //          _context.Users.Add(new Player { UserName = test, pass})
-        //}
-
-
-        //      public PlayerController(PlayerContext context)
-        //      {
-        //          _context = context;
-
-        //          if (_context.Players.Count() == 0)
-        //          {
-        //              // Create a new Player if collection is empty,
-        //              // which means you can't delete all Players.
-        //              for (int i = 0; i < 10; i++)
-        //              {
-        //                  Qty++;
-        //                  Player p = new Player { Name = "Player-" + Qty, Score = 0, PosX = 0, PosY = 0 };
-        //                  _context.Players.Add(p);
-        //              }
-
-        //              _context.SaveChanges();
-        //          }
-        //      }
-
-
-        //      // GET api/player
-        //      [HttpGet]
-        //      public MoveResult<IEnumerable<Player>> GetAll()
-        //      {
-        //          return _context.Players.ToList();
-        //      }
-
-        //      private void CreateUser(string name, string password)
-        //      {
-
-        //      }
-
-        //      // GET api/player/5
-        //      [HttpGet("{id}", Name = "GetPlayer")]
-        //      public MoveResult<Player> GetById(long id)
-        //      {
-        //          Player p = _context.Players.Find(id);
-        //          if (p == null)
-        //          {
-        //              return NotFound("player not found");
-        //          }
-        //          return p;
-        //      }
 
         // POST api/player
         [HttpPost]
@@ -138,9 +85,9 @@ namespace MineServer.Controllers
             return UnprocessableEntity((await _userManager.FindByIdAsync(userId)).UserName);
         }
 
-        [Route("[action]")]
+        [Route("[action]/{id}")]
         [Authorize]
-        [HttpPost("{id}")]
+        [HttpPost]
         public async Task<IActionResult> DoMove([FromBody] Move move, int id)
         {
             var accessToken = Request.Headers["Authorization"];
@@ -211,8 +158,8 @@ namespace MineServer.Controllers
         }
         
         // PUT api/Update/values/5
-        [Route("[action]")]
-        [HttpPut("{id}")]
+        [Route("[action]/{id}")]
+        [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
             var accessToken = Request.Headers["Authorization"];
@@ -226,7 +173,7 @@ namespace MineServer.Controllers
                     result.turn = _games.Games1[id].FindPlayer(userId).TurnsLeft != 0;
                     //if (result.status != GameStatus.Ongoing)
                     //    player.CurrentGame = null;
-                    return Ok();
+                    return Ok(result);
                 }
             }
 

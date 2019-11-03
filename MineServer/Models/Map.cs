@@ -47,7 +47,14 @@ namespace MineServer.Models
                     }
                     else
                     {
-                        RevealMoreCells(index1, index2);
+                        try
+                        {
+                            RevealMoreCells(index1, index2);
+                        }
+                        catch(Exception ex)
+                        {
+                            throw ex;
+                        }
                     }
                     result.success = true;
                 }
@@ -73,27 +80,27 @@ namespace MineServer.Models
                 {
                     RevealMoreCells(i - 1, j);
                 }
-                if (!(_cells[i - 1, j - 1] is Revealed))//down left
+                if ( j > 0 && !(_cells[i - 1, j - 1] is Revealed))//down left
                 {
                     RevealMoreCells(i - 1, j - 1);
                 }
-                if ((j < _cells.GetLength(1)) && !(_cells[i - 1, j + 1] is Revealed))//down right
+                if ((j < _cells.GetLength(1)-1) && !(_cells[i - 1, j + 1] is Revealed))//down right
                 {
                     RevealMoreCells(i - 1, j + 1);
                 }
             }
-            if (i < _cells.GetLength(0))// if there are cells upwards
+            if (i < _cells.GetLength(0)-1)// if there are cells upwards
             {
                 if (!(_cells[i + 1, j] is Revealed))//up
                 {
                     RevealMoreCells(i + 1, j);
                 }
-                if (!(_cells[i + 1, j - 1] is Revealed))//up left
+                if (j > 0 && !(_cells[i + 1, j - 1] is Revealed))//up left
                 {
                     RevealMoreCells(i + 1, j - 1);
 
                 }
-                if ((j < _cells.GetLength(1)) && !(_cells[i + 1, j + 1] is Revealed))//up right
+                if ((j < _cells.GetLength(1)-1) && !(_cells[i + 1, j + 1] is Revealed))//up right
                 {
                     RevealMoreCells(i + 1, j + 1);
                 }
@@ -102,7 +109,7 @@ namespace MineServer.Models
             {
                 RevealMoreCells(i, j - 1);
             }
-            if (j < _cells.GetLength(1) && !(_cells[i, j + 1] is Revealed))// if there are cells right
+            if (j < _cells.GetLength(1)-1 && !(_cells[i, j + 1] is Revealed))// if there are cells right
             {
                 RevealMoreCells(i, j + 1);
             }
@@ -123,27 +130,27 @@ namespace MineServer.Models
                 {
                     bombs++;
                 }
-                if (_cells[i - 1, j - 1] is Tnt)//down left
+                if (j > 0 && _cells[i - 1, j - 1] is Tnt)//down left
                 {
                     bombs++;
                 }
-                if ( (j < _cells.GetLength(1)) && _cells[i - 1, j + 1] is Tnt)//down right
+                if ( (j < _cells.GetLength(1)-1) && _cells[i - 1, j + 1] is Tnt)//down right
                 {
                     bombs++;
                 }
             }
-            if(i < _cells.GetLength(0))// if there are cells upwards
+            if(i < _cells.GetLength(0)-1)// if there are cells upwards
             {
                 if (_cells[i + 1, j] is Tnt)//up
                 {
                     bombs++;
                 }
-                if (_cells[i + 1, j - 1] is Tnt)//up left
+                if (j > 0 && _cells[i + 1, j - 1] is Tnt)//up left
                 {
                     bombs++;
 
                 }
-                if ((j < _cells.GetLength(1)) && _cells[i + 1, j + 1] is Tnt)//up right
+                if ((j < _cells.GetLength(1)-1) && _cells[i + 1, j + 1] is Tnt)//up right
                 {
                     bombs++;
                 }
@@ -153,7 +160,7 @@ namespace MineServer.Models
                 bombs++;
 
             }
-            if (j < _cells.GetLength(1) && _cells[i, j + 1] is Tnt)// if there are cells right
+            if (j < (_cells.GetLength(1)-1) && _cells[i, j + 1] is Tnt)// if there are cells right
             {
                 bombs++;
             }
@@ -260,6 +267,8 @@ namespace MineServer.Models
                             result.map[i, j] = 'u'; // empty cell
                             finished = false;
                         }
+                        if (cell.marked && !(cell is Revealed))
+                            result.map[i, j] = 'm'; // empty cell
 
                     }
                 }
