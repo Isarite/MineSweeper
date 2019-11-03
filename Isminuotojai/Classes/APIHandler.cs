@@ -73,6 +73,31 @@ namespace Isminuotojai.Classes
             return result;
         }
 
+
+        public static async Task<MineResult> Update()
+        {
+            MineResult result = new MineResult();
+            var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(""));
+
+            // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
+            var httpContent = new StringContent(stringPayload, Encoding.UTF8, mediaType);
+
+            HttpResponseMessage response = await client.PutAsync(
+                requestUri + "Update/" + _gameId, httpContent);
+            try
+            {
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                result = JsonConvert.DeserializeObject<MineResult>(responseBody);
+            }
+            catch
+            {
+                //Catching
+            }
+
+            return result;
+        }
+
         public void Surrender()
         {
             //TODO Surrender

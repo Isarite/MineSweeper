@@ -32,6 +32,8 @@ namespace Isminuotojai
         PlayerData pd;
         MoveSet role = MoveSet.MineSetter;
 
+        bool yourTurn = true;
+
         ApiHandler api;
 
         private const string TntUri = "pack://application:,,,/Isminuotojai;component/Images/TNT.png";
@@ -87,9 +89,53 @@ namespace Isminuotojai
         {
                 var response = Task.Run(async () => await api.DoMove(move));
                 MineResult result = response.Result;
-                RemakeGrid(result);
-                //TODO Lose game
-                //TODO Win game
+                if(result.success)
+                {
+                    yourTurn = result.turn;
+                    RemakeGrid(result);
+
+                    if(result.status != GameStatus.Ongoing)
+                    {
+                        if(result.status == GameStatus.Won)
+                        {
+                            //TODO Won game
+                        }
+                        else
+                        {
+                            //TODO Lost game
+                        }
+                    }
+                }
+                else
+                {
+                    //TODO Error handling
+                }
+        }
+
+        private void Update()
+        {
+                var response = Task.Run(async () => await api.Update());
+                MineResult result = response.Result;
+                if(result.success)
+                {
+                    yourTurn = result.turn;
+                    RemakeGrid(result);
+                    if(result.status != GameStatus.Ongoing)
+                    {
+                        if(result.status == GameStatus.Won)
+                        {
+                            //TODO Won game
+                        }
+                        else
+                        {
+                            //TODO Lost game
+                        }
+                    }
+                }
+                else
+                {
+                    //TODO Error handling
+                }
         }
 
         private void ShowPosition(string message, Button clicked)
