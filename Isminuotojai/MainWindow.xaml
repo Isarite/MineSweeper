@@ -38,10 +38,10 @@
             </StackPanel>
             
         </DockPanel>
-        <Label x:Name="label_status1" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">Ieškoma...</Label>
-        <Label x:Name="label_status2" Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">Ėjimas 0/5</Label>
-        <Label x:Name="label_status3" Grid.Column="3" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">Tavo ėjimas</Label>
-        <Button x:Name="btn_end_turn" Click="btn_end_turn_Click" Margin="5" Grid.Column="3" Grid.Row="5">Baigti ėjimą</Button>
+        <Label x:Name="label_role" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden">Išminuotojas</Label>
+        <Label x:Name="label_turn" Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden">Tavo ėjimas</Label>
+        <Label x:Name="label_status2" Grid.Column="3" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden">Ėjimas 0/5</Label>
+        <Button x:Name="btn_end_turn" Click="btn_end_turn_Click" Margin="5" Grid.Column="3" Grid.Row="5" Visibility="Hidden">Baigti ėjimą</Button>
 
         <Button Grid.Column="0" Grid.Row="5" Margin="5" x:Name="btn_logout" Click="btn_logout_Click">Atsijungti</Button>
     </Grid>

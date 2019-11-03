@@ -75,10 +75,7 @@ namespace Isminuotojai
                     return;
                 }
 
-                var f = Task.Run(async () => await api.StartGame());
-                //Starting game
-                MoveSet role = f.Result;
-                Window MainWindow = new MainWindow(pd, api, role);
+                Window MainWindow = new MainWindow(pd, api);
                 MainWindow.Show();
                 this.Close();
             }
@@ -98,14 +95,16 @@ namespace Isminuotojai
                     MessageBox.Show("Registracija nepavyko! ");
                     return;
                 }
-
-
+                MessageBox.Show("Registracija Sėkminga! ");
+                loginForm = true;
+                header1.FontWeight = FontWeights.Bold;
+                header2.FontWeight = FontWeights.Normal;
 
                 // Perjungiam į žaidimą
-              //  var c = api.StartGame();
+                //  var c = api.StartGame();
                 // Window MainWindow = new MainWindow(pd, api);
                 // MainWindow.Show();
-                this.Close();
+                //this.Close();
             }
         }
     }

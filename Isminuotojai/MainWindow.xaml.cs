@@ -43,16 +43,13 @@ namespace Isminuotojai
         private const string WrongTntUri = "pack://application:,,,/Isminuotojai;component/Images/WrongTNT.png";
         private const string MarkedUri = "pack://application:,,,/Isminuotojai;component/Images/Marked.png";
         Task task;
-        public MainWindow(PlayerData pd, ApiHandler api, MoveSet role)
+        public MainWindow(PlayerData pd, ApiHandler api)
         {
             InitializeComponent();
             EventManager.RegisterClassHandler(typeof(Button), Button.MouseDownEvent, new RoutedEventHandler(Button_Click));
             SetGrid(10, 10);
             this.pd = pd;
             this.api = api;
-            this.role = role;
-
-
         }
 
         /// <summary>
@@ -97,6 +94,7 @@ namespace Isminuotojai
                 if(result.success)
                 {
                     yourTurn = result.turn;
+                    label_turn.Content = yourTurn ? "Tavo ėjimas" : "Priešininko ėjimas";
                     RemakeGrid(result);
 
                     if(result.status != GameStatus.Ongoing)
@@ -132,18 +130,19 @@ namespace Isminuotojai
                 lock (obj) {
                     this.Dispatcher.Invoke(() =>
                     {
-                    RemakeGrid(result);
-                    if (result.status != GameStatus.Ongoing)
-                    {
-                        if (result.status == GameStatus.Won)
+                        label_turn.Content = yourTurn ? "Tavo ėjimas" : "Priešininko ėjimas";
+                        RemakeGrid(result);
+                        if (result.status != GameStatus.Ongoing)
                         {
-                            //TODO Won game
+                            if (result.status == GameStatus.Won)
+                            {
+                                MessageBox.Show("Jūs laimėjote!");
+                            }
+                            else
+                            {
+                                MessageBox.Show("Jūs pralaimėjote...");
+                            }
                         }
-                        else
-                        {
-                            //TODO Lost game
-                        }
-                    }
                     });
                 }
                 }
@@ -336,10 +335,18 @@ namespace Isminuotojai
         private void btn_play_Click(object sender, RoutedEventArgs e)
         {
             // TODO surasti porininką ir pradėti žaidimo sesiją.
-
+            var f = Task.Run(async () => await api.StartGame());
+            //Starting game
+            role = f.Result;
             left_menu_not_in_game.Visibility = Visibility.Collapsed;
             left_menu_game_started.Visibility = Visibility.Visible;
             mineGrid.Visibility = Visibility.Visible;
+            label_turn.Visibility = Visibility.Visible;
+            label_role.Visibility = Visibility.Visible;
+            label_role.Content = role == MoveSet.MineSweeper ? "Išminuotojas" : "Teroristas";
+
+
+
             if (role == MoveSet.MineSweeper)
             {
                 yourTurn = false;
