@@ -14,10 +14,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Isminuotojai.Resources;
 //TODO add all images
 //TODO finish button click logic
 //TODO add REST api intermove
 //TODO add  modelled classes
+
+
+
 namespace Isminuotojai
 {
     /// <summary>
@@ -25,11 +29,13 @@ namespace Isminuotojai
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        PlayerData pd;
+        public MainWindow(PlayerData pd)
         {
             InitializeComponent();
             EventManager.RegisterClassHandler(typeof(Button), Button.MouseDownEvent, new RoutedEventHandler(Button_Click));
 
+            this.pd = pd;
 
             SetGrid(10, 10);
             
@@ -143,6 +149,47 @@ namespace Isminuotojai
             Grid.SetRow(b, ii);
             Grid.SetColumn(b, jj);
             mineGrid.Children.Add(b);
+        }
+
+        private void btn_play_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO surasti porininką ir pradėti žaidimo sesiją.
+
+            left_menu_not_in_game.Visibility = Visibility.Collapsed;
+            left_menu_game_started.Visibility = Visibility.Visible;
+            mineGrid.Visibility = Visibility.Visible;
+        }
+
+        private void btn_surrend_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Jūs pralaimėjote nes pasidavėte. Rezultatas: 5:4","Jūs pralaimėjote",MessageBoxButton.OK,MessageBoxImage.Stop);
+            left_menu_not_in_game.Visibility = Visibility.Visible;
+            left_menu_game_started.Visibility = Visibility.Hidden;
+            mineGrid.Visibility = Visibility.Hidden;
+        }
+
+        private void btn_another_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btn_end_turn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btn_logout_Click(object sender, RoutedEventArgs e)
+        {
+            // Atsijugnia.
+            Window Start = new Start();
+            Start.Show();
+            this.Close();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Padaryti kažkokius veiksmus jei žaidimas sesijoje ir išeinama iš lango.
+            MessageBox.Show("Test");
         }
 
         /// <summary>

@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Isminuotojai.Resources;
 
 namespace Isminuotojai
 {
@@ -21,6 +22,8 @@ namespace Isminuotojai
     /// </summary>
     public partial class Start : Window
     {
+        bool loginForm = true;
+
         public Start()
         {
             InitializeComponent();
@@ -32,21 +35,50 @@ namespace Isminuotojai
             var d = Task.Run(async () => await gg.GetToken(user));
             d.Wait();
             var c = gg.StartGame();
+            loginForm = true;
+            header1.FontWeight = FontWeights.Bold;
+            header2.FontWeight = FontWeights.Normal;
         }
 
-        private void btn_login_Click(object sender, RoutedEventArgs e)
+        private void header2_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-
+            // REGISTER
+            loginForm = false;
+            header1.FontWeight = FontWeights.Normal;
+            header2.FontWeight = FontWeights.Bold;
         }
 
-        private void btn_register_Click(object sender, RoutedEventArgs e)
+        private void header1_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-
+            loginForm = true;
+            header1.FontWeight = FontWeights.Bold;
+            header2.FontWeight = FontWeights.Normal;
         }
 
-        private void btn_play_Click(object sender, RoutedEventArgs e)
+        private void btn_header_Click(object sender, RoutedEventArgs e)
         {
+            //
+            if (loginForm)
+            {
+                // TODO login
+                PlayerData pd = new PlayerData();
 
+
+                // Perjungiam į žaidimą
+                Window MainWindow = new MainWindow(pd);
+                MainWindow.Show();
+                this.Close();
+            }
+            else
+            {
+                // TODO register
+                PlayerData pd = new PlayerData();
+
+                // Perjungiam į žaidimą
+                Window MainWindow = new MainWindow(pd);
+                MainWindow.Show();
+                this.Close();
+            }
         }
     }
 }
