@@ -203,9 +203,8 @@ namespace Isminuotojai
                         //Width = 24,
                         //Height = 24,
                         Tag = string.Format("{0};{1}", i, j),//for testing mostly
-                        IsEnabled = enableButton,//change to false to disable
-                        
-                        Content = content;                     
+                        IsEnabled = enableButton,//change to false to disable                       
+                        Content = content                     
                     };
                     Grid.SetRow(b, i);//set row
                     Grid.SetColumn(b, j);//set column
