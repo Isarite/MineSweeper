@@ -78,7 +78,7 @@ namespace Isminuotojai
 
                 d = Task.Run(async () => await api.StartGame());
                 // Perjungiam į žaidimą
-                Window MainWindow = new MainWindow(pd);
+                Window MainWindow = new MainWindow(pd, api);
                 MainWindow.Show();
                 this.Close();
             }

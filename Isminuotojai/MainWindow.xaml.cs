@@ -32,16 +32,18 @@ namespace Isminuotojai
         PlayerData pd;
         MoveSet role = MoveSet.MineSetter;
 
+        ApiHandler api;
 
         private const string TntUri = "pack://application:,,,/Isminuotojai;component/Images/TNT.png";
         private const string WrongTntUri = "pack://application:,,,/Isminuotojai;component/Images/WrongTNT.png";
 
-        public MainWindow(PlayerData pd)
+        public MainWindow(PlayerData pd, ApiHandler api)
         {
             InitializeComponent();
             EventManager.RegisterClassHandler(typeof(Button), Button.MouseDownEvent, new RoutedEventHandler(Button_Click));
 
             this.pd = pd;
+            this.api = api;
 
             SetGrid(10, 10);
             
@@ -67,6 +69,11 @@ namespace Isminuotojai
                 string[] vars = message.Split(';');
                 MakeNumberCell(Int32.Parse(vars[0]), Int32.Parse(vars[1]));
             }
+        }
+
+        private void DoMove(Move move)
+        {
+
         }
 
         private void ShowPosition(string message, Button clicked)
