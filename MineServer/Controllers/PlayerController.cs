@@ -101,6 +101,8 @@ namespace MineServer.Controllers
                     player = game.FindPlayer(userId);
                     var result = player.DoMove(move, ref game);
                     result.turn = player.TurnsLeft != 0;
+                    if (!result.turn)
+                        game.AddTurns(userId);
                     return Ok(result);
                 }
             }

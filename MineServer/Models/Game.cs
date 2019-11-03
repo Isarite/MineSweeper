@@ -52,6 +52,14 @@ namespace MineServer.Models
             return false;
         }
 
+        public  void AddTurns(string id)
+        {
+            if (_players[0] != null && !_players[0].Id.Equals(id))
+                _players[0].TurnsLeft = TurnCount;
+            else if (_players[1] != null)
+                _players[1].TurnsLeft = TurnCount;
+        }
+
         public int Turns()
         {
             return TurnCount;
@@ -65,20 +73,20 @@ namespace MineServer.Models
             {
                 result = GameMap.Update(false);
                 //Checks if it's players turn yet
-                if (!(_players[1] == null))
-                    if(_players[1].TurnsLeft == 0)
+                if (!(_players[0] == null))
+                    if(_players[0].TurnsLeft > 0)
                     {
-                        _players[0].TurnsLeft = TurnCount;
+                        //_players[0].TurnsLeft = TurnCount;
                         result.turn = true;
                     }                   
             }else if (_players[1].Id.Equals(id))//Second player is a minesweeper
             {
                 result = GameMap.Update(true);
                 //Checks if it's players turn yet
-                if (!(_players[0] == null))
-                    if (_players[0].TurnsLeft == 0)
+                if (!(_players[1] == null))
+                    if (_players[1].TurnsLeft > 0)
                     {
-                        _players[1].TurnsLeft = TurnCount;
+                        //_players[1].TurnsLeft = TurnCount;
                         result.turn = true;
                     }
             }

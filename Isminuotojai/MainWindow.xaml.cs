@@ -37,10 +37,12 @@ namespace Isminuotojai
 
         ApiHandler api;
 
+        private static readonly Object obj = new Object();
+
         private const string TntUri = "pack://application:,,,/Isminuotojai;component/Images/TNT.png";
         private const string WrongTntUri = "pack://application:,,,/Isminuotojai;component/Images/WrongTNT.png";
         private const string MarkedUri = "pack://application:,,,/Isminuotojai;component/Images/Marked.png";
-
+        Task task;
         public MainWindow(PlayerData pd, ApiHandler api, MoveSet role)
         {
             InitializeComponent();
@@ -111,7 +113,7 @@ namespace Isminuotojai
                     else if(!yourTurn)
                     {
                         Update();
-                        Task.Run(async () => await Updater());
+                        task = Task.Run((Action)Updater);
                     }
                 }
                 else
@@ -127,10 +129,13 @@ namespace Isminuotojai
                 if(result.success)
                 {
                     yourTurn = result.turn;
-                    RemakeGrid(result);
-                    if(result.status != GameStatus.Ongoing)
+                lock (obj) {
+                    this.Dispatcher.Invoke(() =>
                     {
-                        if(result.status == GameStatus.Won)
+                    RemakeGrid(result);
+                    if (result.status != GameStatus.Ongoing)
+                    {
+                        if (result.status == GameStatus.Won)
                         {
                             //TODO Won game
                         }
@@ -139,6 +144,8 @@ namespace Isminuotojai
                             //TODO Lost game
                         }
                     }
+                    });
+                }
                 }
                 else
                 {
@@ -269,8 +276,12 @@ namespace Isminuotojai
                         };                        
                         break;
                         case 'm'://Marked
-                            content = 'm'; 
-                        break;
+                            content = content = new Image
+                            {
+                                Source = new BitmapImage(new Uri(MarkedUri)),//image source path
+                                VerticalAlignment = VerticalAlignment.Center
+                            };
+                            break;
                         default:
                             content = c;
                             enableButton = false;
@@ -333,18 +344,18 @@ namespace Isminuotojai
             {
                 yourTurn = false;
                 Update();
-                Task.Run(async () => await Updater());
+                task = Task.Run((Action)Updater);
+                //task.Wait();
             }
 
         }
 
-        private async Task<bool> Updater()
+        private  void Updater()
         {
             while (!yourTurn)
             {
                 Update();
             }
-            return true;
         }
 
         private void btn_surrend_Click(object sender, RoutedEventArgs e)

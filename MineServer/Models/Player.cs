@@ -65,7 +65,6 @@ namespace MineServer.Models
                     {
                             if (strategy is MarkCell)
                             {
-                                TurnsLeft--;
                                 return strategy.OnActivation(move.X, move.Y, ref CurrentGame);
                             }
                     }
@@ -85,10 +84,12 @@ namespace MineServer.Models
                     {
                             if (strategy is UnsetMine)
                             {
-                                TurnsLeft--;
-                                return strategy.OnActivation(move.X, move.Y, ref CurrentGame);
+                                result = strategy.OnActivation(move.X, move.Y, ref CurrentGame);
+                                if(result.success)
+                                    TurnsLeft++;
+                                return result;
                             }
-                    }
+                        }
                     break;
                 }
             else
