@@ -4,9 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Isminuotojai"
-        xmlns:viewmodels="clr-namespace:Isminuotojai.ViewModels"
-        xmlns:view="clr-namespace:Isminuotojai.Views"
-        
         mc:Ignorable="d"
         Title="Išminuotojai" Height="400" Width="300"
         Background="YellowGreen"
