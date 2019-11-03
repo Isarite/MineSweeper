@@ -282,16 +282,6 @@ namespace Isminuotojai
         {
             // Padaryti kažkokius veiksmus jei žaidimas sesijoje ir išeinama iš lango.
             MessageBox.Show("Test");
-        }
-
-        /// <summary>
-        /// Remakes a grid according to  the result of the update
-        /// </summary>
-        /// <param name="result"></param>
-        private void RemakeGrid(MineResult result)
-        {
-            //TODO Remake grid
-        }
-  
+        }  
     }
 }
