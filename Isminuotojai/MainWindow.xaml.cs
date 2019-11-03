@@ -37,16 +37,16 @@ namespace Isminuotojai
         private const string TntUri = "pack://application:,,,/Isminuotojai;component/Images/TNT.png";
         private const string WrongTntUri = "pack://application:,,,/Isminuotojai;component/Images/WrongTNT.png";
 
-        public MainWindow(PlayerData pd, ApiHandler api)
+        public MainWindow(PlayerData pd, ApiHandler api, MoveSet role)
         {
             InitializeComponent();
             EventManager.RegisterClassHandler(typeof(Button), Button.MouseDownEvent, new RoutedEventHandler(Button_Click));
 
             this.pd = pd;
             this.api = api;
+            this.role = role;
 
             SetGrid(10, 10);
-            
 
         }
 

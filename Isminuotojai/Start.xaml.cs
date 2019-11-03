@@ -78,7 +78,8 @@ namespace Isminuotojai
 
                 d = Task.Run(async () => await api.StartGame());
                 // Perjungiam į žaidimą
-                Window MainWindow = new MainWindow(pd, api);
+                MoveSet role = d.Result;
+                Window MainWindow = new MainWindow(pd, api, role);
                 MainWindow.Show();
                 this.Close();
             }
@@ -103,8 +104,8 @@ namespace Isminuotojai
 
                 // Perjungiam į žaidimą
               //  var c = api.StartGame();
-                Window MainWindow = new MainWindow(pd);
-                MainWindow.Show();
+                // Window MainWindow = new MainWindow(pd, api);
+                // MainWindow.Show();
                 this.Close();
             }
         }
