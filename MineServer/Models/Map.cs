@@ -261,6 +261,7 @@ namespace MineServer.Models
                         else if (cell is ExplodedTnt)
                         {
                             result.map[i, j] = 'e';// Exploded
+                            finished = false;
                             result.status = mineSweeper ? GameStatus.Lost : GameStatus.Won;//status changed to lost or won
                         }else if (cell is Unknown)
                         {

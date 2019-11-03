@@ -120,36 +120,47 @@ namespace Isminuotojai
                 }
         }
 
-        private void Update()
+        private bool Update()
         {
                 var response = Task.Run(async () => await api.Update());
                 MineResult result = response.Result;
                 if(result.success)
                 {
                     yourTurn = result.turn;
+                    if (yourTurn)
+                        return true;
                 lock (obj) {
                     this.Dispatcher.Invoke(() =>
                     {
                         label_turn.Content = yourTurn ? "Tavo ėjimas" : "Priešininko ėjimas";
                         RemakeGrid(result);
-                        if (result.status != GameStatus.Ongoing)
+                    });
+                    if (result.status != GameStatus.Ongoing)
+                    {
+                        if (result.status == GameStatus.Won)
                         {
-                            if (result.status == GameStatus.Won)
+                            this.Dispatcher.Invoke(() =>
                             {
                                 MessageBox.Show("Jūs laimėjote!");
-                            }
-                            else
+                            });
+                        }
+                        else
+                        {
+                            this.Dispatcher.Invoke(() =>
                             {
                                 MessageBox.Show("Jūs pralaimėjote...");
-                            }
+                            });
                         }
-                    });
+                        return true;
+
+                    }
                 }
                 }
                 else
                 {
                     //TODO Error handling
                 }
+            return false;
         }
 
         private void ShowPosition(string message, Button clicked)
@@ -359,9 +370,9 @@ namespace Isminuotojai
 
         private  void Updater()
         {
-            while (!yourTurn)
+            while (!Update())
             {
-                Update();
+                
             }
         }
 

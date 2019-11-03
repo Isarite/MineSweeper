@@ -77,6 +77,7 @@ namespace MineServer.Models
                     if(_players[0].TurnsLeft > 0)
                     {
                         //_players[0].TurnsLeft = TurnCount;
+                        //result = GameMap.Update(false);
                         result.turn = true;
                     }                   
             }else if (_players[1].Id.Equals(id))//Second player is a minesweeper
