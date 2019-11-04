@@ -7,7 +7,7 @@ namespace Isminuotojai.Resources
 {
     public class GameData
     {
-        public int GameId { get; set; }
+        public string GameId { get; set; }
         public MoveSet Role { get; set; }
     }
 }

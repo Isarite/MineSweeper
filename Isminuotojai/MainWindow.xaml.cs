@@ -354,6 +354,7 @@ namespace Isminuotojai
             label_turn.Visibility = Visibility.Visible;
             label_role.Visibility = Visibility.Visible;
             label_role.Content = role == MoveSet.MineSweeper ? "Išminuotojas" : "Teroristas";
+            label_turn.Content = yourTurn ? "Tavo ėjimas" : "Priešininko ėjimas";
 
 
 

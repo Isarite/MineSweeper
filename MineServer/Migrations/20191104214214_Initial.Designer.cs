@@ -10,14 +10,14 @@ using MineServer.Models;
 namespace MineServer.Migrations
 {
     [DbContext(typeof(MineSweeperContext))]
-    [Migration("20191004143058_MyCommand1")]
-    partial class MyCommand1
+    [Migration("20191104214214_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -131,6 +131,52 @@ namespace MineServer.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("MineServer.Models.Cell", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired();
+
+                    b.Property<int?>("MapId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MapId");
+
+                    b.ToTable("Cells");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Cell");
+                });
+
+            modelBuilder.Entity("MineServer.Models.Game", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("GameMapId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameMapId");
+
+                    b.ToTable("Games");
+                });
+
+            modelBuilder.Entity("MineServer.Models.Map", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Maps");
+                });
+
             modelBuilder.Entity("MineServer.Models.Player", b =>
                 {
                     b.Property<string>("Id")
@@ -145,6 +191,8 @@ namespace MineServer.Migrations
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
+
+                    b.Property<int?>("GameId");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -164,12 +212,16 @@ namespace MineServer.Migrations
 
                     b.Property<string>("SecurityStamp");
 
+                    b.Property<int>("TurnsLeft");
+
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GameId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -180,6 +232,106 @@ namespace MineServer.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("MineServer.Models.PlayerStrategy", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired();
+
+                    b.Property<string>("PlayerId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlayerId");
+
+                    b.ToTable("Strategies");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("PlayerStrategy");
+                });
+
+            modelBuilder.Entity("MineServer.Models.ExplodedTnt", b =>
+                {
+                    b.HasBaseType("MineServer.Models.Cell");
+
+
+                    b.ToTable("ExplodedTnt");
+
+                    b.HasDiscriminator().HasValue("ExplodedTnt");
+                });
+
+            modelBuilder.Entity("MineServer.Models.Tnt", b =>
+                {
+                    b.HasBaseType("MineServer.Models.Cell");
+
+
+                    b.ToTable("Tnt");
+
+                    b.HasDiscriminator().HasValue("Tnt");
+                });
+
+            modelBuilder.Entity("MineServer.Models.Unknown", b =>
+                {
+                    b.HasBaseType("MineServer.Models.Cell");
+
+
+                    b.ToTable("Unknown");
+
+                    b.HasDiscriminator().HasValue("Unknown");
+                });
+
+            modelBuilder.Entity("MineServer.Models.WrongTnt", b =>
+                {
+                    b.HasBaseType("MineServer.Models.Cell");
+
+
+                    b.ToTable("WrongTnt");
+
+                    b.HasDiscriminator().HasValue("WrongTnt");
+                });
+
+            modelBuilder.Entity("MineServer.Models.MarkCell", b =>
+                {
+                    b.HasBaseType("MineServer.Models.PlayerStrategy");
+
+
+                    b.ToTable("MarkCell");
+
+                    b.HasDiscriminator().HasValue("MarkCell");
+                });
+
+            modelBuilder.Entity("MineServer.Models.RevealCell", b =>
+                {
+                    b.HasBaseType("MineServer.Models.PlayerStrategy");
+
+
+                    b.ToTable("RevealCell");
+
+                    b.HasDiscriminator().HasValue("RevealCell");
+                });
+
+            modelBuilder.Entity("MineServer.Models.SetMine", b =>
+                {
+                    b.HasBaseType("MineServer.Models.PlayerStrategy");
+
+
+                    b.ToTable("SetMine");
+
+                    b.HasDiscriminator().HasValue("SetMine");
+                });
+
+            modelBuilder.Entity("MineServer.Models.UnsetMine", b =>
+                {
+                    b.HasBaseType("MineServer.Models.PlayerStrategy");
+
+
+                    b.ToTable("UnsetMine");
+
+                    b.HasDiscriminator().HasValue("UnsetMine");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -225,6 +377,34 @@ namespace MineServer.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MineServer.Models.Cell", b =>
+                {
+                    b.HasOne("MineServer.Models.Map")
+                        .WithMany("_cells")
+                        .HasForeignKey("MapId");
+                });
+
+            modelBuilder.Entity("MineServer.Models.Game", b =>
+                {
+                    b.HasOne("MineServer.Models.Map", "GameMap")
+                        .WithMany()
+                        .HasForeignKey("GameMapId");
+                });
+
+            modelBuilder.Entity("MineServer.Models.Player", b =>
+                {
+                    b.HasOne("MineServer.Models.Game")
+                        .WithMany("players")
+                        .HasForeignKey("GameId");
+                });
+
+            modelBuilder.Entity("MineServer.Models.PlayerStrategy", b =>
+                {
+                    b.HasOne("MineServer.Models.Player")
+                        .WithMany("strategies")
+                        .HasForeignKey("PlayerId");
                 });
 #pragma warning restore 612, 618
         }

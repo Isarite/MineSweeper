@@ -3,36 +3,35 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using MineServer.Resources;
 
 namespace MineServer.Models
 {
-    public class Game
+    public class Game : ModelClass
     {
         private const int TurnCount = 10;
         
-        private readonly int _gameId;
-
         private int _count;
 
-        public Map GameMap;
+        public Map GameMap { get; set; }
 
         public bool Started;
 
-        Player[] _players;
+        public List<Player> players { get; set; }
 
-        public Game(int gameId)
+        public Game()
         {
-            this._gameId = gameId;
-            GameMap = new Map(10, 10);
-            _players = new Player[2];
+            GameMap = new Map();
+            players = new List<Player>();
             _count = 0;
         }
 
         public void SetPlayers(Player player1, Player player2)
         {
-            _players[0] = player1;
-            _players[1] = player2;
+            players[0] = player1;
+            players[1] = player2;
         }
 
         public void AddPlayer(Player player)
@@ -41,23 +40,21 @@ namespace MineServer.Models
                 Started = true;
             else
                 player.TurnsLeft = TurnCount;
-            _players[_count] = player;
+            players.Add(player);
             _count++;
         }
 
         public bool Authorize(string id)
         {
-            if (_players[0].Id.Equals(id) || _players[1].Id.Equals(id))
-                return true;
-            return false;
+            return players.Where(w => w.Id.Equals(id)).Any();
         }
 
         public  void AddTurns(string id)
         {
-            if (_players[0] != null && !_players[0].Id.Equals(id))
-                _players[0].TurnsLeft = TurnCount;
-            else if (_players[1] != null)
-                _players[1].TurnsLeft = TurnCount;
+            if (players[0] != null && !players[0].Id.Equals(id))
+                players[0].TurnsLeft = TurnCount;
+            else if (players[1] != null)
+                players[1].TurnsLeft = TurnCount;
         }
 
         public int Turns()
@@ -71,25 +68,25 @@ namespace MineServer.Models
             {
                 success = true
             };
-            if (_players[0].Id.Equals(id))//First player is a minesetter
+            if (players[0].Id.Equals(id))//First player is a minesetter
             {
                 result = GameMap.Update(false);
                 //Checks if it's players turn yet
-                if (!(_players[0] == null))
-                    if(_players[0].TurnsLeft > 0)
+                if (!(players[0] == null))
+                    if(players[0].TurnsLeft > 0)
                     {
-                        //_players[0].TurnsLeft = TurnCount;
+                        //players[0].TurnsLeft = TurnCount;
                         //result = GameMap.Update(false);
                         result.turn = true;
                     }                   
-            }else if (_players[1].Id.Equals(id))//Second player is a minesweeper
+            }else if (players[1].Id.Equals(id))//Second player is a minesweeper
             {
                 result = GameMap.Update(true);
                 //Checks if it's players turn yet
-                if (!(_players[1] == null))
-                    if (_players[1].TurnsLeft > 0)
+                if (!(players[1] == null))
+                    if (players[1].TurnsLeft > 0)
                     {
-                        //_players[1].TurnsLeft = TurnCount;
+                        //players[1].TurnsLeft = TurnCount;
                         result.turn = true;
                     }
             }
@@ -101,10 +98,10 @@ namespace MineServer.Models
 
         public Player FindPlayer(string id)
         {
-            if (_players[0].Id.Equals(id))
-                return _players[0];
-            if (_players[1].Id.Equals(id))
-                return _players[1];
+            if (players[0].Id.Equals(id))
+                return players[0];
+            if (players[1].Id.Equals(id))
+                return players[1];
             return null;
         }
     }

@@ -1,33 +1,30 @@
 
 using MineServer.Resources;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 /**
 * @(#) Map.cs
 */
 namespace MineServer.Models
 {
-	public class Map
-	{
-		private Cell[,] _cells;
-        private readonly CellFactory _factory = new CellFactory();
+	public class Map : ModelClass
+    {
+		public  List<Cell> _cells { get; set; }
+        private readonly Factory _factory = new CellFactory();
         private static readonly Object obj = new Object();
 
-		 public Map(int index1, int index2)
+		 public Map()
         {
-            lock (obj)
-            {
-                _cells = new Cell[index1, index2];
-                for (int i = 0; i < index1; i++)
-                {
-                    for (int j = 0; j < index2; j++)
-                    {
-                        _cells[i, j] = _factory.Create("Empty");
-                    }
-                }
-            }
+            _cells = new List<Cell>();
+            for (int i = 0; i < 10 * 10; i++)
+                _cells.Add(_factory.Create("Unknown"));
         }
 
-         
+        private int Index(int i, int j = 0)
+        {
+            return i * 10 + j;
+        }
          /// <summary>
          /// Reveals a singular cell, and if it is not a bomb, reveals surrounding non Bomb cells
          /// </summary>
@@ -39,11 +36,11 @@ namespace MineServer.Models
             Result result = new Result();
             lock (obj)
             {
-                if (!_cells[index1, index2].marked)
+                if (!_cells[Index(index1,index2)].marked)
                 {
-                    if (_cells[index1, index2] is Tnt)
+                    if (_cells[Index(index1, index2)] is Tnt)
                     {
-                        _cells[index1, index2] = _factory.Create("ExplodedTNT");
+                        _cells[Index(index1, index2)] = _factory.Create("ExplodedTNT");
                     }
                     else
                     {
@@ -69,47 +66,47 @@ namespace MineServer.Models
         /// <param name="j">Coordinate Y</param>
         private void RevealMoreCells(int i, int j)
         {
-            _cells[i, j] = _factory.Create("Revealed");
+            _cells[Index(i, j)] = _factory.Create("Revealed");
             int bombs = CalculateBombs(i, j);
-            _cells[i, j].bombs = bombs;
+            _cells[Index(i, j)].bombs = bombs;
             if (bombs != 0)
                 return;
             if (i > 0)//if there are cells downwards
             {
-                if (!(_cells[i - 1, j] is Revealed))//down
+                if (!(_cells[Index(i-1, j)] is Revealed))//down
                 {
                     RevealMoreCells(i - 1, j);
                 }
-                if ( j > 0 && !(_cells[i - 1, j - 1] is Revealed))//down left
+                if ( j > 0 && !(_cells[Index(i-1, j-1)] is Revealed))//down left
                 {
                     RevealMoreCells(i - 1, j - 1);
                 }
-                if ((j < _cells.GetLength(1)-1) && !(_cells[i - 1, j + 1] is Revealed))//down right
+                if ((j < 10-1) && !(_cells[Index(i-1, j+1)] is Revealed))//down right
                 {
                     RevealMoreCells(i - 1, j + 1);
                 }
             }
-            if (i < _cells.GetLength(0)-1)// if there are cells upwards
+            if (i < 10-1)// if there are cells upwards
             {
-                if (!(_cells[i + 1, j] is Revealed))//up
+                if (!(_cells[Index(i+1, j)] is Revealed))//up
                 {
                     RevealMoreCells(i + 1, j);
                 }
-                if (j > 0 && !(_cells[i + 1, j - 1] is Revealed))//up left
+                if (j > 0 && !(_cells[Index(i+1, j-1)] is Revealed))//up left
                 {
                     RevealMoreCells(i + 1, j - 1);
 
                 }
-                if ((j < _cells.GetLength(1)-1) && !(_cells[i + 1, j + 1] is Revealed))//up right
+                if ((j < 10-1) && !(_cells[Index(i+1, j+1)] is Revealed))//up right
                 {
                     RevealMoreCells(i + 1, j + 1);
                 }
             }
-            if (j > 0 && !(_cells[i, j - 1] is Revealed))// if there are cells left
+            if (j > 0 && !(_cells[Index(i, j-1)] is Revealed))// if there are cells left
             {
                 RevealMoreCells(i, j - 1);
             }
-            if (j < _cells.GetLength(1)-1 && !(_cells[i, j + 1] is Revealed))// if there are cells right
+            if (j < 10-1 && !(_cells[Index(i, j+1)] is Revealed))// if there are cells right
             {
                 RevealMoreCells(i, j + 1);
             }
@@ -117,16 +114,16 @@ namespace MineServer.Models
 
         internal Result Surrender(bool mineSweeper)
         {
-            for(int i = 0; i < _cells.GetLength(0); i++)
+            for(int i = 0; i < 10; i++)
             {
-                for (int j = 0; j < _cells.GetLength(1); j++)
+                for (int j = 0; j < 10; j++)
                 {
                     if (mineSweeper)
                     {
-                        _cells[i, j] = _factory.Create("ExplodedTNT");
-                    }else if(!mineSweeper && _cells[i,j] is Unknown)
+                        _cells[Index(i, j)] = _factory.Create("ExplodedTNT");
+                    }else if(!mineSweeper && _cells[Index(i, j)] is Unknown)
                     {
-                        _cells[i, j] = _factory.Create("Revealed");
+                        _cells[Index(i, j)] = _factory.Create("Revealed");
                     }
                 }
             }
@@ -144,45 +141,45 @@ namespace MineServer.Models
             int bombs = 0;
             if (i > 0)//if there are cells downwards
             {
-                if (_cells[i - 1, j] is Tnt)//down
+                if (_cells[Index(i-1, j)] is Tnt)//down
                 {
                     bombs++;
                 }
-                if (j > 0 && _cells[i - 1, j - 1] is Tnt)//down left
+                if (j > 0 && _cells[Index(i-1, j-1)] is Tnt)//down left
                 {
                     bombs++;
                 }
-                if ( (j < _cells.GetLength(1)-1) && _cells[i - 1, j + 1] is Tnt)//down right
+                if ( (j < 10-1) && _cells[Index(i-1, j+1)] is Tnt)//down right
                 {
                     bombs++;
                 }
             }
-            if(i < _cells.GetLength(0)-1)// if there are cells upwards
+            if(i < 10-1)// if there are cells upwards
             {
-                if (_cells[i + 1, j] is Tnt)//up
+                if (_cells[Index(i+1, j)] is Tnt)//up
                 {
                     bombs++;
                 }
-                if (j > 0 && _cells[i + 1, j - 1] is Tnt)//up left
+                if (j > 0 && _cells[Index(i+1, j-1)] is Tnt)//up left
                 {
                     bombs++;
 
                 }
-                if ((j < _cells.GetLength(1)-1) && _cells[i + 1, j + 1] is Tnt)//up right
+                if ((j < 10-1) && _cells[Index(i+1, j+1)] is Tnt)//up right
                 {
                     bombs++;
                 }
             }
-            if (j > 0 && _cells[i, j - 1] is Tnt)// if there are cells left
+            if (j > 0 && _cells[Index(i, j-1)] is Tnt)// if there are cells left
             {
                 bombs++;
 
             }
-            if (j < (_cells.GetLength(1)-1) && _cells[i, j + 1] is Tnt)// if there are cells right
+            if (j < (10-1) && _cells[Index(i, j+1)] is Tnt)// if there are cells right
             {
                 bombs++;
             }
-            _cells[i, j].bombs = bombs;
+            _cells[Index(i, j)].bombs = bombs;
             return bombs;
         }
 
@@ -192,11 +189,11 @@ namespace MineServer.Models
         /// <param name="index1">Coordinate X</param>
         /// <param name="index2">Coordinate Y</param>
         /// <returns>Map with marked cell</returns>
-        public Result MarkCell(int index1, int index2)
+        public Result MarkCell(int i, int j)
         {
             lock (obj)
             {
-                _cells[index1, index2].marked = !_cells[index1, index2].marked;
+                _cells[Index(i, j)].marked = !_cells[Index(i, j)].marked;
                 return BuildMap(new Result());//Returns new result
             }
         }
@@ -207,13 +204,13 @@ namespace MineServer.Models
         /// <param name="X"></param>
         /// <param name="Y"></param>
         /// <returns></returns>
-        public Result SetMine(int X, int Y)
+        public Result SetMine(int i, int j)
         {
             Result result = new Result();
             lock (obj)
             {
-                if(!(_cells[X, Y] is Tnt))//Check if not already set
-                    _cells[X, Y] = _factory.Create("TNT");
+                if(!(_cells[Index(i, j)] is Tnt))//Check if not already set
+                    _cells[Index(i, j)] = _factory.Create("TNT");
                 else
                 {
                     result.success = false;
@@ -230,16 +227,16 @@ namespace MineServer.Models
         /// <param name="X">Coordinate X</param>
         /// <param name="Y">Coordinate Y</param>
         /// <returns>Updated map if success, failure if cell wasn't a mine</returns>
-        public Result UnsetMine(int X, int Y)
+        public Result UnsetMine(int i, int j)
         {
             Result result = new Result();
             lock (obj)
             {
-                if (_cells[X, Y] is Tnt)//Check if already set
+                if (_cells[Index(i, j)] is Tnt)//Check if already set
                 {
-                    var marked = _cells[X, Y].marked;
-                    _cells[X, Y] = _factory.Create("Unknown");
-                    _cells[X, Y].marked = marked;
+                    var marked = _cells[Index(i, j)].marked;
+                    _cells[Index(i, j)] = _factory.Create("Unknown");
+                    _cells[Index(i, j)].marked = marked;
                 }
                 else
                 {
@@ -266,12 +263,12 @@ namespace MineServer.Models
             bool finished = true;
             lock (obj)
             {
-                result.map = new char[_cells.GetLength(0), _cells.GetLength(1)];
-                for (int i = 0; i < _cells.GetLength(0); i++)
+                result.map = new char[10, 10];
+                for (int i = 0; i < 10; i++)
                 {
-                    for (int j = 0; j < _cells.GetLength(1); j++)
+                    for (int j = 0; j < 10; j++)
                     {
-                        var cell = _cells[i, j];
+                        var cell = _cells[Index(i, j)];
                         if (cell is Tnt)
                             result.map[i, j] = mineSweeper ? 'u' : 't';// unknown or TNT
                         else if (cell is Revealed)

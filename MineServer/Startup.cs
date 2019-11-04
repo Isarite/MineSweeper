@@ -35,7 +35,9 @@ namespace MineServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<MineSweeperContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
+            //services.AddDbContext<MineSweeperContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
+            services.AddDbContext<MineSweeperContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:LocalDb"]));
+
             //string connectionString = Environment.GetEnvironmentVariable("MYSQLCONNSTR_localdb").ToString();
 
             //services.AddDbContext<MineSweeperContext>(options => options.UseSqlServer(connectionString));
@@ -47,7 +49,7 @@ namespace MineServer
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, MineSweeperContext _context)
         {
             if (env.IsDevelopment())
             {
@@ -60,6 +62,8 @@ namespace MineServer
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();
+            _context.Database.EnsureCreated();
+
         }
     }
 }

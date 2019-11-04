@@ -11,10 +11,10 @@ namespace Isminuotojai.Classes
 {
     public class ApiHandler
     {
-        private const string Site = "https://mineserver20191008030835.azurewebsites.net";
-        //private const string Site = "https://localhost:44397";
+        //private const string Site = "https://mineserver20191008030835.azurewebsites.net";
+        private const string Site = "https://localhost:44397";
         private string _token;//Token assigned on login
-        private int _gameId;//Game Id assigned on starting game
+        private string _gameId;//Game Id assigned on starting game
         static readonly WinHttpHandler handler = new WinHttpHandler();
         static HttpClient client = new HttpClient(handler);
         const string apipath = "/api/player/";
