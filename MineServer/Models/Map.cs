@@ -114,7 +114,25 @@ namespace MineServer.Models
                 RevealMoreCells(i, j + 1);
             }
         }
-        
+
+        internal Result Surrender(bool mineSweeper)
+        {
+            for(int i = 0; i < _cells.GetLength(0); i++)
+            {
+                for (int j = 0; j < _cells.GetLength(1); j++)
+                {
+                    if (mineSweeper)
+                    {
+                        _cells[i, j] = _factory.Create("ExplodedTNT");
+                    }else if(!mineSweeper && _cells[i,j] is Unknown)
+                    {
+                        _cells[i, j] = _factory.Create("Revealed");
+                    }
+                }
+            }
+            return BuildMap(new Result(), mineSweeper);
+        }
+
         /// <summary>
         /// finds the number of bombs around cell
         /// </summary>

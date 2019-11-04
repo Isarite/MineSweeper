@@ -12,10 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-//TODO player handling
-//TODO context class
 //TODO Game Controller
-//TODO edit model
 namespace MineServer.Controllers
 {
     [Route("api/player")]
@@ -108,7 +105,29 @@ namespace MineServer.Controllers
             }
             return Unauthorized();
         }
-        
+
+        [Route("[action]/{id}")]
+        [Authorize]
+        [HttpPut]
+        public async Task<IActionResult> Surrender(int id)
+        {
+            var accessToken = Request.Headers["Authorization"];
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Player player = await _userManager.FindByIdAsync(userId);
+            lock (_games)
+            {
+                if (_games.Games1[id].Authorize(userId))
+                {
+                    var game = _games.Games1[id];
+                    player = game.FindPlayer(userId);
+                    var result = player.Surrender(ref game);
+                    result.turn = false;
+                    return Ok(result);
+                }
+            }
+            return Unauthorized();
+        }
+
         /// <summary>
         /// Starts or joins game for player
         /// </summary>
@@ -126,7 +145,8 @@ namespace MineServer.Controllers
             {
                 lock (_games)
                 {
-                    if (_games.Games1.Count == 0 || _games.Games1[_games.Games1.Count - 1].Started)
+                    if ((_games.Games1.Count == 0 || _games.Games1[_games.Games1.Count - 1].Started)//If the last game is full
+                        || _games.Games1[_games.Games1.Count - 1].Authorize(userId))//or If the last game has the same player in it
                     {
                         lock (_games)
                         {
@@ -159,7 +179,7 @@ namespace MineServer.Controllers
             }
         }
         
-        // PUT api/Update/values/5
+        // Get api/Update/values/5
         [Route("[action]/{id}")]
         [HttpGet]
         public async Task<IActionResult> Update(int id)

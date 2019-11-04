@@ -15,11 +15,11 @@ namespace Isminuotojai.Classes
         //private const string Site = "https://localhost:44397";
         private string _token;//Token assigned on login
         private int _gameId;//Game Id assigned on starting game
-        static WinHttpHandler handler = new WinHttpHandler();
+        static readonly WinHttpHandler handler = new WinHttpHandler();
         static HttpClient client = new HttpClient(handler);
-        static string apipath = "/api/player/";
-        static string mediaType = "application/json";
-        private static string requestUri = Site + apipath;
+        const string apipath = "/api/player/";
+        const string mediaType = "application/json";
+        private static readonly string requestUri = Site + apipath;
 
 
 
@@ -98,9 +98,28 @@ namespace Isminuotojai.Classes
             return result;
         }
 
-        public void Surrender()
+        public async Task<MineResult> Surrender()
         {
-            //TODO Surrender
+            MineResult result = new MineResult();
+            var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(""));
+
+            // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
+            var httpContent = new StringContent(stringPayload, Encoding.UTF8, mediaType);
+
+            HttpResponseMessage response = await client.PutAsync(
+                requestUri + "Surrender/" + _gameId, httpContent);
+            try
+            {
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                result = JsonConvert.DeserializeObject<MineResult>(responseBody);
+            }
+            catch
+            {
+                //Catching
+            }
+
+            return result;
         }
 
 
@@ -137,9 +156,6 @@ namespace Isminuotojai.Classes
 
         public async Task<MoveSet> StartGame()
         {
-            //TODO Assign game id
-            //TODO Start game
-            //TODO Recognize role
             HttpResponseMessage response = new HttpResponseMessage();
             var httpContent = new StringContent("", Encoding.UTF8, mediaType);
             try

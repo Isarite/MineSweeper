@@ -26,8 +26,8 @@
                 <RowDefinition Height="16"/>
             </Grid.RowDefinitions>
 
-            <Label Grid.Row="1" Grid.Column="1" FontWeight="Bold" x:Name="header1" MouseLeftButtonUp="header1_MouseDoubleClick">Prisijunkite</Label>
-        <Label Grid.Row="1" Grid.Column="2" x:Name="header2" MouseLeftButtonUp="header2_MouseDoubleClick">Užsiregistruokite</Label>
+            <Label Grid.Row="1" Grid.Column="1" FontWeight="Bold" x:Name="header1" MouseLeftButtonUp="Header1_MouseDoubleClick">Prisijunkite</Label>
+        <Label Grid.Row="1" Grid.Column="2" x:Name="header2" MouseLeftButtonUp="Header2_MouseDoubleClick">Užsiregistruokite</Label>
             
             <Label Grid.Column="1" Grid.Row="2">Vardas</Label>
             <TextBox Margin="5" x:Name="txt_username" Grid.Column="2" Grid.Row="2"></TextBox>
@@ -35,6 +35,6 @@
             <Label Grid.Column="1" Grid.Row="3">Slaptažodis</Label>
             <TextBox Margin="5" x:Name="txt_password" Grid.Column="2" Grid.Row="3"></TextBox>
 
-        <Button Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2" Margin="5" Padding="2" x:Name="btn_header" Click="btn_header_Click">Pirmyn</Button>
+        <Button Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2" Margin="5" Padding="2" x:Name="btn_header" Click="Btn_header_Click">Pirmyn</Button>
     </Grid>
 </Window>

@@ -14,13 +14,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Isminuotojai.Resources;
 using Isminuotojai.Classes;
 //TODO add all images
-//TODO finish button click logic
-//TODO add REST api intermove
-//TODO add  modelled classes
-
+//TODO make actions concurrent
 
 
 namespace Isminuotojai
@@ -65,9 +61,11 @@ namespace Isminuotojai
             if (message == null)
                 return;
             string[] vars = message.Split(';');
-            Move move = new Move();
-            move.X = Int32.Parse(vars[0]);
-            move.Y = Int32.Parse(vars[1]);
+            Move move = new Move
+            {
+                X = Int32.Parse(vars[0]),
+                Y = Int32.Parse(vars[1])
+            };
             MouseButtonEventArgs mouse = (MouseButtonEventArgs)e;
             if (mouse.LeftButton == MouseButtonState.Pressed)
             {//If  left button pressed
@@ -101,11 +99,11 @@ namespace Isminuotojai
                     {
                         if(result.status == GameStatus.Won)
                         {
-                            //TODO Won game
+                                MessageBox.Show("Jūs laimėjote!");
                         }
                         else
                         {
-                            //TODO Lost game
+                                MessageBox.Show("Jūs pralaimėjote...");
                         }
                     }
                     else if(!yourTurn)
@@ -166,10 +164,12 @@ namespace Isminuotojai
         private void ShowPosition(string message, Button clicked)
         {
             Popup codePopup = new Popup();
-            TextBlock popupText = new TextBlock();
-            popupText.Text = message;
-            popupText.Background = Brushes.LightBlue;
-            popupText.Foreground = Brushes.Blue;
+            TextBlock popupText = new TextBlock
+            {
+                Text = message,
+                Background = Brushes.LightBlue,
+                Foreground = Brushes.Blue
+            };
             codePopup.Child = popupText;
 
             codePopup.PlacementTarget = clicked;
@@ -343,9 +343,8 @@ namespace Isminuotojai
             mineGrid.Children.Add(b);
         }
 
-        private void btn_play_Click(object sender, RoutedEventArgs e)
+        private void Btn_play_Click(object sender, RoutedEventArgs e)
         {
-            // TODO surasti porininką ir pradėti žaidimo sesiją.
             var f = Task.Run(async () => await api.StartGame());
             //Starting game
             role = f.Result;
@@ -376,25 +375,28 @@ namespace Isminuotojai
             }
         }
 
-        private void btn_surrend_Click(object sender, RoutedEventArgs e)
+        private void Btn_surrend_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Jūs pralaimėjote nes pasidavėte. Rezultatas: 5:4","Jūs pralaimėjote",MessageBoxButton.OK,MessageBoxImage.Stop);
+            var f = Task.Run(async () => await api.Surrender());
+            MineResult result = f.Result;
+            RemakeGrid(result);
+            MessageBox.Show("Jūs pralaimėjote...");
             left_menu_not_in_game.Visibility = Visibility.Visible;
             left_menu_game_started.Visibility = Visibility.Hidden;
-            mineGrid.Visibility = Visibility.Hidden;
+            //mineGrid.Visibility = Visibility.Hidden;
         }
 
-        private void btn_another_Click(object sender, RoutedEventArgs e)
+        private void Btn_another_Click(object sender, RoutedEventArgs e)
         {
 
         }
 
-        private void btn_end_turn_Click(object sender, RoutedEventArgs e)
+        private void Btn_end_turn_Click(object sender, RoutedEventArgs e)
         {
 
         }
 
-        private void btn_logout_Click(object sender, RoutedEventArgs e)
+        private void Btn_logout_Click(object sender, RoutedEventArgs e)
         {
             // Atsijugnia.
             Window Start = new Start();

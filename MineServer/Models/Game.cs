@@ -11,7 +11,7 @@ namespace MineServer.Models
     {
         private const int TurnCount = 10;
         
-        private int _gameId;
+        private readonly int _gameId;
 
         private int _count;
 
@@ -67,8 +67,10 @@ namespace MineServer.Models
 
         public Result Update(string id)
         {
-            Result result = new Result();
-            result.success = true;
+            Result result = new Result
+            {
+                success = true
+            };
             if (_players[0].Id.Equals(id))//First player is a minesetter
             {
                 result = GameMap.Update(false);
