@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MineServer.Models;
 using MineServer.Resources;
 using System;
@@ -95,27 +96,55 @@ namespace MineServer.Controllers
                 {
                     player = game.FindPlayer(userId);
                     player.strategies = _context.Strategies.Where(s => s.player.Id.Equals(userId)).ToList();
+                    try
+                    {
+                    //foreach (var cell in game.GameMap._cells)
+                    //{
+                    //    _context.Cells.Remove(cell);
+                    //}
+                    game.GameMap = await _context.Maps.Where(g => g.Id == game.Id).FirstOrDefaultAsync();
+                    player.strategies = _context.Strategies.Where(s => s.player.Id.Equals(userId)).ToList();
+                    int? mapId = game.GameMap.Id;
+                    game.GameMap._cells = _context.Cells.Where(c => mapId.Equals(c.map.Id)).OrderBy(d => d.number).ToList();
+                    var cellsgame = game.GameMap._cells.ToList();
+                    for (int i = 0; i < cellsgame.Count; i++)
+                    {
+                        //game.GameMap._cells.Add(cell);
+                        //_context.Cells.Add(cell);
+                        var cell = _context.Cells.Find(cellsgame[i].Id);
+                        _context.Cells.Remove(cell);
+                    }
+                    await _context.SaveChangesAsync();
+                    game.GameMap._cells = cellsgame;
                     var result = player.DoMove(move, ref game);
                     result.turn = player.TurnsLeft != 0;
                     if (!result.turn)
                         game.AddTurns(userId);
-                    foreach(var cell in game.GameMap._cells)
-                    {
-                        var c = new Cell { Id = cell.Id };
-                        _context.Cells.Attach(c);
-                        _context.Cells.Remove(c);
-                    }
-                    var cellsgame = game.GameMap._cells;
-                    game.GameMap._cells = new List<Cell>();
+                    //game.GameMap._cells = new List<Cell>();
 
-                    await _context.SaveChangesAsync();
-                    foreach (var cell in cellsgame)
+                    //await _context.SaveChangesAsync();
+
+                    using (var transaction = _context.Database.BeginTransaction())
                     {
-                        game.GameMap._cells.Add(cell);
-                        _context.Cells.Add(cell);
+                        _context.Database.ExecuteSqlCommand(@"SET IDENTITY_INSERT [dbo].[Cells] ON");
+                        for (int i = 0; i < cellsgame.Count; i++)
+                        {
+                            //game.GameMap._cells.Add(cell);
+                            //_context.Cells.Add(cell);
+                            //game.GameMap._cells[i].Id = new int();
+                            //_context.Cells.Add(game.GameMap._cells[i]);
+                        }
+                        transaction.Commit();
+                        //_context.Database.ExecuteSqlCommand(@"SET IDENTITY_INSERT [dbo].[Cells] OFF");
+                        //transaction.Commit();
                     }
                     await _context.SaveChangesAsync();
                     return Ok(result);
+                }
+                catch (Exception EX)
+                    {
+                        return NotFound(EX);
+                    }
                 }
             return Unauthorized();
         }

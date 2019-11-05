@@ -11,6 +11,7 @@ namespace MineServer.Models
 	public class Map : ModelClass
     {
 		public  List<Cell> _cells { get; set; }
+        //public Game game { get; set; }
         private readonly Factory _factory = new CellFactory();
         private static readonly Object obj = new Object();
 
@@ -18,7 +19,10 @@ namespace MineServer.Models
         {
             _cells = new List<Cell>();
             for (int i = 0; i < 10 * 10; i++)
+            {
                 _cells.Add(_factory.Create("Unknown"));
+                _cells[i].number = i;
+            }
         }
 
         private int Index(int i, int j = 0)
@@ -41,6 +45,7 @@ namespace MineServer.Models
                     if (_cells[Index(index1, index2)] is Tnt)
                     {
                         _cells[Index(index1, index2)] = _factory.Create("ExplodedTNT");
+                        _cells[Index(index1,index2)].number = Index(index1, index2);
                     }
                     else
                     {
@@ -67,6 +72,8 @@ namespace MineServer.Models
         private void RevealMoreCells(int i, int j)
         {
             _cells[Index(i, j)] = _factory.Create("Revealed");
+            _cells[Index(i, j)].number = Index(i, j);
+
             int bombs = CalculateBombs(i, j);
             _cells[Index(i, j)].bombs = bombs;
             if (bombs != 0)
@@ -121,9 +128,14 @@ namespace MineServer.Models
                     if (mineSweeper)
                     {
                         _cells[Index(i, j)] = _factory.Create("ExplodedTNT");
-                    }else if(!mineSweeper && _cells[Index(i, j)] is Unknown)
+                        _cells[Index(i, j)].number = Index(i, j);
+
+                    }
+                    else if(!mineSweeper && _cells[Index(i, j)] is Unknown)
                     {
                         _cells[Index(i, j)] = _factory.Create("Revealed");
+                        _cells[Index(i, j)].number = Index(i, j);
+
                     }
                 }
             }
@@ -206,11 +218,16 @@ namespace MineServer.Models
         /// <returns></returns>
         public Result SetMine(int i, int j)
         {
+            int id;
             Result result = new Result();
             lock (obj)
             {
-                if(!(_cells[Index(i, j)] is Tnt))//Check if not already set
+                if (!(_cells[Index(i, j)] is Tnt))
+                {//Check if not already set
                     _cells[Index(i, j)] = _factory.Create("TNT");
+                    _cells[Index(i, j)].number = Index(i, j);
+
+                }
                 else
                 {
                     result.success = false;
@@ -236,6 +253,7 @@ namespace MineServer.Models
                 {
                     var marked = _cells[Index(i, j)].marked;
                     _cells[Index(i, j)] = _factory.Create("Unknown");
+                    _cells[Index(i, j)].number = Index(i, j);
                     _cells[Index(i, j)].marked = marked;
                 }
                 else
@@ -270,22 +288,36 @@ namespace MineServer.Models
                     {
                         var cell = _cells[Index(i, j)];
                         if (cell is Tnt)
+                        {
                             result.map[i, j] = mineSweeper ? 'u' : 't';// unknown or TNT
+                            _cells[Index(i, j)] = _factory.Create("TNT");
+                            _cells[Index(i, j)].number = Index(i, j);
+                        }
                         else if (cell is Revealed)
+                        {
                             result.map[i, j] = cell.bombs.ToString()[0];// max number is 6
+                            _cells[Index(i, j)] = _factory.Create("Revealed");
+                            _cells[Index(i, j)].number = Index(i, j);
+                        }
                         else if (cell is ExplodedTnt)
                         {
                             result.map[i, j] = 'e';// Exploded
                             finished = false;
                             result.status = mineSweeper ? GameStatus.Lost : GameStatus.Won;//status changed to lost or won
-                        }else if (cell is Unknown)
+                            _cells[Index(i, j)] = _factory.Create("ExplodedTNT");
+                            _cells[Index(i, j)].number = Index(i, j);
+                        }
+                        else if (cell is Unknown)
                         {
                             result.map[i, j] = 'u'; // empty cell
                             finished = false;
+                            _cells[Index(i, j)] = _factory.Create("Unknown");
+                            _cells[Index(i, j)].number = Index(i, j);
                         }
                         if (cell.marked && !(cell is Revealed))
                             result.map[i, j] = 'm'; // empty cell
-
+                        _cells[Index(i, j)].marked = cell.marked;
+                        _cells[Index(i, j)].bombs = cell.bombs;
                     }
                 }
             }

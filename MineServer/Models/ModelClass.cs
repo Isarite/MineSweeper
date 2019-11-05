@@ -9,8 +9,7 @@ namespace MineServer.Models
 {
     public abstract class ModelClass
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
     }
 }

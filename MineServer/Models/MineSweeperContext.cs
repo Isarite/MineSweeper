@@ -37,7 +37,7 @@ namespace MineServer.Models
 
             modelBuilder.Entity<Game>().HasOne(d => d.GameMap);
 
-            //modelBuilder.Entity<Map>().HasMany(d => d._cells).WithOne();
+            modelBuilder.Entity<Map>().HasMany(d => d._cells).WithOne(c => c.map).IsRequired();
 
             modelBuilder.Entity<Cell>().HasKey(d => d.Id);
             modelBuilder.Entity<PlayerStrategy>().HasKey(d => d.Id);
