@@ -13,7 +13,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Isminuotojai.Resources;
 
 namespace Isminuotojai
 {
@@ -43,7 +42,7 @@ namespace Isminuotojai
             header2.FontWeight = FontWeights.Normal;
         }
 
-        private void header2_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void Header2_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             // REGISTER
             loginForm = false;
@@ -51,22 +50,22 @@ namespace Isminuotojai
             header2.FontWeight = FontWeights.Bold;
         }
 
-        private void header1_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void Header1_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             loginForm = true;
             header1.FontWeight = FontWeights.Bold;
             header2.FontWeight = FontWeights.Normal;
         }
 
-        private void btn_header_Click(object sender, RoutedEventArgs e)
+        private void Btn_header_Click(object sender, RoutedEventArgs e)
         {
-            PlayerData pd = new PlayerData();
-            pd.userName = txt_username.Text;
-            pd.password = txt_password.Text;
-
+            PlayerData pd = new PlayerData
+            {
+                userName = txt_username.Text,
+                password = txt_password.Text
+            };
             if (loginForm)
             {
-                // TODO login
                 var d = Task.Run(async () => await api.GetToken(pd));
                 d.Wait();
 
@@ -76,16 +75,12 @@ namespace Isminuotojai
                     return;
                 }
 
-                d = Task.Run(async () => await api.StartGame());
-                // Perjungiam į žaidimą
-                MoveSet role = d.Result;
-                Window MainWindow = new MainWindow(pd, api, role);
+                Window MainWindow = new MainWindow(pd, api);
                 MainWindow.Show();
                 this.Close();
             }
             else
             {
-                // TODO register
                 pd.userName = txt_username.Text;
                 pd.password = txt_password.Text;
                // var response = api.CreatePlayerAsync(pd);
@@ -99,14 +94,16 @@ namespace Isminuotojai
                     MessageBox.Show("Registracija nepavyko! ");
                     return;
                 }
-
-
+                MessageBox.Show("Registracija Sėkminga! ");
+                loginForm = true;
+                header1.FontWeight = FontWeights.Bold;
+                header2.FontWeight = FontWeights.Normal;
 
                 // Perjungiam į žaidimą
-              //  var c = api.StartGame();
+                //  var c = api.StartGame();
                 // Window MainWindow = new MainWindow(pd, api);
                 // MainWindow.Show();
-                this.Close();
+                //this.Close();
             }
         }
     }

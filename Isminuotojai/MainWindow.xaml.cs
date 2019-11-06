@@ -14,12 +14,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Isminuotojai.Resources;
+using Isminuotojai.Classes;
 //TODO add all images
-//TODO finish button click logic
-//TODO add REST api intermove
-//TODO add  modelled classes
-
+//TODO make actions concurrent
 
 
 namespace Isminuotojai
@@ -30,26 +27,25 @@ namespace Isminuotojai
     public partial class MainWindow : Window
     {
         PlayerData pd;
-        MoveSet role = MoveSet.MineSetter;
+        MoveSet role;
 
         bool yourTurn = true;
 
         ApiHandler api;
 
+        private static readonly Object obj = new Object();
+
         private const string TntUri = "pack://application:,,,/Isminuotojai;component/Images/TNT.png";
         private const string WrongTntUri = "pack://application:,,,/Isminuotojai;component/Images/WrongTNT.png";
-
-        public MainWindow(PlayerData pd, ApiHandler api, MoveSet role)
+        private const string MarkedUri = "pack://application:,,,/Isminuotojai;component/Images/Marked.png";
+        Task task;
+        public MainWindow(PlayerData pd, ApiHandler api)
         {
             InitializeComponent();
             EventManager.RegisterClassHandler(typeof(Button), Button.MouseDownEvent, new RoutedEventHandler(Button_Click));
-
+            SetGrid(10, 10);
             this.pd = pd;
             this.api = api;
-            this.role = role;
-
-            SetGrid(10, 10);
-
         }
 
         /// <summary>
@@ -62,10 +58,14 @@ namespace Isminuotojai
             Button clicked = (Button)sender;
 
             string message = (string)clicked.Tag;//gets tag which stores button position "{0};{1}" , e.g "0;1"
+            if (message == null)
+                return;
             string[] vars = message.Split(';');
-            Move move = new Move();
-            move.X = Int32.Parse(vars[0]);
-            move.Y = Int32.Parse(vars[1]);
+            Move move = new Move
+            {
+                X = Int32.Parse(vars[0]),
+                Y = Int32.Parse(vars[1])
+            };
             MouseButtonEventArgs mouse = (MouseButtonEventArgs)e;
             if (mouse.LeftButton == MouseButtonState.Pressed)
             {//If  left button pressed
@@ -92,18 +92,26 @@ namespace Isminuotojai
                 if(result.success)
                 {
                     yourTurn = result.turn;
+                    label_turn.Content = yourTurn ? "Tavo ėjimas" : "Priešininko ėjimas";
                     RemakeGrid(result);
 
                     if(result.status != GameStatus.Ongoing)
                     {
                         if(result.status == GameStatus.Won)
                         {
-                            //TODO Won game
+                                MessageBox.Show("Jūs laimėjote!");
                         }
                         else
                         {
-                            //TODO Lost game
+                                MessageBox.Show("Jūs pralaimėjote...");
                         }
+                        left_menu_not_in_game.Visibility = Visibility.Visible;
+                        left_menu_game_started.Visibility = Visibility.Hidden;
+                }
+                    else if(!yourTurn)
+                    {
+                        Update();
+                        task = Task.Run((Action)Updater);
                     }
                 }
                 else
@@ -112,39 +120,64 @@ namespace Isminuotojai
                 }
         }
 
-        private void Update()
+        private bool Update()
         {
                 var response = Task.Run(async () => await api.Update());
                 MineResult result = response.Result;
                 if(result.success)
                 {
                     yourTurn = result.turn;
-                    RemakeGrid(result);
-                    if(result.status != GameStatus.Ongoing)
+                lock (obj) {
+                    this.Dispatcher.Invoke(() =>
                     {
-                        if(result.status == GameStatus.Won)
+                        label_turn.Content = yourTurn ? "Tavo ėjimas" : "Priešininko ėjimas";
+                        RemakeGrid(result);
+                    });
+                    if (result.status != GameStatus.Ongoing)
+                    {
+                        if (result.status == GameStatus.Won)
                         {
-                            //TODO Won game
+                            this.Dispatcher.Invoke(() =>
+                            {
+                                MessageBox.Show("Jūs laimėjote!");
+                            });
                         }
                         else
                         {
-                            //TODO Lost game
+                            this.Dispatcher.Invoke(() =>
+                            {
+                                MessageBox.Show("Jūs pralaimėjote...");
+                            });
                         }
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            left_menu_not_in_game.Visibility = Visibility.Visible;
+                            left_menu_game_started.Visibility = Visibility.Hidden;
+                        });
+
+                        return true;
+
                     }
+                    if (yourTurn)
+                        return true;
+                }
                 }
                 else
                 {
                     //TODO Error handling
                 }
+            return false;
         }
 
         private void ShowPosition(string message, Button clicked)
         {
             Popup codePopup = new Popup();
-            TextBlock popupText = new TextBlock();
-            popupText.Text = message;
-            popupText.Background = Brushes.LightBlue;
-            popupText.Foreground = Brushes.Blue;
+            TextBlock popupText = new TextBlock
+            {
+                Text = message,
+                Background = Brushes.LightBlue,
+                Foreground = Brushes.Blue
+            };
             codePopup.Child = popupText;
 
             codePopup.PlacementTarget = clicked;
@@ -183,12 +216,12 @@ namespace Isminuotojai
                         //Height = 24,
                         Tag = string.Format("{0};{1}", i, j),
                         IsEnabled = true,//change to false to disable
-                        
+
                         //Content = new Image
                         //{
                         //    Source = new BitmapImage(new Uri("pack://application:,,,/Isminuotojai;component/Images/WrongTNT.png")),//image source path
                         //    VerticalAlignment = VerticalAlignment.Center
-                        //}                        
+                        //}
                     };
                     Grid.SetRow(b, i);
                     Grid.SetColumn(b, j);
@@ -201,10 +234,10 @@ namespace Isminuotojai
         /// <summary>
         /// Remakes the grid
         /// </summary>
-        /// <param name="ii">Size of X</param>
-        /// <param name="jj">Size of Y</param>
-        private void RemakeGrid(int ii, int jj, MineResult result)
+        /// <param name="Result">Status of the game and map</param>
+        private void RemakeGrid(MineResult result)
         {
+            int ii = 10, jj = 10;
             mineGrid.ColumnDefinitions.Clear();
             mineGrid.RowDefinitions.Clear();
             mineGrid.Children.Clear();
@@ -222,30 +255,30 @@ namespace Isminuotojai
                 mineGrid.ColumnDefinitions.Add(col);
                 mineGrid.RowDefinitions.Add(row);
             }
-            for (int i = 0; i < jj; i++)//set buttons in cells
+            for (int i = 0; i < ii; i++)//set buttons in cells
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < jj; j++)
                 {
                     //Button b = new Button();                  
                     //b.Content = string.Format("Row: {0}, Column: {1}", i, j);
-                    Object content = new Object();
-                    bool enableButton = !(result.turn || (result.status != GameStatus.Ongoing)) ;//disables button if not player's turn, or the game is over
+                    Object content = "";
+                    bool enableButton = (result.turn && (result.status == GameStatus.Ongoing)) ;//disables button if not player's turn, or the game is over
 
                     char c = result.map[i,j];
                     switch (c)
                     {
-                        case 'u':
+                        case 'u'://Unknown
                         break;
-                        case 't':
+                        case 't'://Bomb
                         content = new Image
                         {
                            Source = new BitmapImage(new Uri(TntUri)),//image source path
                            VerticalAlignment = VerticalAlignment.Center
                         };
-                        if(role == MoveSet.mineSweeper)
+                        if(role == MoveSet.MineSweeper)
                             enableButton = false;
                         break;
-                        case 'w':
+                        case 'w'://Wrong
                         content = new Image
                         {
                            Source = new BitmapImage(new Uri(WrongTntUri)),//image source path
@@ -253,17 +286,24 @@ namespace Isminuotojai
                         };
                         enableButton = false;
                         break;
-                        case 'e':
+                        case 'e'://Exploded
                         content = new Image
                         {
                            Source = new BitmapImage(new Uri(TntUri)),//image source path
-                           Background = Brushes.Red,
                            VerticalAlignment = VerticalAlignment.Center
                         };                        
                         break;
+                        case 'm'://Marked
+                            content = content = new Image
+                            {
+                                Source = new BitmapImage(new Uri(MarkedUri)),//image source path
+                                VerticalAlignment = VerticalAlignment.Center
+                            };
+                            break;
                         default:
                             content = c;
                             enableButton = false;
+                            break;
                     }
                     
 
@@ -273,7 +313,7 @@ namespace Isminuotojai
                         //Height = 24,
                         Tag = string.Format("{0};{1}", i, j),//for testing mostly
                         IsEnabled = enableButton,//change to false to disable                       
-                        Content = content                     
+                        Content = content,
                     };
                     Grid.SetRow(b, i);//set row
                     Grid.SetColumn(b, j);//set column
@@ -311,34 +351,61 @@ namespace Isminuotojai
             mineGrid.Children.Add(b);
         }
 
-        private void btn_play_Click(object sender, RoutedEventArgs e)
+        private void Btn_play_Click(object sender, RoutedEventArgs e)
         {
-            // TODO surasti porininką ir pradėti žaidimo sesiją.
-
+            var f = Task.Run(async () => await api.StartGame());
+            //Starting game
+            role = f.Result;
             left_menu_not_in_game.Visibility = Visibility.Collapsed;
             left_menu_game_started.Visibility = Visibility.Visible;
             mineGrid.Visibility = Visibility.Visible;
+            label_turn.Visibility = Visibility.Visible;
+            label_role.Visibility = Visibility.Visible;
+            label_role.Content = role == MoveSet.MineSweeper ? "Išminuotojas" : "Teroristas";
+            label_turn.Content = yourTurn ? "Tavo ėjimas" : "Priešininko ėjimas";
+
+
+
+            if (role == MoveSet.MineSweeper)
+            {
+                yourTurn = false;
+                Update();
+                task = Task.Run((Action)Updater);
+                //task.Wait();
+            }
+
         }
 
-        private void btn_surrend_Click(object sender, RoutedEventArgs e)
+        private  void Updater()
         {
-            MessageBox.Show("Jūs pralaimėjote nes pasidavėte. Rezultatas: 5:4","Jūs pralaimėjote",MessageBoxButton.OK,MessageBoxImage.Stop);
+            while (!Update())
+            {
+                
+            }
+        }
+
+        private void Btn_surrend_Click(object sender, RoutedEventArgs e)
+        {
+            var f = Task.Run(async () => await api.Surrender());
+            MineResult result = f.Result;
+            RemakeGrid(result);
+            MessageBox.Show("Jūs pralaimėjote...");
             left_menu_not_in_game.Visibility = Visibility.Visible;
             left_menu_game_started.Visibility = Visibility.Hidden;
-            mineGrid.Visibility = Visibility.Hidden;
+            //mineGrid.Visibility = Visibility.Hidden;
         }
 
-        private void btn_another_Click(object sender, RoutedEventArgs e)
+        private void Btn_another_Click(object sender, RoutedEventArgs e)
         {
 
         }
 
-        private void btn_end_turn_Click(object sender, RoutedEventArgs e)
+        private void Btn_end_turn_Click(object sender, RoutedEventArgs e)
         {
 
         }
 
-        private void btn_logout_Click(object sender, RoutedEventArgs e)
+        private void Btn_logout_Click(object sender, RoutedEventArgs e)
         {
             // Atsijugnia.
             Window Start = new Start();

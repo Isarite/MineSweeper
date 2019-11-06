@@ -6,16 +6,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MineServer.Models;
 using MineServer.Resources;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-//TODO player handling
-//TODO context class
 //TODO Game Controller
-//TODO edit model
 namespace MineServer.Controllers
 {
     [Route("api/player")]
@@ -25,7 +24,6 @@ namespace MineServer.Controllers
         private readonly UserManager<Player> _userManager;
         private readonly MineSweeperContext _context;
         private readonly Games _games;
-        private int gameCount;
 
         public PlayerController(MineSweeperContext context, UserManager<Player> userManager, SignInManager<Player> signInManager, Games games)
         {
@@ -33,63 +31,9 @@ namespace MineServer.Controllers
             _context = context;
             _userManager = userManager;
             _signManager = signInManager;
-            //this.games = new List<Game>();
             _games = games;
-            gameCount = 0;
         }
-		
-		//List<Game> games;
-        
 
-        //public void GetInstance(  )
-        //{
-        //          _context.Users.Add(new Player { UserName = test, pass})
-        //}
-
-
-        //      public PlayerController(PlayerContext context)
-        //      {
-        //          _context = context;
-
-        //          if (_context.Players.Count() == 0)
-        //          {
-        //              // Create a new Player if collection is empty,
-        //              // which means you can't delete all Players.
-        //              for (int i = 0; i < 10; i++)
-        //              {
-        //                  Qty++;
-        //                  Player p = new Player { Name = "Player-" + Qty, Score = 0, PosX = 0, PosY = 0 };
-        //                  _context.Players.Add(p);
-        //              }
-
-        //              _context.SaveChanges();
-        //          }
-        //      }
-
-
-        //      // GET api/player
-        //      [HttpGet]
-        //      public MoveResult<IEnumerable<Player>> GetAll()
-        //      {
-        //          return _context.Players.ToList();
-        //      }
-
-        //      private void CreateUser(string name, string password)
-        //      {
-
-        //      }
-
-        //      // GET api/player/5
-        //      [HttpGet("{id}", Name = "GetPlayer")]
-        //      public MoveResult<Player> GetById(long id)
-        //      {
-        //          Player p = _context.Players.Find(id);
-        //          if (p == null)
-        //          {
-        //              return NotFound("player not found");
-        //          }
-        //          return p;
-        //      }
 
         // POST api/player
         [HttpPost]
@@ -97,7 +41,6 @@ namespace MineServer.Controllers
         public async Task<IActionResult> Create([FromBody] PlayerData player)
         {
 
-            //return Ok(); //"created - ok"; 
             string name = player.userName;
             string pass = player.password;
 
@@ -133,33 +76,111 @@ namespace MineServer.Controllers
         [HttpGet]
         public async Task<IActionResult> ConfirmToken()
         {
-            var accessToken = Request.Headers["Authorization"];
             string userId =  User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return UnprocessableEntity((await _userManager.FindByIdAsync(userId)).UserName);
         }
 
-        [Route("[action]")]
+        [Route("[action]/{id}")]
         [Authorize]
-        [HttpPost("{id}")]
+        [HttpPost]
         public async Task<IActionResult> DoMove([FromBody] Move move, int id)
         {
-            var accessToken = Request.Headers["Authorization"];
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             Player player = await _userManager.FindByIdAsync(userId);
-            lock (_games)
-            {
-                if (_games.Games1[id].Authorize(userId))
+
+                var game = _context.Games.Find(id);
+                if (game.Authorize(userId))
                 {
-                    var game = _games.Games1[id];
+                    try
+                    {
+                    player.strategies = _context.Strategies.Where(s => s.player.Id.Equals(userId)).ToList();
                     player = game.FindPlayer(userId);
+                    game.GameMap = await _context.Maps.Where(g => g.Id == id).FirstOrDefaultAsync();
+                    int? gameId = game.Id;
+                    game.players = await _context.Users.Where(p => gameId.Equals(p.currentGame.Id)).ToListAsync();
+                    player.strategies = _context.Strategies.Where(s => s.player.Id.Equals(userId)).ToList();
+                    int? mapId = game.GameMap.Id;
+                    game.GameMap._cells = _context.Cells.Where(c => mapId.Equals(c.map.Id)).OrderBy(d => d.number).ToList();
+                    var cellsgame = game.GameMap._cells.ToList();
+                    for (int i = 0; i < cellsgame.Count; i++)
+                    {
+                        //game.GameMap._cells.Add(cell);
+                        //_context.Cells.Add(cell);
+                        var cell = _context.Cells.Find(cellsgame[i].Id);
+                        _context.Cells.Remove(cell);
+                    }
+                    await _context.SaveChangesAsync();
+                    game.GameMap._cells = cellsgame;
                     var result = player.DoMove(move, ref game);
                     result.turn = player.TurnsLeft != 0;
+                    if (!result.turn)
+                    {
+                        var player2 = game.players.Where(p => !p.Id.Equals(userId)).FirstOrDefault();
+                        if(player2!=null)
+                            game.AddTurns(player2.Id);
+                    }
+                    var list = game.GameMap._cells.Select(x => x.Id).ToList();
+                    await _context.SaveChangesAsync();
                     return Ok(result);
+                    }
+                    catch (Exception EX)
+                    {
+                        return NotFound(EX);
+                    }
                 }
-            }
             return Unauthorized();
         }
-        
+
+        [Route("[action]/{id}")]
+        [Authorize]
+        [HttpPut]
+        public async Task<IActionResult> Surrender(int id)
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Player player = await _userManager.FindByIdAsync(userId);
+            var game = _context.Games.Find(id);
+
+                if (game.Authorize(userId))
+                {
+                    //Get Map
+                    game.GameMap = await _context.Maps.Where(g => g.Id == id).FirstOrDefaultAsync();
+                    int? gameId = game.Id;
+
+                    game.players = await _context.Users.Where(p => gameId.Equals(p.currentGame.Id)).ToListAsync();
+
+                //Get Player Strategies
+                    player.strategies = _context.Strategies.Where(s => s.player.Id.Equals(userId)).ToList();
+                    //Get Cells ordered by number
+                    int? mapId = game.GameMap.Id;
+                    game.GameMap._cells = _context.Cells.Where(c => mapId.Equals(c.map.Id)).OrderBy(d => d.number).ToList();
+                    //Copy cells to temporary list 
+                    var cellsgame = game.GameMap._cells.ToList();
+                    //Delete cells from db
+                    for (int i = 0; i < cellsgame.Count; i++)
+                    {
+                        var cell = _context.Cells.Find(cellsgame[i].Id);
+                        _context.Cells.Remove(cell);
+                    }
+                    //Save changes
+                    await _context.SaveChangesAsync();
+                    //Put pack cells into list
+                    game.GameMap._cells = cellsgame;
+                    
+                    //Get player
+                    player = game.FindPlayer(userId);
+                    //Surrender
+                    var result = player.Surrender(ref game);
+
+                    await _context.SaveChangesAsync();
+                    
+                    //Return
+                    result.turn = false;
+                    return Ok(result);
+                }
+                
+                return Unauthorized();
+        }
+
         /// <summary>
         /// Starts or joins game for player
         /// </summary>
@@ -169,67 +190,81 @@ namespace MineServer.Controllers
         [HttpPost]
         public async Task<IActionResult> StartGame()//[FromBody] Move move
         {
-            var accessToken = Request.Headers["Authorization"];
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            MoveSet role;
             var player = await _userManager.FindByIdAsync(userId);
             try
             {
-                lock (_games)
-                {
-                    if (_games.Games1.Count == 0 || _games.Games1[_games.Games1.Count - 1].Started)
-                    {
-                        lock (_games)
-                        {
-                            //games.Add(new Game(gameCount++));
-                            _games.Games1.Add(new Game(gameCount++));
-                            _games.Games1[_games.Games1.Count - 1].AddPlayer(player);
-                            player.AddMoves(MoveSet.MineSetter);
-                            role = MoveSet.MineSetter;
-                            player.TurnsLeft = _games.Games1[_games.Games1.Count - 1].Turns();
-                        }
 
+                    if ((!_context.Games.Any() || _context.Games.LastOrDefault().Started)//If the last game is full
+                        || _context.Games.LastOrDefault().Authorize(userId))//or If the last game has the same player in it
+                    {
+
+                            //games.Add(new Game(gameCount++));
+                            var game = new Game();
+
+                            await _context.Cells.AddRangeAsync(game.GameMap._cells);
+                            game.AddPlayer(player);
+                            await _context.Maps.AddAsync(game.GameMap);
+                            await _context.Cells.AddRangeAsync(game.GameMap._cells);
+                            await _context.Games.AddAsync(game);
+                            player.AddMoves(MoveSet.MineSetter);
+                            await _context.Strategies.AddRangeAsync(player.strategies);
+                            player.role = MoveSet.MineSetter;
+                            player.TurnsLeft = 10;
+                        
                     }
                     else
                     {
-                        _games.Games1[_games.Games1.Count - 1].AddPlayer(player);
+                        _context.Games.LastOrDefault().AddPlayer(player);
                         player.AddMoves(MoveSet.MineSweeper);
-                        role = MoveSet.MineSweeper;
+                        player.role = MoveSet.MineSweeper;
                         player.TurnsLeft = 0;
                     }
-                }
+                    _context.SaveChanges();
+
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 return NotFound(exception);
             }
-            lock (_games)
-            {
-               // player.CurrentGame = _games.Games1[_games.Games1.Count - 1];
-                return Ok(new GameData { GameId = _games.Games1.Count - 1, Role = role });//returns gameid and player role
-            }
+
+            return Ok(new GameData { GameId = (int)_context.Games.LastOrDefault().Id, Role = player.role });//returns game id
+                                                                                                     //and player role            
         }
         
-        // PUT api/Update/values/5
-        [Route("[action]")]
-        [HttpPut("{id}")]
+        // Get api/Update/values/5
+        [Route("[action]/{id}")]
+        [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
-            var accessToken = Request.Headers["Authorization"];
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             Player player = await _userManager.FindByIdAsync(userId);
-            lock (_games)
-            {
-                if (_games.Games1[id].Authorize(userId))
+            lock (_context) {
+                var game = _context.Games.Find(id);
+                if (game.Authorize(userId))
                 {
-                    var result = _games.Games1[id].Update(userId);
-                    result.turn = _games.Games1[id].FindPlayer(userId).TurnsLeft != 0;
-                    //if (result.status != GameStatus.Ongoing)
-                    //    player.CurrentGame = null;
-                    return Ok();
+                    //Get Map
+                    game.GameMap =  _context.Maps.Where(g => g.Id == id).FirstOrDefault();
+                    //Get Player Strategies
+                    int? gameId = game.Id;
+
+                    game.players =  _context.Users.Where(p => gameId.Equals(p.currentGame.Id)).ToList();
+                    player.strategies = _context.Strategies.Where(s => s.player.Id.Equals(userId)).ToList();
+                    //Get Cells ordered by number
+                    int? mapId = game.GameMap.Id;
+                    game.GameMap._cells = _context.Cells.Where(c => mapId.Equals(c.map.Id)).OrderBy(d => d.number).ToList();
+
+                    //Get Update
+                    var result = game.Update(userId);
+                    //Save any changes
+                     _context.SaveChanges();
+
+                    //Set turns
+                    result.turn = player.TurnsLeft != 0;
+
+                    return Ok(result);
                 }
             }
-
             return Unauthorized();
         }
     }

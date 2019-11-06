@@ -11,15 +11,15 @@ namespace Isminuotojai.Classes
 {
     public class ApiHandler
     {
-        //private const string Site = "https://mineserver20191008030835.azurewebsites.net";
-        private const string Site = "https://localhost:44397";
+        private const string Site = "https://mineserver20191008030835.azurewebsites.net";
+        //private const string Site = "https://localhost:44397";
         private string _token;//Token assigned on login
-        private int _gameId;//Game Id assigned on starting game
-        static WinHttpHandler handler = new WinHttpHandler();
+        private string _gameId;//Game Id assigned on starting game
+        static readonly WinHttpHandler handler = new WinHttpHandler();
         static HttpClient client = new HttpClient(handler);
-        static string apipath = "/api/player/";
-        static string mediaType = "application/json";
-        private static string requestUri = Site + apipath;
+        const string apipath = "/api/player/";
+        const string mediaType = "application/json";
+        private static readonly string requestUri = Site + apipath;
 
 
 
@@ -49,7 +49,7 @@ namespace Isminuotojai.Classes
             return response.StatusCode.Equals(HttpStatusCode.OK);
         }
 
-        public static async Task<MineResult> DoMove(Move move)
+        public async Task<MineResult> DoMove(Move move)
         {
             MineResult result = new MineResult();
             var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(move));
@@ -58,7 +58,7 @@ namespace Isminuotojai.Classes
             var httpContent = new StringContent(stringPayload, Encoding.UTF8, mediaType);
 
             HttpResponseMessage response = await client.PostAsync(
-                requestUri, httpContent);
+                requestUri + "DoMove/" + _gameId, httpContent);
             try
             {
                 response.EnsureSuccessStatusCode();
@@ -74,7 +74,31 @@ namespace Isminuotojai.Classes
         }
 
 
-        public static async Task<MineResult> Update()
+        public async Task<MineResult> Update()
+        {
+            MineResult result = new MineResult();
+            var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(""));
+
+            // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
+            var httpContent = new StringContent(stringPayload, Encoding.UTF8, mediaType);
+
+            HttpResponseMessage response = await client.GetAsync(
+                requestUri + "Update/" + _gameId);
+            try
+            {
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                result = JsonConvert.DeserializeObject<MineResult>(responseBody);
+            }
+            catch
+            {
+                //Catching
+            }
+
+            return result;
+        }
+
+        public async Task<MineResult> Surrender()
         {
             MineResult result = new MineResult();
             var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(""));
@@ -83,7 +107,7 @@ namespace Isminuotojai.Classes
             var httpContent = new StringContent(stringPayload, Encoding.UTF8, mediaType);
 
             HttpResponseMessage response = await client.PutAsync(
-                requestUri + "Update/" + _gameId, httpContent);
+                requestUri + "Surrender/" + _gameId, httpContent);
             try
             {
                 response.EnsureSuccessStatusCode();
@@ -96,11 +120,6 @@ namespace Isminuotojai.Classes
             }
 
             return result;
-        }
-
-        public void Surrender()
-        {
-            //TODO Surrender
         }
 
 
@@ -137,9 +156,6 @@ namespace Isminuotojai.Classes
 
         public async Task<MoveSet> StartGame()
         {
-            //TODO Assign game id
-            //TODO Start game
-            //TODO Recognize role
             HttpResponseMessage response = new HttpResponseMessage();
             var httpContent = new StringContent("", Encoding.UTF8, mediaType);
             try
