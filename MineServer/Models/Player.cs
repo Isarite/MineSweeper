@@ -18,8 +18,13 @@ namespace MineServer.Models
         //public int CurrentGame;
         public int TurnsLeft { get; set; }
 
-
-        List<PlayerStrategy> strategies = new List<PlayerStrategy>();
+        public Game currentGame { get; set; }
+        public List<PlayerStrategy> strategies { get; set; }
+        public MoveSet role { get; set; }
+        public Player()
+        {
+            new List<PlayerStrategy>();
+        }
 
         /// <summary>
         /// Adds a moveSet according to the player role
@@ -27,6 +32,8 @@ namespace MineServer.Models
         /// <param name="move"></param>
         public void AddMoves(MoveSet move)
         {
+            if (strategies == null)
+                strategies = new List<PlayerStrategy>();
             switch (move)
             {
                 case MoveSet.MineSetter:

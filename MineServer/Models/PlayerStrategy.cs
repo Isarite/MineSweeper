@@ -6,9 +6,10 @@ using MineServer.Resources;
 */
 namespace MineServer.Models
 {
-	public abstract class PlayerStrategy
-	{
-		public abstract Result OnActivation(int x, int y, ref Game game);
+	public abstract class PlayerStrategy : ModelClass
+    {
+        public Player player { get; set; }
+        public abstract Result OnActivation(int x, int y, ref Game game);
 		
 	}
 	

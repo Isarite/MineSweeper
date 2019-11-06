@@ -105,7 +105,9 @@ namespace Isminuotojai
                         {
                                 MessageBox.Show("Jūs pralaimėjote...");
                         }
-                    }
+                        left_menu_not_in_game.Visibility = Visibility.Visible;
+                        left_menu_game_started.Visibility = Visibility.Hidden;
+                }
                     else if(!yourTurn)
                     {
                         Update();
@@ -125,8 +127,6 @@ namespace Isminuotojai
                 if(result.success)
                 {
                     yourTurn = result.turn;
-                    if (yourTurn)
-                        return true;
                 lock (obj) {
                     this.Dispatcher.Invoke(() =>
                     {
@@ -149,9 +149,17 @@ namespace Isminuotojai
                                 MessageBox.Show("Jūs pralaimėjote...");
                             });
                         }
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            left_menu_not_in_game.Visibility = Visibility.Visible;
+                            left_menu_game_started.Visibility = Visibility.Hidden;
+                        });
+
                         return true;
 
                     }
+                    if (yourTurn)
+                        return true;
                 }
                 }
                 else
@@ -354,6 +362,7 @@ namespace Isminuotojai
             label_turn.Visibility = Visibility.Visible;
             label_role.Visibility = Visibility.Visible;
             label_role.Content = role == MoveSet.MineSweeper ? "Išminuotojas" : "Teroristas";
+            label_turn.Content = yourTurn ? "Tavo ėjimas" : "Priešininko ėjimas";
 
 
 
