@@ -1,32 +1,28 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\vytmik2\\Documents\\minesweeper\\MineServer\\MineServer.csproj": {}
+    "/home/isarite/SoftwareProjects/MineSweeper/MineServer/MineServer.csproj": {}
   },
   "projects": {
-    "C:\\Users\\vytmik2\\Documents\\minesweeper\\MineServer\\MineServer.csproj": {
+    "/home/isarite/SoftwareProjects/MineSweeper/MineServer/MineServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\vytmik2\\Documents\\minesweeper\\MineServer\\MineServer.csproj",
+        "projectUniqueName": "/home/isarite/SoftwareProjects/MineSweeper/MineServer/MineServer.csproj",
         "projectName": "MineServer",
-        "projectPath": "C:\\Users\\vytmik2\\Documents\\minesweeper\\MineServer\\MineServer.csproj",
-        "packagesPath": "C:\\Users\\vytmik2\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\vytmik2\\Documents\\minesweeper\\MineServer\\obj\\",
+        "projectPath": "/home/isarite/SoftwareProjects/MineSweeper/MineServer/MineServer.csproj",
+        "packagesPath": "/home/isarite/.nuget/packages/",
+        "outputPath": "/home/isarite/SoftwareProjects/MineSweeper/MineServer/obj/",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "/usr/share/dotnet/sdk/NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\vytmik2\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "/home/isarite/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp2.1"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -49,10 +45,14 @@
               "version": "[2.1.1, )",
               "autoReferenced": true
             },
+            "Microsoft.AspNetCore.Mvc.Core": {
+              "target": "Package",
+              "version": "[2.2.5, )"
+            },
             "Microsoft.AspNetCore.Razor.Design": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[2.1.2, )"
+              "version": "[2.1.1, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
@@ -78,8 +78,7 @@
             "net48"
           ],
           "assetTargetFallback": true,
-          "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
+          "warn": true
         }
       }
     }

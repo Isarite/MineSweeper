@@ -23,15 +23,13 @@ namespace MineServer.Controllers
         private readonly SignInManager<Player> _signManager;
         private readonly UserManager<Player> _userManager;
         private readonly MineSweeperContext _context;
-        private readonly Games _games;
 
-        public PlayerController(MineSweeperContext context, UserManager<Player> userManager, SignInManager<Player> signInManager, Games games)
+        public PlayerController(MineSweeperContext context, UserManager<Player> userManager, SignInManager<Player> signInManager)
         {
             context.Database.EnsureCreated();
             _context = context;
             _userManager = userManager;
             _signManager = signInManager;
-            _games = games;
         }
 
 
