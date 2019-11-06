@@ -275,6 +275,50 @@ namespace MineServer.Models
         /// <returns></returns>
         private Result BuildMap(Result result, bool mineSweeper = true)
         {
+            for(int i = 0; i < _cells.Count; i++)
+            {
+                var cell = _cells[i];
+                if (_cells[i] is Tnt)
+                {
+                    //TODO instead of buildmap do rebuild map function, and then rebuild map
+                    //TODO or instead of rebuilding the whole map, just change the new ones, delete the ones with the same index
+                    _cells[i] = _factory.Create("TNT");
+                    _cells[i].number = i;
+                }
+                else if (_cells[i] is Revealed)
+                {
+                    _cells[i] = _factory.Create("Revealed");
+                    _cells[i].number = i;
+                    _cells[i].bombs = CalculateBombs(i/10, i%10);
+                }
+                else if (_cells[i] is ExplodedTnt)
+                {
+                    _cells[i] = _factory.Create("ExplodedTNT");
+                    _cells[i].number = i;
+                }
+                else if (_cells[i] is Unknown)
+                {
+                    _cells[i] = _factory.Create("Unknown");
+                    _cells[i].number = i;
+                }
+                else
+                {
+                    _cells[i] = _factory.Create("Unknown");
+                    _cells[i].number = i;
+                }
+                _cells[i].marked = cell.marked;
+            }
+            return GetMapStatus(result, mineSweeper);
+        }
+
+        /// <summary>
+        /// Only gets the status of the map
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="mineSweeper"></param>
+        /// <returns></returns>
+        private Result GetMapStatus(Result result, bool mineSweeper = true)
+        {
             //The default game status is 0 aka Ongoing
             //result.status = GameStatus.Ongoing;
             result.success = true;
@@ -289,30 +333,24 @@ namespace MineServer.Models
                         var cell = _cells[Index(i, j)];
                         if (cell is Tnt)
                         {
+                            //TODO instead of buildmap do rebuild map function, and then rebuild map
+                            //TODO or instead of rebuilding the whole map, just change the new ones, delete the ones with the same index
                             result.map[i, j] = mineSweeper ? 'u' : 't';// unknown or TNT
-                            _cells[Index(i, j)] = _factory.Create("TNT");
-                            _cells[Index(i, j)].number = Index(i, j);
                         }
                         else if (cell is Revealed)
                         {
                             result.map[i, j] = cell.bombs.ToString()[0];// max number is 6
-                            _cells[Index(i, j)] = _factory.Create("Revealed");
-                            _cells[Index(i, j)].number = Index(i, j);
                         }
                         else if (cell is ExplodedTnt)
                         {
                             result.map[i, j] = 'e';// Exploded
                             finished = false;
                             result.status = mineSweeper ? GameStatus.Lost : GameStatus.Won;//status changed to lost or won
-                            _cells[Index(i, j)] = _factory.Create("ExplodedTNT");
-                            _cells[Index(i, j)].number = Index(i, j);
                         }
                         else if (cell is Unknown)
                         {
                             result.map[i, j] = 'u'; // empty cell
                             finished = false;
-                            _cells[Index(i, j)] = _factory.Create("Unknown");
-                            _cells[Index(i, j)].number = Index(i, j);
                         }
                         if (cell.marked && !(cell is Revealed))
                             result.map[i, j] = 'm'; // empty cell
@@ -329,7 +367,7 @@ namespace MineServer.Models
 
         public Result Update(bool mineSweeper)
         {
-            return BuildMap(new Result());
+            return GetMapStatus(new Result(), mineSweeper);
         }
     }
 	

@@ -23,6 +23,8 @@ namespace MineServer.Models
             modelBuilder.Entity<Tnt>().HasBaseType<Cell>();
             modelBuilder.Entity<ExplodedTnt>().HasBaseType<Cell>();
             modelBuilder.Entity<WrongTnt>().HasBaseType<Cell>();
+            modelBuilder.Entity<Revealed>().HasBaseType<Cell>();
+
 
             modelBuilder.Entity<SetMine>().HasBaseType<PlayerStrategy>();
             modelBuilder.Entity<UnsetMine>().HasBaseType<PlayerStrategy>();
@@ -32,7 +34,7 @@ namespace MineServer.Models
 
             modelBuilder.Entity<Player>().HasMany(u => u.strategies).WithOne(s => s.player);
 
-            modelBuilder.Entity<Game>().HasMany(g => g.players).WithOne();
+            modelBuilder.Entity<Game>().HasMany(g => g.players).WithOne(p => p.currentGame);
 
 
             modelBuilder.Entity<Game>().HasOne(d => d.GameMap);

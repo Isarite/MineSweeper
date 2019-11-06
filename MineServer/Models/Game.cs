@@ -11,7 +11,7 @@ namespace MineServer.Models
 {
     public class Game : ModelClass
     {
-        private const int TurnCount = 10;
+        private const int TurnCount = 3;
         
         private int _count;
 
@@ -36,11 +36,17 @@ namespace MineServer.Models
 
         public void AddPlayer(Player player)
         {
-            if (_count > 0)
-                Started = true;
-            else
-                player.TurnsLeft = TurnCount;
             players.Add(player);
+            if (_count > 0)
+            {
+                Started = true;
+                player.role = MoveSet.MineSweeper;
+            }
+            else
+            {
+                player.TurnsLeft = 10;
+                player.role = MoveSet.MineSetter;
+            }
             _count++;
         }
 
@@ -51,10 +57,9 @@ namespace MineServer.Models
 
         public  void AddTurns(string id)
         {
-            if (players[0] != null && !players[0].Id.Equals(id))
-                players[0].TurnsLeft = TurnCount;
-            else if (players[1] != null)
-                players[1].TurnsLeft = TurnCount;
+            var player = players.Where(w => w.Id.Equals(id)).First();
+            if(player != null)
+                player.TurnsLeft = TurnCount;
         }
 
         public int Turns()
@@ -70,7 +75,8 @@ namespace MineServer.Models
             };
             if (players[0].Id.Equals(id))//First player is a minesetter
             {
-                result = GameMap.Update(false);
+                bool mineSweeper = players[0].role.Equals(MoveSet.MineSweeper);
+                result = GameMap.Update(mineSweeper);
                 //Checks if it's players turn yet
                 if (!(players[0] == null))
                     if(players[0].TurnsLeft > 0)
@@ -81,8 +87,8 @@ namespace MineServer.Models
                     }                   
             }else if (players[1].Id.Equals(id))//Second player is a minesweeper
             {
-                result = GameMap.Update(true);
-                //Checks if it's players turn yet
+                bool mineSweeper = players[1].role.Equals(MoveSet.MineSweeper);
+                result = GameMap.Update(mineSweeper);//Checks if it's players turn yet
                 if (!(players[1] == null))
                     if (players[1].TurnsLeft > 0)
                     {

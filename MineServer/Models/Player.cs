@@ -18,9 +18,9 @@ namespace MineServer.Models
         //public int CurrentGame;
         public int TurnsLeft { get; set; }
 
-
+        public Game currentGame { get; set; }
         public List<PlayerStrategy> strategies { get; set; }
-
+        public MoveSet role { get; set; }
         public Player()
         {
             new List<PlayerStrategy>();

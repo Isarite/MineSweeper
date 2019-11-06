@@ -91,11 +91,13 @@ namespace MineServer.Controllers
                 var game = _context.Games.Find(id);
                 if (game.Authorize(userId))
                 {
-                    player = game.FindPlayer(userId);
-                    player.strategies = _context.Strategies.Where(s => s.player.Id.Equals(userId)).ToList();
                     try
-                    {  
-                        game.GameMap = await _context.Maps.Where(g => g.Id == id).FirstOrDefaultAsync();
+                    {
+                    player.strategies = _context.Strategies.Where(s => s.player.Id.Equals(userId)).ToList();
+                    player = game.FindPlayer(userId);
+                    game.GameMap = await _context.Maps.Where(g => g.Id == id).FirstOrDefaultAsync();
+                    int? gameId = game.Id;
+                    game.players = await _context.Users.Where(p => gameId.Equals(p.currentGame.Id)).ToListAsync();
                     player.strategies = _context.Strategies.Where(s => s.player.Id.Equals(userId)).ToList();
                     int? mapId = game.GameMap.Id;
                     game.GameMap._cells = _context.Cells.Where(c => mapId.Equals(c.map.Id)).OrderBy(d => d.number).ToList();
@@ -112,8 +114,12 @@ namespace MineServer.Controllers
                     var result = player.DoMove(move, ref game);
                     result.turn = player.TurnsLeft != 0;
                     if (!result.turn)
-                        game.AddTurns(userId);
-
+                    {
+                        var player2 = game.players.Where(p => !p.Id.Equals(userId)).FirstOrDefault();
+                        if(player2!=null)
+                            game.AddTurns(player2.Id);
+                    }
+                    var list = game.GameMap._cells.Select(x => x.Id).ToList();
                     await _context.SaveChangesAsync();
                     return Ok(result);
                     }
@@ -138,7 +144,11 @@ namespace MineServer.Controllers
                 {
                     //Get Map
                     game.GameMap = await _context.Maps.Where(g => g.Id == id).FirstOrDefaultAsync();
-                    //Get Player Strategies
+                    int? gameId = game.Id;
+
+                    game.players = await _context.Users.Where(p => gameId.Equals(p.currentGame.Id)).ToListAsync();
+
+                //Get Player Strategies
                     player.strategies = _context.Strategies.Where(s => s.player.Id.Equals(userId)).ToList();
                     //Get Cells ordered by number
                     int? mapId = game.GameMap.Id;
@@ -181,7 +191,6 @@ namespace MineServer.Controllers
         public async Task<IActionResult> StartGame()//[FromBody] Move move
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            MoveSet role;
             var player = await _userManager.FindByIdAsync(userId);
             try
             {
@@ -192,6 +201,7 @@ namespace MineServer.Controllers
 
                             //games.Add(new Game(gameCount++));
                             var game = new Game();
+
                             await _context.Cells.AddRangeAsync(game.GameMap._cells);
                             game.AddPlayer(player);
                             await _context.Maps.AddAsync(game.GameMap);
@@ -199,15 +209,15 @@ namespace MineServer.Controllers
                             await _context.Games.AddAsync(game);
                             player.AddMoves(MoveSet.MineSetter);
                             await _context.Strategies.AddRangeAsync(player.strategies);
-                            role = MoveSet.MineSetter;
-                            player.TurnsLeft = game.Turns();
+                            player.role = MoveSet.MineSetter;
+                            player.TurnsLeft = 10;
                         
                     }
                     else
                     {
                         _context.Games.LastOrDefault().AddPlayer(player);
                         player.AddMoves(MoveSet.MineSweeper);
-                        role = MoveSet.MineSweeper;
+                        player.role = MoveSet.MineSweeper;
                         player.TurnsLeft = 0;
                     }
                     _context.SaveChanges();
@@ -218,7 +228,7 @@ namespace MineServer.Controllers
                 return NotFound(exception);
             }
 
-            return Ok(new GameData { GameId = (int)_context.Games.LastOrDefault().Id, Role = role });//returns game id
+            return Ok(new GameData { GameId = (int)_context.Games.LastOrDefault().Id, Role = player.role });//returns game id
                                                                                                      //and player role            
         }
         
@@ -229,26 +239,31 @@ namespace MineServer.Controllers
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             Player player = await _userManager.FindByIdAsync(userId);
-            var game = _context.Games.Find(id);
-            if (game.Authorize(userId))
-            {
-                //Get Map
-                game.GameMap = await _context.Maps.Where(g => g.Id == id).FirstOrDefaultAsync();
-                //Get Player Strategies
-                player.strategies = _context.Strategies.Where(s => s.player.Id.Equals(userId)).ToList();
-                //Get Cells ordered by number
-                int? mapId = game.GameMap.Id;
-                game.GameMap._cells = _context.Cells.Where(c => mapId.Equals(c.map.Id)).OrderBy(d => d.number).ToList();
-                    
-                //Get Update
-                var result = game.Update(userId);
-                //Save any changes
-                await _context.SaveChangesAsync();
+            lock (_context) {
+                var game = _context.Games.Find(id);
+                if (game.Authorize(userId))
+                {
+                    //Get Map
+                    game.GameMap =  _context.Maps.Where(g => g.Id == id).FirstOrDefault();
+                    //Get Player Strategies
+                    int? gameId = game.Id;
 
-                //Set turns
-                result.turn = player.TurnsLeft != 0;
-                
-                return Ok(result);
+                    game.players =  _context.Users.Where(p => gameId.Equals(p.currentGame.Id)).ToList();
+                    player.strategies = _context.Strategies.Where(s => s.player.Id.Equals(userId)).ToList();
+                    //Get Cells ordered by number
+                    int? mapId = game.GameMap.Id;
+                    game.GameMap._cells = _context.Cells.Where(c => mapId.Equals(c.map.Id)).OrderBy(d => d.number).ToList();
+
+                    //Get Update
+                    var result = game.Update(userId);
+                    //Save any changes
+                     _context.SaveChanges();
+
+                    //Set turns
+                    result.turn = player.TurnsLeft != 0;
+
+                    return Ok(result);
+                }
             }
             return Unauthorized();
         }
