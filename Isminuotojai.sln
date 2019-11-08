@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Isminuotojai", "Isminuotoja
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineServer", "MineServer\MineServer.csproj", "{33167796-1065-485C-957C-93A3A9578601}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControllerTests", "ControllerTests\ControllerTests.csproj", "{83BD809E-7875-4B8A-BE3B-0E4B7EBB9F1D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NunitTests", "NunitTests\NunitTests.csproj", "{5397E123-41E4-4FEF-8E03-4B8BEE297564}"
 EndProject
 Global
@@ -25,10 +23,6 @@ Global
 		{33167796-1065-485C-957C-93A3A9578601}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33167796-1065-485C-957C-93A3A9578601}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33167796-1065-485C-957C-93A3A9578601}.Release|Any CPU.Build.0 = Release|Any CPU
-		{83BD809E-7875-4B8A-BE3B-0E4B7EBB9F1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{83BD809E-7875-4B8A-BE3B-0E4B7EBB9F1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{83BD809E-7875-4B8A-BE3B-0E4B7EBB9F1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{83BD809E-7875-4B8A-BE3B-0E4B7EBB9F1D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5397E123-41E4-4FEF-8E03-4B8BEE297564}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5397E123-41E4-4FEF-8E03-4B8BEE297564}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5397E123-41E4-4FEF-8E03-4B8BEE297564}.Release|Any CPU.ActiveCfg = Release|Any CPU
