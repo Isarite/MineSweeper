@@ -203,6 +203,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\GameUI.cs" />
+    <Compile Include="Classes\ILogin.cs" />
+    <Compile Include="Classes\LoginAdapter.cs" />
+    <Compile Include="Classes\LoginUI.cs" />
     <Compile Include="Resources\GameData.cs" />
     <Compile Include="Resources\GameStatus.cs" />
     <Compile Include="Resources\MineResult.cs" />

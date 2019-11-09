@@ -4,7 +4,7 @@
 
 namespace MineServer.Models
 {
-	public class Cell:ModelClass
+	public abstract class Cell:ModelClass
 	{
         public bool marked { get; set; }
         public int bombs { get; set; }

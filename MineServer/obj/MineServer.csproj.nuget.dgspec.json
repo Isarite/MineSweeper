@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "/home/isarite/SoftwareProjects/MineSweeper/MineServer/MineServer.csproj": {}
+    "/home/user/Programming/MineSweeper/MineServer/MineServer.csproj": {}
   },
   "projects": {
-    "/home/isarite/SoftwareProjects/MineSweeper/MineServer/MineServer.csproj": {
+    "/home/user/Programming/MineSweeper/MineServer/MineServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/isarite/SoftwareProjects/MineSweeper/MineServer/MineServer.csproj",
+        "projectUniqueName": "/home/user/Programming/MineSweeper/MineServer/MineServer.csproj",
         "projectName": "MineServer",
-        "projectPath": "/home/isarite/SoftwareProjects/MineSweeper/MineServer/MineServer.csproj",
-        "packagesPath": "/home/isarite/.nuget/packages/",
-        "outputPath": "/home/isarite/SoftwareProjects/MineSweeper/MineServer/obj/",
+        "projectPath": "/home/user/Programming/MineSweeper/MineServer/MineServer.csproj",
+        "packagesPath": "/home/user/.nuget/packages/",
+        "outputPath": "/home/user/Programming/MineSweeper/MineServer/obj/",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "/usr/share/dotnet/sdk/NuGetFallbackFolder"
+          "/home/user/.dotnet/sdk/NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "/home/isarite/.config/NuGet/NuGet.Config"
+          "/home/user/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp2.1"
@@ -44,10 +44,6 @@
               "target": "Package",
               "version": "[2.1.1, )",
               "autoReferenced": true
-            },
-            "Microsoft.AspNetCore.Mvc.Core": {
-              "target": "Package",
-              "version": "[2.2.5, )"
             },
             "Microsoft.AspNetCore.Razor.Design": {
               "suppressParent": "All",

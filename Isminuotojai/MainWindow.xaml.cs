@@ -87,7 +87,7 @@ namespace Isminuotojai
         /// <param name="move">move to do</param>
         private void DoMove(Move move)
         {
-                var response = Task.Run(async () => await api.DoMove(move));
+                var response = Task.Run(async () => await api.DoMoveAsync(move));
                 MineResult result = response.Result;
                 if(result.success)
                 {
@@ -122,7 +122,7 @@ namespace Isminuotojai
 
         private bool Update()
         {
-                var response = Task.Run(async () => await api.Update());
+                var response = Task.Run(async () => await api.UpdateAsync());
                 MineResult result = response.Result;
                 if(result.success)
                 {
@@ -353,7 +353,7 @@ namespace Isminuotojai
 
         private void Btn_play_Click(object sender, RoutedEventArgs e)
         {
-            var f = Task.Run(async () => await api.StartGame());
+            var f = Task.Run(async () => await api.StartGameAsync());
             //Starting game
             role = f.Result;
             left_menu_not_in_game.Visibility = Visibility.Collapsed;
@@ -386,7 +386,7 @@ namespace Isminuotojai
 
         private void Btn_surrend_Click(object sender, RoutedEventArgs e)
         {
-            var f = Task.Run(async () => await api.Surrender());
+            var f = Task.Run(async () => await api.SurrenderAsync());
             MineResult result = f.Result;
             RemakeGrid(result);
             MessageBox.Show("Jūs pralaimėjote...");

@@ -6,6 +6,9 @@
     "projectPath": "/home/user/Programming/MineSweeper/MineServer/MineServer.csproj",
     "outputPath": "/home/user/Programming/MineSweeper/MineServer/obj/",
     "projectStyle": "PackageReference",
+    "fallbackFolders": [
+      "/home/user/.dotnet/sdk/NuGetFallbackFolder"
+    ],
     "originalTargetFrameworks": [
       "netcoreapp2.1"
     ],

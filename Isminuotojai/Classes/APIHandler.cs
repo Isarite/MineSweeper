@@ -20,6 +20,23 @@ namespace Isminuotojai.Classes
         const string apipath = "/api/player/";
         const string mediaType = "application/json";
         private static readonly string requestUri = Site + apipath;
+        
+        private static readonly Lazy<ApiHandler>
+            _instance =
+                new Lazy<ApiHandler>
+                    (() => new Singleton());
+        
+        public static ApiHandler Instance
+        {
+            get {
+                return _instance.Value;
+            }
+        }
+        
+        private ApiHandler()
+        {
+            
+        }
 
 
 
@@ -49,7 +66,7 @@ namespace Isminuotojai.Classes
             return response.StatusCode.Equals(HttpStatusCode.OK);
         }
 
-        public async Task<MineResult> DoMove(Move move)
+        public async Task<MineResult> DoMoveAsync(Move move)
         {
             MineResult result = new MineResult();
             var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(move));
@@ -74,7 +91,7 @@ namespace Isminuotojai.Classes
         }
 
 
-        public async Task<MineResult> Update()
+        public async Task<MineResult> UpdateAsync()
         {
             MineResult result = new MineResult();
             var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(""));
@@ -98,7 +115,7 @@ namespace Isminuotojai.Classes
             return result;
         }
 
-        public async Task<MineResult> Surrender()
+        public async Task<MineResult> SurrenderAsync()
         {
             MineResult result = new MineResult();
             var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(""));
@@ -123,7 +140,7 @@ namespace Isminuotojai.Classes
         }
 
 
-        public async Task<bool> GetToken(PlayerData player)
+        public async Task<bool> GetTokenAsync(PlayerData player)
         {
             var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(player));
 
@@ -154,7 +171,7 @@ namespace Isminuotojai.Classes
             return response.StatusCode.Equals(HttpStatusCode.OK);
         }
 
-        public async Task<MoveSet> StartGame()
+        public async Task<MoveSet> StartGameAsync()
         {
             HttpResponseMessage response = new HttpResponseMessage();
             var httpContent = new StringContent("", Encoding.UTF8, mediaType);

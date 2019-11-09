@@ -66,7 +66,7 @@ namespace Isminuotojai
             };
             if (loginForm)
             {
-                var d = Task.Run(async () => await api.GetToken(pd));
+                var d = Task.Run(async () => await api.GetTokenAsync(pd));
                 d.Wait();
 
                 if(!d.Result)
