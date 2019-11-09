@@ -23,15 +23,13 @@ namespace MineServer.Controllers
         private readonly SignInManager<Player> _signManager;
         private readonly UserManager<Player> _userManager;
         private readonly MineSweeperContext _context;
-        private readonly Games _games;
 
-        public PlayerController(MineSweeperContext context, UserManager<Player> userManager, SignInManager<Player> signInManager, Games games)
+        public PlayerController(MineSweeperContext context, UserManager<Player> userManager, SignInManager<Player> signInManager)
         {
             context.Database.EnsureCreated();
             _context = context;
             _userManager = userManager;
             _signManager = signInManager;
-            _games = games;
         }
 
 
@@ -57,7 +55,7 @@ namespace MineServer.Controllers
             return Ok();
         }
 
-        [HttpGet]
+        [HttpPut]
         public async Task<IActionResult> GetToken([FromBody] PlayerData player)
         {
             var user = await _userManager.FindByNameAsync(player.userName);
@@ -69,15 +67,6 @@ namespace MineServer.Controllers
                 return Ok(token);
             }
             return UnprocessableEntity();
-        }
-
-        [Route("[action]")]
-        [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> ConfirmToken()
-        {
-            string userId =  User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            return UnprocessableEntity((await _userManager.FindByIdAsync(userId)).UserName);
         }
 
         [Route("[action]/{id}")]
@@ -125,7 +114,7 @@ namespace MineServer.Controllers
                     }
                     catch (Exception EX)
                     {
-                        return NotFound(EX);
+                        return NotFound(EX.Message + "DoMove");
                     }
                 }
             return Unauthorized();
@@ -225,7 +214,7 @@ namespace MineServer.Controllers
             }
             catch (Exception exception)
             {
-                return NotFound(exception);
+                return NotFound(exception.Message + exception.StackTrace + "StartGame");
             }
 
             return Ok(new GameData { GameId = (int)_context.Games.LastOrDefault().Id, Role = player.role });//returns game id

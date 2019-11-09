@@ -131,7 +131,7 @@ namespace Isminuotojai.Classes
             //var httpContent = new StringContent(stringPayload, Encoding.UTF8, mediaType);
             var request = new HttpRequestMessage
             {
-                Method = HttpMethod.Get,
+                Method = HttpMethod.Put,
                 RequestUri = new Uri(requestUri),
                 Content = new StringContent(stringPayload, Encoding.UTF8, mediaType),
             };

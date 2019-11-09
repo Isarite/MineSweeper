@@ -12533,19 +12533,23 @@
     ]
   },
   "packageFolders": {
-    "/home/user/.nuget/packages/": {}
+    "/home/isarite/.nuget/packages/": {},
+    "/usr/share/dotnet/sdk/NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/user/Programming/MineSweeper/MineServer/MineServer.csproj",
+      "projectUniqueName": "/home/isarite/SoftwareProjects/MineSweeper/MineServer/MineServer.csproj",
       "projectName": "MineServer",
-      "projectPath": "/home/user/Programming/MineSweeper/MineServer/MineServer.csproj",
-      "packagesPath": "/home/user/.nuget/packages/",
-      "outputPath": "/home/user/Programming/MineSweeper/MineServer/obj/",
+      "projectPath": "/home/isarite/SoftwareProjects/MineSweeper/MineServer/MineServer.csproj",
+      "packagesPath": "/home/isarite/.nuget/packages/",
+      "outputPath": "/home/isarite/SoftwareProjects/MineSweeper/MineServer/obj/",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "/usr/share/dotnet/sdk/NuGetFallbackFolder"
+      ],
       "configFilePaths": [
-        "/home/user/.config/NuGet/NuGet.Config"
+        "/home/isarite/.config/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.1"
