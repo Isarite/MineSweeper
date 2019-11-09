@@ -1,14 +1,11 @@
 ﻿{
   "version": "1.0.0",
   "restore": {
-    "projectUniqueName": "/home/isarite/SoftwareProjects/MineSweeper/MineServer/MineServer.csproj",
+    "projectUniqueName": "/home/user/Programming/MineSweeper/MineServer/MineServer.csproj",
     "projectName": "MineServer",
-    "projectPath": "/home/isarite/SoftwareProjects/MineSweeper/MineServer/MineServer.csproj",
-    "outputPath": "/home/isarite/SoftwareProjects/MineSweeper/MineServer/obj/",
+    "projectPath": "/home/user/Programming/MineSweeper/MineServer/MineServer.csproj",
+    "outputPath": "/home/user/Programming/MineSweeper/MineServer/obj/",
     "projectStyle": "PackageReference",
-    "fallbackFolders": [
-      "/usr/share/dotnet/sdk/NuGetFallbackFolder"
-    ],
     "originalTargetFrameworks": [
       "netcoreapp2.1"
     ],
@@ -38,7 +35,7 @@
         "Microsoft.AspNetCore.Razor.Design": {
           "suppressParent": "All",
           "target": "Package",
-          "version": "[2.1.2, )"
+          "version": "[2.1.1, )"
         },
         "Microsoft.EntityFrameworkCore.SqlServer": {
           "target": "Package",
@@ -56,12 +53,7 @@
         }
       },
       "imports": [
-        "net461",
-        "net462",
-        "net47",
-        "net471",
-        "net472",
-        "net48"
+        "net461"
       ],
       "assetTargetFallback": true,
       "warn": true
