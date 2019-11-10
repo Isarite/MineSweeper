@@ -1,8 +1,10 @@
 using Isminuotojai.Resources;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace Isminuotojai.Classes
 {
-    public class LoginUI
+    public class LoginUI:ILogin
     {
         private bool _loginForm;
         private TextBox _username;
@@ -12,7 +14,7 @@ namespace Isminuotojai.Classes
         
         public LoginUI(TextBox username, TextBox password, Label loginLabel , Label registerLabel)
         {
-            loginForm = true;
+            _loginForm = true;
             _username = username;
             _password = password;
             _login = loginLabel;
@@ -21,31 +23,60 @@ namespace Isminuotojai.Classes
         
         public void SetLoginScreen()
         {
-            loginForm = true;
-            header1.FontWeight = FontWeights.Bold;
-            header2.FontWeight = FontWeights.Normal;
+            _loginForm = true;
+            _login.FontWeight = FontWeights.Bold;
+            _register.FontWeight = FontWeights.Normal;
         }
 
         public void SetRegisterScreen()
         {
-            loginForm = false;
-            header1.FontWeight = FontWeights.Normal;
-            header2.FontWeight = FontWeights.Bold;
+            _loginForm = false;
+            _login.FontWeight = FontWeights.Normal;
+            _register.FontWeight = FontWeights.Bold;
         }
 
         public PlayerData GetUserData()
         {
             //TODO set player data
-            PlayerData pd = new PlayerData{userName = _username.Text, password = _password};
+            PlayerData pd = new PlayerData{userName = _username.Text, password = _password.Text};
             return pd;
         }
 
         public bool OpenGameWindow()
         {
-            Window MainWindow = new MainWindow(pd, api);
+            Window MainWindow = new MainWindow(GetUserData());
             MainWindow.Show();
             return true;
         }
-        
+
+        public void ShowMessage(string message)
+        {
+            MessageBox.Show(message);
+        }
+
+        public virtual bool Login()
+        {
+            if (_username.Text.Length>0 && _password.Text.Length>0)
+            {
+                OpenGameWindow();
+                ShowMessage("Prisijungimas sëkmingas! ");
+                return true;
+            }
+            ShowMessage("Prisijungimas nepavyko! ");
+            return false;
+        }
+
+        public virtual bool Register()
+        {
+            if (_username.Text.Length > 0 && _password.Text.Length > 0)
+            {
+                SetLoginScreen();
+                ShowMessage("Registracija sëkminga! ");
+                return true;
+            }
+            ShowMessage("Registracija nepavyko! ");
+            return false;
+        }
+
     }
 }

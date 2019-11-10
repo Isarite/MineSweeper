@@ -9,10 +9,10 @@ using Newtonsoft.Json;
 
 namespace Isminuotojai.Classes
 {
-    public class ApiHandler
+    public class ApiHandler:IAPI
     {
-        private const string Site = "https://mineserver20191008030835.azurewebsites.net";
-        //private const string Site = "https://localhost:44397";
+        //private const string Site = "https://mineserver20191008030835.azurewebsites.net";
+        private const string Site = "https://localhost:44397";
         private string _token;//Token assigned on login
         private string _gameId;//Game Id assigned on starting game
         static readonly WinHttpHandler handler = new WinHttpHandler();
@@ -24,7 +24,7 @@ namespace Isminuotojai.Classes
         private static readonly Lazy<ApiHandler>
             _instance =
                 new Lazy<ApiHandler>
-                    (() => new Singleton());
+                    (() => new ApiHandler());
         
         public static ApiHandler Instance
         {

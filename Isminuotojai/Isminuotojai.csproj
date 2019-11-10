@@ -204,9 +204,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Classes\GameUI.cs" />
+    <Compile Include="Classes\IAPI.cs" />
+    <Compile Include="Classes\IGameEngine.cs" />
     <Compile Include="Classes\ILogin.cs" />
     <Compile Include="Classes\LoginAdapter.cs" />
     <Compile Include="Classes\LoginUI.cs" />
+    <Compile Include="Classes\OnlineGameAdapter.cs" />
     <Compile Include="Resources\GameData.cs" />
     <Compile Include="Resources\GameStatus.cs" />
     <Compile Include="Resources\MineResult.cs" />
@@ -276,6 +279,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Marked.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\ExplodedTNT.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

@@ -1,35 +1,43 @@
 using Isminuotojai.Resources;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace Isminuotojai.Classes
 {
-    public class LoginAdapter: LoginUI, ILogin
+    public class LoginAdapter: LoginUI
     {
-        public LoginAdapter(TextBox username, TextBox password, Label loginLabel, Label registerLabel) : base(username, password, button, loginLabel, registerLabel)
+        public LoginAdapter(TextBox username, TextBox password, Label loginLabel, Label registerLabel) : base(username, password, loginLabel, registerLabel)
         {
         }
 
-        public void Register()
+        public override bool  Register()
         {
-            PlayerData pd = GetRegisterData();
-            var result = ApiHandler.Instance.CreatePlayerAsync(pd).Result;
-            if(result)
-                MessageBox.Show("Registracija nepavyko! ");
-            else
+            PlayerData pd = GetUserData();
+            var result = Task.Run(async () => await ApiHandler.Instance.CreatePlayerAsync(pd)).Result;
+            if (result)
+            {
                 SetLoginScreen();
+                ShowMessage("Registracija sėkminga! ");
+                return true;
+            }
+            else
+                ShowMessage("Registracija nepavyko! ");
+            return false;
         }
 
-        public void Login()
+        public override bool Login()
         {
-            PlayerData pd = GetLoginData();
-            var result = ApiHandler.Instance.GetTokenAsync(pd).Wait.Result;
+            PlayerData pd = GetUserData();
+            var result = Task.Run(async () => await ApiHandler.Instance.GetTokenAsync(pd)).Result;
             if (result)
             {
                 OpenGameWindow();
-                MessageBox.Show("Prisijungimas sėkmingas! ");
+                ShowMessage("Prisijungimas sėkmingas! ");
+                return true;
             }
-            else
-                MessageBox.Show("Prisijungimas nepavyko! ");
-            
+            ShowMessage("Prisijungimas nepavyko! ");
+            return false;
         }
     }
 }

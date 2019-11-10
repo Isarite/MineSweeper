@@ -48,7 +48,7 @@ namespace MineServer
             else
             {
                 services.AddDbContext<MineSweeperContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                    options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
                 //services.AddDbContext<MineSweeperContext>(options => options.UseSqlServer(connectionString));
             }
 
@@ -72,7 +72,7 @@ namespace MineServer
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();
-            //_context.Database.EnsureCreated();
+            _context.Database.EnsureCreated();
 
         }
     }
