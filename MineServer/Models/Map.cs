@@ -275,39 +275,39 @@ namespace MineServer.Models
         /// <returns></returns>
         private Result BuildMap(Result result, bool mineSweeper = true)
         {
-            for(int i = 0; i < _cells.Count; i++)
-            {
-                var cell = _cells[i];
-                if (_cells[i] is Tnt)
-                {
-                    //TODO instead of buildmap do rebuild map function, and then rebuild map
-                    //TODO or instead of rebuilding the whole map, just change the new ones, delete the ones with the same index
-                    _cells[i] = _factory.Create("TNT");
-                    _cells[i].number = i;
-                }
-                else if (_cells[i] is Revealed)
-                {
-                    _cells[i] = _factory.Create("Revealed");
-                    _cells[i].number = i;
-                    _cells[i].bombs = CalculateBombs(i/10, i%10);
-                }
-                else if (_cells[i] is ExplodedTnt)
-                {
-                    _cells[i] = _factory.Create("ExplodedTNT");
-                    _cells[i].number = i;
-                }
-                else if (_cells[i] is Unknown)
-                {
-                    _cells[i] = _factory.Create("Unknown");
-                    _cells[i].number = i;
-                }
-                else
-                {
-                    _cells[i] = _factory.Create("Unknown");
-                    _cells[i].number = i;
-                }
-                _cells[i].marked = cell.marked;
-            }
+//            for(int i = 0; i < _cells.Count; i++)
+//            {
+//                var cell = _cells[i];
+//                if (_cells[i] is Tnt)
+//                {
+//                    //TODO instead of buildmap do rebuild map function, and then rebuild map
+//                    //TODO or instead of rebuilding the whole map, just change the new ones, delete the ones with the same index
+//                    _cells[i] = _factory.Create("TNT");
+//                    _cells[i].number = i;
+//                }
+//                else if (_cells[i] is Revealed)
+//                {
+//                    _cells[i] = _factory.Create("Revealed");
+//                    _cells[i].number = i;
+//                    _cells[i].bombs = CalculateBombs(i/10, i%10);
+//                }
+//                else if (_cells[i] is ExplodedTnt)
+//                {
+//                    _cells[i] = _factory.Create("ExplodedTNT");
+//                    _cells[i].number = i;
+//                }
+//                else if (_cells[i] is Unknown)
+//                {
+//                    _cells[i] = _factory.Create("Unknown");
+//                    _cells[i].number = i;
+//                }
+//                else
+//                {
+//                    _cells[i] = _factory.Create("Unknown");
+//                    _cells[i].number = i;
+//                }
+//                _cells[i].marked = cell.marked;
+//            }
             return GetMapStatus(result, mineSweeper);
         }
 

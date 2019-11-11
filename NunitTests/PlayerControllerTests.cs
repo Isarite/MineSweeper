@@ -48,6 +48,13 @@ namespace NunitTests
             //Setting up a player account
         }
         
+        [TearDown]
+        public void TearDown()
+        {
+            _client = null;
+            _factory = null;
+        }
+        
 
         /// <summary>
         /// Sets up players in database
@@ -90,7 +97,7 @@ namespace NunitTests
         
         [TestCase("user1", "#aAaA12345")]
         [TestCase("user2", "#aAaA12345")]
-        [TestCase("user3", "#aAaA12345",HttpStatusCode.UnprocessableEntity)]
+        [TestCase("user4", "#aAaA12345",HttpStatusCode.NotFound)]
         [TestCase("user1", "wrongPa$$word",HttpStatusCode.UnprocessableEntity)]
         public void PlayerTokenGetTest(string userName, string password, HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
         {

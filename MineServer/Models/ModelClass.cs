@@ -10,6 +10,6 @@ namespace MineServer.Models
     public abstract class ModelClass
     {
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int? Id { get; set; }
     }
 }

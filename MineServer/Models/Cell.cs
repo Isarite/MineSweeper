@@ -15,6 +15,10 @@ namespace MineServer.Models
             marked = false;
             bombs = 0;
         }
+
+        public abstract Cell Clone();
+
+        public abstract Cell ShallowClone();
     }
 
 }

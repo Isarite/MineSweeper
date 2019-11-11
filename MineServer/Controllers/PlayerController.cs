@@ -59,6 +59,8 @@ namespace MineServer.Controllers
         public async Task<IActionResult> GetToken([FromBody] PlayerData player)
         {
             var user = await _userManager.FindByNameAsync(player.userName);
+            if (user == null)
+                return NotFound();
             var result = await _signManager.PasswordSignInAsync(user, player.password, false, false);
             if (result.Succeeded)
             {
@@ -82,35 +84,38 @@ namespace MineServer.Controllers
                 {
                     try
                     {
-                    player.strategies = _context.Strategies.Where(s => s.player.Id.Equals(userId)).ToList();
-                    player = game.FindPlayer(userId);
-                    game.GameMap = await _context.Maps.Where(g => g.Id == id).FirstOrDefaultAsync();
-                    int? gameId = game.Id;
-                    game.players = await _context.Users.Where(p => gameId.Equals(p.currentGame.Id)).ToListAsync();
-                    player.strategies = _context.Strategies.Where(s => s.player.Id.Equals(userId)).ToList();
-                    int? mapId = game.GameMap.Id;
-                    game.GameMap._cells = _context.Cells.Where(c => mapId.Equals(c.map.Id)).OrderBy(d => d.number).ToList();
-                    var cellsgame = game.GameMap._cells.ToList();
-                    for (int i = 0; i < cellsgame.Count; i++)
-                    {
-                        //game.GameMap._cells.Add(cell);
-                        //_context.Cells.Add(cell);
-                        var cell = _context.Cells.Find(cellsgame[i].Id);
-                        _context.Cells.Remove(cell);
-                    }
-                    await _context.SaveChangesAsync();
-                    game.GameMap._cells = cellsgame;
-                    var result = player.DoMove(move, ref game);
-                    result.turn = player.TurnsLeft != 0;
-                    if (!result.turn)
-                    {
-                        var player2 = game.players.Where(p => !p.Id.Equals(userId)).FirstOrDefault();
-                        if(player2!=null)
-                            game.AddTurns(player2.Id);
-                    }
-                    var list = game.GameMap._cells.Select(x => x.Id).ToList();
-                    await _context.SaveChangesAsync();
-                    return Ok(result);
+                        player.strategies = _context.Strategies.Where(s => s.player.Id.Equals(userId)).ToList();
+                        player = game.FindPlayer(userId);
+                        game.GameMap = await _context.Maps.Where(g => g.Id == id).FirstOrDefaultAsync();
+                        int? gameId = game.Id;
+                        game.players = await _context.Users.Where(p => gameId.Equals(p.currentGame.Id)).ToListAsync();
+                        player.strategies = _context.Strategies.Where(s => s.player.Id.Equals(userId)).ToList();
+                        int? mapId = game.GameMap.Id;
+                        game.GameMap._cells = _context.Cells.Where(c => mapId.Equals(c.map.Id)).OrderBy(d => d.number).ToList();
+                        //Clone all cells
+                        var cellsgame = game.GameMap._cells.Select(c => c.Clone()).ToList();//Changed
+                        //Delete cells from Database
+                        //var cellsgame = game.GameMap._cells.ToList();
+                        for (int i = 0; i < cellsgame.Count; i++)
+                        {
+                            //game.GameMap._cells.Add(cell);
+                            //_context.Cells.Add(cell);
+                            var cell = _context.Cells.Find(game.GameMap._cells[i].Id);
+                            _context.Cells.Remove(cell);
+                        }
+                        await _context.SaveChangesAsync();
+                        game.GameMap._cells = cellsgame;
+                        var result = player.DoMove(move, ref game);
+                        result.turn = player.TurnsLeft != 0;
+                        if (!result.turn)
+                        {
+                            var player2 = game.players.Where(p => !p.Id.Equals(userId)).FirstOrDefault();
+                            if(player2!=null)
+                                game.AddTurns(player2.Id);
+                        }
+                        var list = game.GameMap._cells.Select(x => x.Id).ToList();
+                        await _context.SaveChangesAsync();
+                        return Ok(result);
                     }
                     catch (Exception EX)
                     {
