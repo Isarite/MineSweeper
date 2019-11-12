@@ -23,6 +23,8 @@ namespace Isminuotojai
     {
         bool loginForm = true;
         ILogin loginUI;
+        
+        
 
         public Start()
         {
@@ -47,8 +49,13 @@ namespace Isminuotojai
 
         private void Btn_header_Click(object sender, RoutedEventArgs e)
         {
+            PlayerDataBuilder pdb = new PlayerDataBuilder();
+            pdb.AddName(txt_username.Text);
+            pdb.AddPass(txt_password.Text);
+            PlayerData pd = pdb.GetResult();
             if (loginForm)
             {
+                
                 bool loggedIn = loginUI.Login();
                 if (loggedIn)
                     this.Close();
