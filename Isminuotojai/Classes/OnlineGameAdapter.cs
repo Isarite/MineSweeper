@@ -25,8 +25,6 @@ namespace Isminuotojai.Classes
 
 
 
-
-
         public override void StartGame()
         {
             var f = Task.Run(async () => await ApiHandler.Instance.StartGameAsync());
