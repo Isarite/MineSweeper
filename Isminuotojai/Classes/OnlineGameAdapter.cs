@@ -11,14 +11,16 @@ using System.Windows.Threading;
 
 namespace Isminuotojai.Classes
 {
-    class OnlineGameAdapter : GameUI
+    public class OnlineGameAdapter : GameUI
     {
         private Task task;
+        private IAPI api;
 
         public OnlineGameAdapter(Label label_turn, Label label_role, 
-            StackPanel NotInGameStackPanel, StackPanel GameStartedPanel, Dispatcher dispatcher, Grid mineGrid) 
+            StackPanel NotInGameStackPanel, StackPanel GameStartedPanel, Dispatcher dispatcher, Grid mineGrid, IAPI api) 
             : base(label_turn, label_role, NotInGameStackPanel, GameStartedPanel, dispatcher, mineGrid)
         {
+            this.api = api;
         }
 
 
@@ -27,7 +29,7 @@ namespace Isminuotojai.Classes
 
         public override void StartGame()
         {
-            var f = Task.Run(async () => await ApiHandler.Instance.StartGameAsync());
+            var f = Task.Run(async () => await api.StartGameAsync());
             role = f.Result;
             started = true;
             SetGameWindow();
@@ -50,7 +52,7 @@ namespace Isminuotojai.Classes
             if (move == null)
                 return;
             //DoMove(move);
-            var response = Task.Run(async () => await ApiHandler.Instance.DoMoveAsync(move));
+            var response = Task.Run(async () => await api.DoMoveAsync(move));
 
             UpdateMap(response.Result);
 
@@ -69,7 +71,7 @@ namespace Isminuotojai.Classes
 
         private bool Update()
         {
-            var response = Task.Run(async () => await ApiHandler.Instance.UpdateAsync());
+            var response = Task.Run(async () => await api.UpdateAsync());
             return UpdateMap(response.Result);
         }
 
@@ -85,7 +87,7 @@ namespace Isminuotojai.Classes
         {
             if (started)
             {
-                var f = Task.Run(async () => await ApiHandler.Instance.SurrenderAsync());
+                var f = Task.Run(async () => await api.SurrenderAsync());
                 MineResult result = f.Result;
                 RemakeGrid(result);
                 started = false;

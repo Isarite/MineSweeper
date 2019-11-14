@@ -7,7 +7,7 @@ using Isminuotojai.Resources;
 
 namespace Isminuotojai.Classes
 {
-    class PlayerDataBuilder
+    public class PlayerDataBuilder
     {
         private string name, pass;
         public PlayerDataBuilder AddName(string name)
@@ -15,7 +15,7 @@ namespace Isminuotojai.Classes
             this.name = name;
             return this;
         }
-        public PlayerDataBuilder AddPass(string name)
+        public PlayerDataBuilder AddPass(string pass)
         {
             this.pass = pass;
             return this;

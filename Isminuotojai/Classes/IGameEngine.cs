@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace Isminuotojai.Classes
 {
-    interface IGameEngine
+    public interface IGameEngine
     {
         void OnClick(object sender, RoutedEventArgs e);
         void Logout();

@@ -43,7 +43,7 @@ namespace Isminuotojai
         {
             InitializeComponent();
             engine = new OnlineGameAdapter(label_turn, label_role, left_menu_not_in_game,
-                left_menu_game_started, this.Dispatcher, mineGrid);
+                left_menu_game_started, this.Dispatcher, mineGrid, ApiHandler.Instance);
             EventManager.RegisterClassHandler(typeof(Button), Button.MouseDownEvent, new RoutedEventHandler(engine.OnClick));
         }
 

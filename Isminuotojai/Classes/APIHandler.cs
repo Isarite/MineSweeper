@@ -12,8 +12,8 @@ namespace Isminuotojai.Classes
     public class ApiHandler:IAPI
     {
         //private const string Site = "https://mineserver20191008030835.azurewebsites.net";
-        //private const string Site = "https://localhost:44397";
-        private const string Site = "https://mineserver20191112111915.azurewebsites.net";
+        private const string Site = "https://localhost:44397";
+        //private const string Site = "https://mineserver20191112111915.azurewebsites.net";
         private string _token;//Token assigned on login
         private string _gameId;//Game Id assigned on starting game
         static readonly WinHttpHandler handler = new WinHttpHandler();
@@ -86,6 +86,7 @@ namespace Isminuotojai.Classes
             catch
             {
                 //Catching
+                result.success = false;
             }
 
             return result;
@@ -111,6 +112,7 @@ namespace Isminuotojai.Classes
             catch
             {
                 //Catching
+                result.success = false;
             }
 
             return result;
@@ -135,6 +137,7 @@ namespace Isminuotojai.Classes
             catch
             {
                 //Catching
+                result.success = false;
             }
 
             return result;
@@ -192,6 +195,11 @@ namespace Isminuotojai.Classes
             _gameId = data.GameId;
 
             return data.Role;
+        }
+
+        public void SetHandler(HttpMessageHandler handler)
+        {
+            client = new HttpClient(handler);
         }
 
     }

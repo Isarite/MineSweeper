@@ -119,7 +119,7 @@ namespace MineServer.Models
             }
         }
 
-        internal Result Surrender(bool mineSweeper)
+        public Result Surrender(bool mineSweeper)
         {
             for(int i = 0; i < 10; i++)
             {

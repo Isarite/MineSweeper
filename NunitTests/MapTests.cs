@@ -39,9 +39,27 @@ namespace NunitTests
         [TestCase(0, 9,'e', GameStatus.Lost)]
         [TestCase(9, 9,'0', GameStatus.Won)]
         [TestCase(9, 0,'0',GameStatus.Won)]
-        public void CellRevealTest()
+        public void CellRevealTest(int x, int y, char expected,GameStatus status = GameStatus.Ongoing)
         {
-            
+            for (int i = 0; i < 10; i++)
+            {
+                map._cells[i] = new Tnt();
+                map._cells[i].number = i;
+            }
+
+            var result = map.RevealCell(x, y);
+
+            Assert.IsNotNull(result.map);
+            Assert.AreEqual(expected, result.map[x, y]);
+            switch (expected)
+            {
+                case 'e':
+                    Assert.IsTrue(map._cells[x * 10 + y] is ExplodedTnt);
+                    break;
+                default:
+                    Assert.IsTrue(map._cells[x * 10 + y] is Revealed);
+                    break;
+            }
         }
         
         [TestCase(0, 0)]
@@ -71,7 +89,12 @@ namespace NunitTests
         [TestCase(9, 0)]
         public void MineSetTest(int x, int y)
         {
-            
+
+            var result = map.SetMine(x, y);
+
+            Assert.IsNotNull(result.map);
+            Assert.AreEqual('t', result.map[x, y]);
+            Assert.IsTrue(map._cells[x * 10 + y] is Tnt);
         }
         
         [TestCase(0, 0)]
@@ -79,9 +102,14 @@ namespace NunitTests
         [TestCase(0, 9)]
         [TestCase(9, 9)]
         [TestCase(9, 0)]        
-        public void MineUnsetTest()
+        public void MineUnsetTest(int x, int y)
         {
-            
+
+            map.SetMine(x, y);
+            var result = map.UnsetMine(x, y);
+            Assert.IsNotNull(result.map);
+            Assert.AreEqual('u', result.map[x, y]);
+            Assert.IsTrue(map._cells[x * 10 + y] is Unknown);
         }
 
         [TestCase(0, 0)]
@@ -89,14 +117,21 @@ namespace NunitTests
         [TestCase(0, 9)]
         [TestCase(9, 9)]
         [TestCase(9, 0)]
-        public void UpdateTest()
+        [TestCase(9, 0,true)]
+        public void UpdateTest(int x, int y, bool mineSweeper = false)
         {
-            
+            map._cells[x * 10 + y] = new Tnt();
+            var result = map.Update(mineSweeper);
+            Assert.AreEqual(!mineSweeper, 't'.Equals(result.map[x, y]));
         }
 
-        public void SurrenderTest()
+        [TestCase(true)]
+        [TestCase(false)]
+        public void SurrenderTest(bool mineSweeper = true)
         {
-            
+            var result = map.Surrender(mineSweeper);
+            Assert.AreEqual(GameStatus.Lost, result.status);
         }
+
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Isminuotojai.Classes
 {
-    interface IAPI
+    public interface IAPI
     {
         Task<MoveSet> StartGameAsync();
         Task<bool> GetTokenAsync(PlayerData player);

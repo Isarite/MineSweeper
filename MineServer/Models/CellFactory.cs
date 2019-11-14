@@ -12,8 +12,6 @@ namespace MineServer.Models
             {
                 case "ExplodedTNT":
                     return new ExplodedTnt();
-                case "Marker":
-                    return new Marker();
                 case "WrongTNT":
                     return new WrongTnt();
                 case "TNT":
