@@ -358,7 +358,41 @@ namespace NunitTests
         [TestCase(9, 0)]
         public void MarkCellTest(int X, int Y)
         {
+            //Arrange
+            PlayerData player1 = new PlayerData{userName = "user1",password = "#aAaA12345"};
+            PlayerData player2 = new PlayerData{userName = "user2",password = "#aAaA12345"};
+
+            SetClientToken(player1);
+            var gameData1 = StartGame();
+            SetClientToken(player2);
+            var gameData2 = StartGame();
+            SetClientToken(player1);
+
+
+
+            for (int i = 0; i < 10; i++)
+            {
+                Move move1 = new Move {Type = MoveType.Set, X = 0, Y = i};
+                var stringPayload1 = Task.Run(() => JsonConvert.SerializeObject(move1)).Result;
+                var httpContent1 = new StringContent(stringPayload1, Encoding.UTF8, mediaType);
+                Task.Run(() => _client.PostAsync("/api/player/DoMove/" + gameData1.GameId, httpContent1)).Wait();
+            }
+            SetClientToken(player2);
             
+            Move move = new Move {Type = MoveType.Mark, X = X, Y = Y};
+            var stringPayload = Task.Run(() => JsonConvert.SerializeObject(move)).Result;
+            var httpContent = new StringContent(stringPayload, Encoding.UTF8, mediaType);
+            //Act
+            var response = Task.Run(() => _client.PostAsync("/api/player/DoMove/" + gameData2.GameId, httpContent)).Result;
+            var responseBody = Task.Run(()=> response.Content.ReadAsStringAsync()).Result;
+            Result result = JsonConvert.DeserializeObject<Result>(responseBody);
+            
+            //Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual(true,result.success);
+            Assert.AreEqual(true,result.turn);
+            Assert.AreEqual(GameStatus.Ongoing,result.status);
+            Assert.AreEqual('m', result.map[X,Y]);
         }
 
         [TestCase("user1", "#aAaA12345")]
