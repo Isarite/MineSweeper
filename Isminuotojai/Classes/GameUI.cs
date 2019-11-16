@@ -253,7 +253,7 @@ namespace Isminuotojai.Classes
                         case 'e'://Exploded
                             content = new Image
                             {
-                                Source = new BitmapImage(new Uri(TntUri)),//image source path
+                                Source = new BitmapImage(new Uri(ExplodedUri)),//image source path
                                 VerticalAlignment = VerticalAlignment.Center
                             };
                             break;

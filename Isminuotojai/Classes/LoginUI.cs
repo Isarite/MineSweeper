@@ -39,7 +39,7 @@ namespace Isminuotojai.Classes
         public PlayerData GetUserData()
         {
             PlayerDataBuilder pdb = new PlayerDataBuilder();
-            pdb.AddPass(_username.Text);
+            pdb.AddName(_username.Text);
             pdb.AddPass(_password.Text);
             //TODO set player data
             //PlayerData pd = new PlayerData{userName = _username.Text, password = _password.Text};

@@ -48,7 +48,9 @@ namespace MineServer
             else
             {
                 services.AddDbContext<MineSweeperContext>(options =>
-                    options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+                    options.UseInMemoryDatabase("TestingDB"));
+                //services.AddDbContext<MineSweeperContext>(options =>
+                //    options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
                 //services.AddDbContext<MineSweeperContext>(options => options.UseSqlServer(connectionString));
             }
 

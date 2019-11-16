@@ -46,6 +46,7 @@ namespace MineServer.Models
                     {
                         _cells[Index(index1, index2)] = _factory.Create("ExplodedTNT");
                         _cells[Index(index1,index2)].number = Index(index1, index2);
+                        BombExploded();
                     }
                     else
                     {
@@ -63,6 +64,32 @@ namespace MineServer.Models
                 return BuildMap(new Result());
             }
         }
+
+         private void BombExploded()
+         {
+             for (int i = 0; i < _cells.Count; i++)
+             {
+                 switch (_cells[i].marked)
+                 {
+                    case true:
+                        if (!(_cells[i] is Tnt))
+                        {
+                            int number = _cells[i].number;
+                            _cells[i] = _factory.Create("WrongTNT");
+                            _cells[i].number = number;
+                        }
+                        break;
+                    case false:
+                        if (_cells[i] is Tnt)
+                        {
+                            int number = _cells[i].number;
+                            _cells[i] = _factory.Create("ExplodedTNT");
+                            _cells[i].number = number;
+                        }
+                        break;
+                 }
+             }
+         }
 
         /// <summary>
         /// Reveals empty cells until finds cell near bomb
@@ -351,6 +378,9 @@ namespace MineServer.Models
                         {
                             result.map[i, j] = 'u'; // empty cell
                             finished = false;
+                        }else if (cell is WrongTnt)
+                        {
+                            result.map[i, j] = 'w'; // empty cell
                         }
                         if (cell.marked && !(cell is Revealed))
                             result.map[i, j] = 'm'; // empty cell
