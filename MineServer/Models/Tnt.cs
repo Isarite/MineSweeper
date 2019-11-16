@@ -14,11 +14,11 @@ namespace MineServer.Models
 			return new Tnt{bombs = this.bombs, map = this.map, marked = this.marked, number = this.number};
 		}
 		
-		public override Cell ShallowClone()
+		public override Cell DeepClone()
 		{
-			return this.MemberwiseClone() as Cell;
+            return new Revealed { bombs = this.bombs, marked = this.marked, number = this.number };
 		}
 
-	}
+    }
 	
 }

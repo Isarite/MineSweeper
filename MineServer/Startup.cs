@@ -56,12 +56,13 @@ namespace MineServer
 
             services.AddIdentity<Player, IdentityRole>(options => { options.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultProvider; }).AddEntityFrameworkStores<MineSweeperContext>().AddDefaultTokenProviders();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddScoped<GameFacade>();
             //services.AddSingleton<Games>();
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, MineSweeperContext _context)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, MineSweeperContext context)
         {
             if (env.IsDevelopment())
             {
@@ -74,7 +75,7 @@ namespace MineServer
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();
-            _context.Database.EnsureCreated();
+            context.Database.EnsureCreated();
 
         }
     }

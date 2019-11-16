@@ -77,66 +77,66 @@ namespace NunitTests
         }
 
         [Test]
-        public void UnknownShallowCloneTest()
+        public void UnknownDeepCloneTest()
         {
             var original = new Unknown { Id = 1, map = new Map(), marked = true, number = 1 };
-            var clone = original.ShallowClone();
+            var clone = original.DeepClone();
 
-            Assert.AreEqual(original.Id, clone.Id);
+            Assert.IsNull(clone.Id);
             Assert.AreEqual(original.bombs, clone.bombs);
-            Assert.AreEqual(original.map, clone.map);
+            Assert.IsNull(clone.map);
             Assert.AreEqual(original.marked, clone.marked);
             Assert.AreEqual(original.number, clone.number);
         }
 
         [Test]
-        public void RevealedShallowCloneTest()
+        public void RevealedDeepCloneTest()
         {
             var original = new Revealed { Id = 1, map = new Map(), marked = true, number = 1 };
-            var clone = original.ShallowClone();
+            var clone = original.DeepClone();
 
-            Assert.AreEqual(original.Id, clone.Id);
+            Assert.IsNull(clone.Id);
             Assert.AreEqual(original.bombs, clone.bombs);
-            Assert.AreEqual(original.map, clone.map);
+            Assert.IsNull(clone.map);
             Assert.AreEqual(original.marked, clone.marked);
             Assert.AreEqual(original.number, clone.number);
         }
 
         [Test]
-        public void TntShallowCloneTest()
+        public void TntDeepCloneTest()
         {
             var original = new Tnt { Id = 1, map = new Map(), marked = true, number = 1 };
-            var clone = original.ShallowClone();
+            var clone = original.DeepClone();
 
-            Assert.AreEqual(original.Id, clone.Id);
+            Assert.IsNull(clone.Id);
             Assert.AreEqual(original.bombs, clone.bombs);
-            Assert.AreEqual(original.map, clone.map);
+            Assert.IsNull(clone.map);
             Assert.AreEqual(original.marked, clone.marked);
             Assert.AreEqual(original.number, clone.number);
         }
 
         [Test]
-        public void WrongTntShallowCloneTest()
+        public void WrongTntDeepCloneTest()
         {
             var original = new WrongTnt { Id = 1, map = new Map(), marked = true, number = 1 };
-            var clone = original.ShallowClone();
+            var clone = original.DeepClone();
 
-            Assert.AreEqual(original.Id, clone.Id);
+            Assert.IsNull(clone.Id);
             Assert.AreEqual(original.bombs, clone.bombs);
-            Assert.AreEqual(original.map, clone.map);
+            Assert.IsNull(clone.map);
             Assert.AreEqual(original.marked, clone.marked);
             Assert.AreEqual(original.number, clone.number);
         }
 
         [Test]
-        public void ExplodedShallowCloneTest()
+        public void ExplodedDeepCloneTest()
         {
             var original = new ExplodedTnt { Id = 1, map = new Map(), marked = true, number = 1 };
-            var clone = original.ShallowClone();
+            var clone = original.DeepClone();
 
-            Assert.AreEqual(original.Id, clone.Id);
+            Assert.IsNull(clone.Id);
             Assert.AreEqual(original.bombs, clone.bombs);
-            Assert.AreEqual(original.map, clone.map);
+            Assert.IsNull(clone.map);
             Assert.AreEqual(original.marked, clone.marked);
             Assert.AreEqual(original.number, clone.number);
         }

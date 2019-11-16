@@ -18,7 +18,7 @@ namespace MineServer.Models
 
         public abstract Cell Clone();
 
-        public abstract Cell ShallowClone();
+        public abstract Cell DeepClone();
     }
 
 }

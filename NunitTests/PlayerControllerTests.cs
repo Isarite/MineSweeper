@@ -98,7 +98,7 @@ namespace NunitTests
         [TestCase("user1", "#aAaA12345")]
         [TestCase("user2", "#aAaA12345")]
         [TestCase("user4", "#aAaA12345",HttpStatusCode.NotFound)]
-        [TestCase("user1", "wrongPa$$word",HttpStatusCode.UnprocessableEntity)]
+        [TestCase("user1", "wrongPa$$word",HttpStatusCode.NotFound)]
         public void PlayerTokenGetTest(string userName, string password, HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
         {
             //Arrange
