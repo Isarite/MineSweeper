@@ -2,6 +2,8 @@
  * @(#) Unknown.cs
  */
 
+using System.Collections.Generic;
+
 namespace MineServer.Models
 {
 	public class Unknown : Cell
@@ -13,11 +15,19 @@ namespace MineServer.Models
 			//Shallow Cloning
 			return new Unknown{bombs = this.bombs, map = this.map, marked = this.marked, number = this.number};
 		}
-		
-		public override Cell DeepClone()
-		{
-            return new Revealed { bombs = this.bombs, marked = this.marked, number = this.number };
-		}
+
+        public override Cell DeepClone()
+        {
+            Map newMap = new Map();
+            newMap._cells = new List<Cell>();
+            foreach (Cell cell in map._cells)
+            {
+                var newCell = cell.Clone();
+                newCell.map = newMap;
+                newMap._cells.Add(newCell);
+            }
+            return new Unknown { Id = this.Id, bombs = this.bombs, marked = this.marked, number = this.number, map = newMap };
+        }
     }
 	
 }

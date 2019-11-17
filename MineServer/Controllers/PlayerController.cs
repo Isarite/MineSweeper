@@ -21,7 +21,7 @@ namespace MineServer.Controllers
     [Route("api/player")]
     public class PlayerController : ControllerBase
 	{
-        private readonly GameFacade _facade;
+        private readonly IFacade _facade;
 
         public PlayerController(GameFacade facade)
         {

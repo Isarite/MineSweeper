@@ -82,9 +82,9 @@ namespace NunitTests
             var original = new Unknown { Id = 1, map = new Map(), marked = true, number = 1 };
             var clone = original.DeepClone();
 
-            Assert.IsNull(clone.Id);
+            Assert.AreEqual(original.Id, clone.Id);
             Assert.AreEqual(original.bombs, clone.bombs);
-            Assert.IsNull(clone.map);
+            Assert.AreNotEqual(original.map, clone.map);
             Assert.AreEqual(original.marked, clone.marked);
             Assert.AreEqual(original.number, clone.number);
         }
@@ -95,9 +95,9 @@ namespace NunitTests
             var original = new Revealed { Id = 1, map = new Map(), marked = true, number = 1 };
             var clone = original.DeepClone();
 
-            Assert.IsNull(clone.Id);
+            Assert.AreEqual(original.Id, clone.Id);
             Assert.AreEqual(original.bombs, clone.bombs);
-            Assert.IsNull(clone.map);
+            Assert.AreNotEqual(original.map, clone.map);
             Assert.AreEqual(original.marked, clone.marked);
             Assert.AreEqual(original.number, clone.number);
         }
@@ -108,9 +108,9 @@ namespace NunitTests
             var original = new Tnt { Id = 1, map = new Map(), marked = true, number = 1 };
             var clone = original.DeepClone();
 
-            Assert.IsNull(clone.Id);
+            Assert.AreEqual(original.Id, clone.Id);
             Assert.AreEqual(original.bombs, clone.bombs);
-            Assert.IsNull(clone.map);
+            Assert.AreNotEqual(original.map, clone.map);
             Assert.AreEqual(original.marked, clone.marked);
             Assert.AreEqual(original.number, clone.number);
         }
@@ -121,9 +121,9 @@ namespace NunitTests
             var original = new WrongTnt { Id = 1, map = new Map(), marked = true, number = 1 };
             var clone = original.DeepClone();
 
-            Assert.IsNull(clone.Id);
+            Assert.AreEqual(original.Id, clone.Id);
             Assert.AreEqual(original.bombs, clone.bombs);
-            Assert.IsNull(clone.map);
+            Assert.AreNotEqual(original.map, clone.map);
             Assert.AreEqual(original.marked, clone.marked);
             Assert.AreEqual(original.number, clone.number);
         }
@@ -134,9 +134,9 @@ namespace NunitTests
             var original = new ExplodedTnt { Id = 1, map = new Map(), marked = true, number = 1 };
             var clone = original.DeepClone();
 
-            Assert.IsNull(clone.Id);
+            Assert.AreEqual(original.Id, clone.Id);
             Assert.AreEqual(original.bombs, clone.bombs);
-            Assert.IsNull(clone.map);
+            Assert.AreNotEqual(original.map,clone.map);
             Assert.AreEqual(original.marked, clone.marked);
             Assert.AreEqual(original.number, clone.number);
         }

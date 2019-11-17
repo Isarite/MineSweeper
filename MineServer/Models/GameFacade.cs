@@ -11,7 +11,7 @@ using MineServer.Resources;
 
 namespace MineServer.Models
 {
-    public class GameFacade
+    public class GameFacade:IFacade
     {
         private readonly SignInManager<Player> _signManager;
         private readonly UserManager<Player> _userManager;
