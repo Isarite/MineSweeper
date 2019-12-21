@@ -41,7 +41,6 @@ namespace Isminuotojai.Classes
             PlayerDataBuilder pdb = new PlayerDataBuilder();
             pdb.AddName(_username.Text);
             pdb.AddPass(_password.Text);
-            //TODO set player data
             //PlayerData pd = new PlayerData{userName = _username.Text, password = _password.Text};
             return pdb.GetResult();
         }
@@ -63,7 +62,7 @@ namespace Isminuotojai.Classes
             if (_username.Text.Length>0 && _password.Text.Length>0)
             {
                 OpenGameWindow();
-                ShowMessage("Prisijungimas sëkmingas! ");
+                ShowMessage("Prisijungimas sï¿½kmingas! ");
                 return true;
             }
             ShowMessage("Prisijungimas nepavyko! ");
@@ -75,7 +74,7 @@ namespace Isminuotojai.Classes
             if (_username.Text.Length > 0 && _password.Text.Length > 0)
             {
                 SetLoginScreen();
-                ShowMessage("Registracija sëkminga! ");
+                ShowMessage("Registracija sï¿½kminga! ");
                 return true;
             }
             ShowMessage("Registracija nepavyko! ");

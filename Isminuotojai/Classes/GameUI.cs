@@ -105,7 +105,7 @@ namespace Isminuotojai.Classes
                 {
                     dispatcher.Invoke(() =>
                     {
-                        label_turn.Content = yourTurn ? "Tavo ëjimas" : "Prieðininko ëjimas";
+                        label_turn.Content = yourTurn ? "Tavo ï¿½jimas" : "Prieï¿½ininko ï¿½jimas";
                         RemakeGrid(result);
                     });
                     if (result.status != GameStatus.Ongoing)
@@ -114,14 +114,14 @@ namespace Isminuotojai.Classes
                         {
                             dispatcher.Invoke(() =>
                             {
-                                MessageBox.Show("Jûs laimëjote!");
+                                MessageBox.Show("Jï¿½s laimï¿½jote!");
                             });
                         }
                         else
                         {
                             dispatcher.Invoke(() =>
                             {
-                                MessageBox.Show("Jûs pralaimëjote...");
+                                MessageBox.Show("Jï¿½s pralaimï¿½jote...");
                             });
                         }
                         dispatcher.Invoke(() =>
@@ -290,7 +290,16 @@ namespace Isminuotojai.Classes
         {
             SetGameWindow();
             started = true;
-            //TODO Some demo
+        }
+
+        public virtual void PreviousState()
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void ForwardState()
+        {
+            throw new NotImplementedException();
         }
 
         protected void SetGameWindow()
@@ -301,8 +310,8 @@ namespace Isminuotojai.Classes
             mineGrid.Visibility = Visibility.Visible;
             label_turn.Visibility = Visibility.Visible;
             label_role.Visibility = Visibility.Visible;
-            label_role.Content = role == MoveSet.MineSweeper ? "Iðminuotojas" : "Teroristas";
-            label_turn.Content = yourTurn ? "Tavo ëjimas" : "Prieðininko ëjimas";
+            label_role.Content = role == MoveSet.MineSweeper ? "Iï¿½minuotojas" : "Teroristas";
+            label_turn.Content = yourTurn ? "Tavo ï¿½jimas" : "Prieï¿½ininko ï¿½jimas";
         }
 
 
@@ -314,7 +323,7 @@ namespace Isminuotojai.Classes
             {
                 RemakeGrid(new MineResult());
                 started = false;
-                MessageBox.Show("Jûs pralaimëjote...");
+                MessageBox.Show("Jï¿½s pralaimï¿½jote...");
                 left_menu_not_in_game.Visibility = Visibility.Visible;
                 left_menu_game_started.Visibility = Visibility.Hidden;
                 //mineGrid.Visibility = Visibility.Hidden;

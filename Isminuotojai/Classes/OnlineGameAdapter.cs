@@ -15,6 +15,7 @@ namespace Isminuotojai.Classes
     {
         private Task task;
         private IAPI api;
+        private Memento _memento = new Memento();
 
         public OnlineGameAdapter(Label label_turn, Label label_role, 
             StackPanel NotInGameStackPanel, StackPanel GameStartedPanel, Dispatcher dispatcher, Grid mineGrid, IAPI api) 
@@ -53,6 +54,7 @@ namespace Isminuotojai.Classes
                 return;
             //DoMove(move);
             var response = Task.Run(async () => await api.DoMoveAsync(move));
+            _memento.SetState(response.Result);
 
             UpdateMap(response.Result);
 
@@ -98,5 +100,114 @@ namespace Isminuotojai.Classes
             }
         }
 
+        public override void ForwardState()
+        {
+            var state = _memento.GetState();
+            if (state != null)
+                HistoryGrid(state);
+            else
+                button.IsEnabled = false;
+            //TODO button
+        }
+
+        public override void PreviousState()
+        {
+            var state = _memento.GetState();
+            if (state != null)
+                HistoryGrid(state);
+            else
+                button.IsEnabled = false;        
+        }
+
+        protected void HistoryGrid(char[,] map)
+        {
+            int ii = 10, jj = 10;
+            mineGrid.ColumnDefinitions.Clear();
+            mineGrid.RowDefinitions.Clear();
+            mineGrid.Children.Clear();
+
+            for (int i = 0; i < ii; i++)//Create Rows and Columns
+            {
+                RowDefinition row = new RowDefinition()
+                {
+                    SharedSizeGroup = "FirstRow"//equal size rows
+                };
+                ColumnDefinition col = new ColumnDefinition
+                {
+                    SharedSizeGroup = "FirstColumn"
+                };
+                mineGrid.ColumnDefinitions.Add(col);
+                mineGrid.RowDefinitions.Add(row);
+            }
+
+            for (int i = 0; i < ii; i++)//set buttons in cells
+            {
+                for (int j = 0; j < jj; j++)
+                {
+                    //Button b = new Button();
+                    //b.Content = string.Format("Row: {0}, Column: {1}", i, j);
+                    Object content = "";
+                    bool enableButton = false; //disables button if not player's turn, or the game is over
+
+                    char c = map[i, j];
+                    string tag = string.Format("{0};{1}", i, j);
+                    switch (c)
+                    {
+                        case 'u'://Unknown
+                            break;
+                        case 't'://Bomb
+                            content = new Image
+                            {
+                                Source = new BitmapImage(new Uri(TntUri)),//image source path
+                                VerticalAlignment = VerticalAlignment.Center
+                            };
+                            if (role == MoveSet.MineSweeper)
+                                enableButton = false;
+                            else
+                                tag = string.Format("{0};{1};{2}", i, j, c);
+                            break;
+                        case 'w'://Wrong
+                            content = new Image
+                            {
+                                Source = new BitmapImage(new Uri(WrongTntUri)),//image source path
+                                VerticalAlignment = VerticalAlignment.Center
+                            };
+                            enableButton = false;
+                            break;
+                        case 'e'://Exploded
+                            content = new Image
+                            {
+                                Source = new BitmapImage(new Uri(ExplodedUri)),//image source path
+                                VerticalAlignment = VerticalAlignment.Center
+                            };
+                            break;
+                        case 'm'://Marked
+                            content = content = new Image
+                            {
+                                Source = new BitmapImage(new Uri(MarkedUri)),//image source path
+                                VerticalAlignment = VerticalAlignment.Center
+                            };
+                            break;
+                        default:
+                            content = c;
+                            enableButton = false;
+                            break;
+                    }
+
+
+                    Button b = new Button//button with image
+                    {
+                        //Width = 24,
+                        //Height = 24,
+                        Tag = tag,//for testing mostly
+                        IsEnabled = enableButton,//change to false to disable                       
+                        Content = content,
+                    };
+                    Grid.SetRow(b, i);//set row
+                    Grid.SetColumn(b, j);//set column
+                    mineGrid.Children.Add(b);//add to grid
+                }
+            }
+        }
     }
 }

@@ -13,5 +13,9 @@ namespace Isminuotojai.Classes
         void Logout();
         void Surrender();
         void StartGame();
+
+        void PreviousState();
+
+        void ForwardState();
     }
 }
