@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 //using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using MineServer.Models;
-using static MineServer.Models.MineSweeperContext;
 
 namespace MineServer
 {
@@ -39,7 +31,7 @@ namespace MineServer
         {
             //services.AddDbContext<MineSweeperContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:LocalDb"]));
 
-            //string connectionString = Environment.GetEnvironmentVariable("MYSQLCONNSTR_localdb").ToString();
+//            string connectionString = Environment.GetEnvironmentVariable("DefaultConnection").ToString();
             if (CurrentEnvironment.IsEnvironment("Testing"))
             {
                 services.AddDbContext<MineSweeperContext>(options =>
@@ -47,11 +39,12 @@ namespace MineServer
             }
             else
             {
-                services.AddDbContext<MineSweeperContext>(options =>
-                    options.UseInMemoryDatabase("TestingDB"));
+//                services.AddDbContext<MineSweeperContext>(options =>
+//                    options.UseInMemoryDatabase("TestingDB"));
                 //services.AddDbContext<MineSweeperContext>(options =>
                 //    options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
-                //services.AddDbContext<MineSweeperContext>(options => options.UseSqlServer(connectionString));
+                services.AddDbContext<MineSweeperContext>(options => 
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             }
 
             services.AddIdentity<Player, IdentityRole>(options => { options.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultProvider; }).AddEntityFrameworkStores<MineSweeperContext>().AddDefaultTokenProviders();

@@ -3,6 +3,7 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MineServer.Models
 {
@@ -18,14 +19,12 @@ namespace MineServer.Models
 
         public override Cell DeepClone()
         {
-            Map newMap = new Map();
-            newMap._cells = new List<Cell>();
-            foreach (Cell cell in map._cells)
-            {
-                var newCell = cell.Clone();
-                newCell.map = newMap;
-                newMap._cells.Add(newCell);
-            }
+	        var newMap = new Map {Cells = new List<Cell>()};
+	        foreach (var newCell in map.Cells.Select(cell => cell.Clone()))
+	        {
+		        newCell.map = newMap;
+		        newMap.Cells.Add(newCell);
+	        }
             return new Unknown { Id = this.Id, bombs = this.bombs, marked = this.marked, number = this.number, map = newMap };
         }
     }

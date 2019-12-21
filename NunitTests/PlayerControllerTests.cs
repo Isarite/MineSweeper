@@ -1,28 +1,13 @@
-using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Principal;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.Extensions.DependencyInjection;
 using MineServer;
-using MineServer.Controllers;
-using MineServer.Models;
 using MineServer.Resources;
-using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
 namespace NunitTests
 {
@@ -47,14 +32,14 @@ namespace NunitTests
             //_client = testServer.CreateClient();
             //Setting up a player account
         }
-        
+
         [TearDown]
         public void TearDown()
         {
             _client = null;
             _factory = null;
         }
-        
+
 
         /// <summary>
         /// Sets up players in database
@@ -65,12 +50,12 @@ namespace NunitTests
             var stringPayload =  Task.Run(() => JsonConvert.SerializeObject(player)).Result;
             var httpContent0 = new StringContent(stringPayload, Encoding.UTF8, mediaType);
             Task.Run(() => _client.PostAsync(requestUri, httpContent0)).Wait();
-            
+
             player = new PlayerData{userName = "user1",password = "#aAaA12345"};
             stringPayload =  Task.Run(() => JsonConvert.SerializeObject(player)).Result;
             httpContent0 = new StringContent(stringPayload, Encoding.UTF8, mediaType);
             Task.Run(() => _client.PostAsync(requestUri, httpContent0)).Wait();
-            
+
             player = new PlayerData{userName = "user3",password = "#aAaA12345"};
             stringPayload =  Task.Run(() => JsonConvert.SerializeObject(player)).Result;
             httpContent0 = new StringContent(stringPayload, Encoding.UTF8, mediaType);
@@ -83,7 +68,7 @@ namespace NunitTests
         {
             //Arrange
             PlayerData player = new PlayerData{userName = userName, password = password};
-            
+
             //Act
             var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(player));
 
@@ -94,7 +79,7 @@ namespace NunitTests
             //Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
-        
+
         [TestCase("user1", "#aAaA12345")]
         [TestCase("user2", "#aAaA12345")]
         [TestCase("user4", "#aAaA12345",HttpStatusCode.NotFound)]
@@ -141,7 +126,7 @@ namespace NunitTests
 
             responseBody = Task.Run(()=> response.Content.ReadAsStringAsync()).Result;
             var data = JsonConvert.DeserializeObject<GameData>(responseBody);
-            
+
             //Assert
 
             TestContext.Out.WriteLine(response.StatusCode);
@@ -171,8 +156,8 @@ namespace NunitTests
             TestContext.Out.WriteLine("Token: " + token);
             //Set authentication token in client
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            
-            
+
+
             //Start game
             httpContent = new StringContent("", Encoding.UTF8, mediaType);
             response = Task.Run(()=>_client.PostAsync("api/player/StartGame", httpContent)).Result;
@@ -184,7 +169,7 @@ namespace NunitTests
             StartGame();
             SetClientToken(new PlayerData{userName =userName, password = password});
 
-            
+
             Move move = new Move {Type = MoveType.Set, X = X, Y = Y};
             stringPayload =  Task.Run(() => JsonConvert.SerializeObject(move)).Result;
             httpContent = new StringContent(stringPayload, Encoding.UTF8, mediaType);
@@ -193,7 +178,7 @@ namespace NunitTests
 
             responseBody = Task.Run(()=> response.Content.ReadAsStringAsync()).Result;
             Result result = JsonConvert.DeserializeObject<Result>(responseBody);
-            
+
             //Assert
 
             //TestContext.Out.WriteLine(response.StatusCode);
@@ -227,8 +212,8 @@ namespace NunitTests
             TestContext.Out.WriteLine("Token: " + token);
             //Set authentication token in client
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            
-            
+
+
             //Start game
             httpContent = new StringContent("", Encoding.UTF8, mediaType);
             response = Task.Run(()=>_client.PostAsync("api/player/StartGame", httpContent)).Result;
@@ -242,9 +227,9 @@ namespace NunitTests
             stringPayload =  Task.Run(() => JsonConvert.SerializeObject(move)).Result;
             httpContent = new StringContent(stringPayload, Encoding.UTF8, mediaType);
             response = Task.Run(()=>_client.PostAsync("/api/player/DoMove/" + data.GameId, httpContent)).Result;
-            
+
             responseBody = Task.Run(()=> response.Content.ReadAsStringAsync()).Result;
-            
+
             //Act
             move = new Move {Type = MoveType.Unset, X = X, Y = Y};
             stringPayload =  Task.Run(() => JsonConvert.SerializeObject(move)).Result;
@@ -253,7 +238,7 @@ namespace NunitTests
             response = Task.Run(()=>_client.PostAsync("/api/player/DoMove/" + data.GameId, httpContent)).Result;
             responseBody = Task.Run(()=> response.Content.ReadAsStringAsync()).Result;
             Result result = JsonConvert.DeserializeObject<Result>(responseBody);
-            
+
             //Assert
 
             //TestContext.Out.WriteLine(response.StatusCode);
@@ -281,8 +266,8 @@ namespace NunitTests
             TestContext.Out.WriteLine("Token: " + token);
             //Set authentication token in client
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            
-            
+
+
             //Start game
             httpContent = new StringContent("", Encoding.UTF8, mediaType);
             response = Task.Run(()=>_client.PostAsync("api/player/StartGame", httpContent)).Result;
@@ -302,7 +287,7 @@ namespace NunitTests
 
             responseBody = Task.Run(()=> response.Content.ReadAsStringAsync()).Result;
             Result result = JsonConvert.DeserializeObject<Result>(responseBody);
-            
+
             Assert.AreEqual(false, result.turn);
         }
 
@@ -334,7 +319,7 @@ namespace NunitTests
                 Task.Run(() => _client.PostAsync("/api/player/DoMove/" + gameData1.GameId, httpContent1)).Wait();
             }
             SetClientToken(player2);
-            
+
             Move move = new Move {Type = MoveType.Reveal, X = X, Y = Y};
             var stringPayload = Task.Run(() => JsonConvert.SerializeObject(move)).Result;
             var httpContent = new StringContent(stringPayload, Encoding.UTF8, mediaType);
@@ -342,7 +327,7 @@ namespace NunitTests
             var response = Task.Run(() => _client.PostAsync("/api/player/DoMove/" + gameData2.GameId, httpContent)).Result;
             var responseBody = Task.Run(()=> response.Content.ReadAsStringAsync()).Result;
             Result result = JsonConvert.DeserializeObject<Result>(responseBody);
-            
+
             //Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.AreEqual(true,result.success);
@@ -350,7 +335,7 @@ namespace NunitTests
             Assert.AreEqual(expectedStatus,result.status);
             Assert.AreEqual(expected, result.map[X,Y]);
         }
-        
+
         [TestCase(0, 0)]
         [TestCase(0, 1)]
         [TestCase(0, 9)]
@@ -378,7 +363,7 @@ namespace NunitTests
                 Task.Run(() => _client.PostAsync("/api/player/DoMove/" + gameData1.GameId, httpContent1)).Wait();
             }
             SetClientToken(player2);
-            
+
             Move move = new Move {Type = MoveType.Mark, X = X, Y = Y};
             var stringPayload = Task.Run(() => JsonConvert.SerializeObject(move)).Result;
             var httpContent = new StringContent(stringPayload, Encoding.UTF8, mediaType);
@@ -386,7 +371,7 @@ namespace NunitTests
             var response = Task.Run(() => _client.PostAsync("/api/player/DoMove/" + gameData2.GameId, httpContent)).Result;
             var responseBody = Task.Run(()=> response.Content.ReadAsStringAsync()).Result;
             Result result = JsonConvert.DeserializeObject<Result>(responseBody);
-            
+
             //Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.AreEqual(true,result.success);
@@ -415,16 +400,16 @@ namespace NunitTests
                 _client.PutAsync("api/player/Surrender/" + gameData1.GameId, httpContent)).Result;
             var responseBody = Task.Run(()=> response.Content.ReadAsStringAsync()).Result;
             var result = JsonConvert.DeserializeObject<Result>(responseBody);
-            
+
             //Assert
-            
+
             Assert.AreEqual(expectedStatusCode, response.StatusCode);
             if (response.StatusCode.Equals(HttpStatusCode.OK))
             {
                 Assert.True(result.success);
                 Assert.AreEqual(GameStatus.Lost,result.status);
             }
-            
+
         }
 
         [Test]
@@ -450,12 +435,12 @@ namespace NunitTests
                 Task.Run(() => _client.PostAsync("/api/player/DoMove/" + gameData1.GameId, httpContent1)).Wait();
             }
             SetClientToken(player2);
-            
+
             //Act
             var response = Task.Run(() => _client.GetAsync("/api/player/Update/" + gameData2.GameId)).Result;
             var responseBody = Task.Run(()=> response.Content.ReadAsStringAsync()).Result;
             Result result = JsonConvert.DeserializeObject<Result>(responseBody);
-            
+
             //Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.AreEqual(true, result.turn);
@@ -464,7 +449,7 @@ namespace NunitTests
             Assert.IsNotEmpty(result.map);
         }
 
-        
+
         /// <summary>
         /// Get token from server, then set it to client
         /// </summary>
@@ -495,7 +480,43 @@ namespace NunitTests
             return data;
         }
         
-        
+        [TestCase("user1", "#aAaA12345")]
+        [TestCase("user2", "#aAaA12345")]
+        public void GetPlayersTest(string userName, string password
+            , HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
+        {
+            //Arrange
+            PlayerData player1 = new PlayerData{userName = "user1",password = "#aAaA12345"};
+            PlayerData player2 = new PlayerData{userName = "user2",password = "#aAaA12345"};
+
+            SetClientToken(player1);
+            var gameData1 = StartGame();
+            SetClientToken(player2);
+            var gameData2 = StartGame();
+            SetClientToken(new PlayerData{userName = userName, password = password});
+            var httpContent = new StringContent("", Encoding.UTF8, mediaType);
+            var response = Task.Run(() =>
+                _client.PutAsync("api/player/Surrender/" + gameData1.GameId, httpContent)).Result;
+            var responseBody = Task.Run(()=> response.Content.ReadAsStringAsync()).Result;
+            var result = JsonConvert.DeserializeObject<Result>(responseBody);
+
+            //Assert
+
+            Assert.AreEqual(expectedStatusCode, response.StatusCode);
+            if (response.StatusCode.Equals(HttpStatusCode.OK))
+            {
+                Assert.True(result.success);
+                Assert.AreEqual(GameStatus.Lost,result.status);
+            }
+            
+            response = Task.Run(() =>
+                _client.GetAsync("api/player/GetPlayers/")).Result;
+            responseBody = Task.Run(() => response.Content.ReadAsStringAsync()).Result;
+            Assert.IsNotNull(responseBody);
+            Assert.IsNotEmpty(responseBody);
+
+        }
+
 
 
 

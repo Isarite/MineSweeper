@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using MineServer.Resources;
 
 namespace MineServer.Models
 {
@@ -13,6 +10,8 @@ namespace MineServer.Models
         public DbSet<PlayerStrategy> Strategies { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<Map> Maps { get; set; }
+        
+        //public DbSet<MapMemento> Mementoes { get; set; }
 
         public MineSweeperContext(DbContextOptions<MineSweeperContext> options) : base(options) { }
 
@@ -38,13 +37,21 @@ namespace MineServer.Models
 
 
             modelBuilder.Entity<Game>().HasOne(d => d.GameMap);
+            modelBuilder.Entity<Game>().HasOne(d => d.Memento);
+            modelBuilder.Entity<Game>().Property(e => e.Status)
+                .HasConversion(x => (int) x, x => (GameStatus) x);
 
-            modelBuilder.Entity<Map>().HasMany(d => d._cells).WithOne(c => c.map).IsRequired();
+            modelBuilder.Entity<Map>().HasMany(d => d.Cells).WithOne(c => c.map).IsRequired();
+
+            //modelBuilder.Entity<MapMemento>().HasMany(d => d.Cells).WithOne(c => c.Memento).IsRequired();
+
 
             modelBuilder.Entity<Cell>().HasKey(d => d.Id);
             modelBuilder.Entity<PlayerStrategy>().HasKey(d => d.Id);
             modelBuilder.Entity<Game>().HasKey(d => d.Id);
             modelBuilder.Entity<Map>().HasKey(d => d.Id);
+            modelBuilder.Entity<MapMemento>().HasKey(d => d.Id);
+
 
             modelBuilder.Entity<Cell>().Property(p => p.Id).ValueGeneratedOnAdd();
             modelBuilder.Entity<PlayerStrategy>().Property(p => p.Id).ValueGeneratedOnAdd();

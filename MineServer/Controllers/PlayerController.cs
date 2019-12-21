@@ -3,23 +3,16 @@
  */
 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MineServer.Models;
 using MineServer.Resources;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 //TODO Game Controller
 namespace MineServer.Controllers
 {
     [Route("api/player")]
-    public class PlayerController : ControllerBase
+    public sealed class PlayerController : ControllerBase
 	{
         private readonly IFacade _facade;
 
@@ -34,7 +27,7 @@ namespace MineServer.Controllers
         //public string Create(Player player)
         public async Task<IActionResult> Create([FromBody] PlayerData player)
         {
-            if (player == null || player.userName == null || player.password == null)
+            if (player?.userName == null || player.password == null)
                 return BadRequest();
             string name = player.userName;
             string pass = player.password;
@@ -66,6 +59,7 @@ namespace MineServer.Controllers
                     return BadRequest();
                 return Ok(result);
             }
+
             return Unauthorized();
         }
 
@@ -103,7 +97,7 @@ namespace MineServer.Controllers
 
             return BadRequest();
         }
-        
+
         // Get api/Update/values/5
         [Route("[action]/{id}")]
         [HttpGet]
@@ -121,6 +115,32 @@ namespace MineServer.Controllers
 
             return Unauthorized();
         }
-    }
 
+        [Route("[action]")]
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetPlayers()
+        {
+            return Ok(await _facade.GetPlayers());
+        }
+        
+        
+        // [Route("[action]/{id}")]
+        // [Authorize]
+        // [HttpPost]
+        // public async Task<IActionResult> ResetState(int id)
+        // {
+        //     string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        //     var result = await _facade.ResetState(id, userId);
+        //     if (result != null)
+        //     {
+        //         if (!result.success)
+        //             return BadRequest();
+        //
+        //         return Ok(result);
+        //     }
+        //
+        //     return Unauthorized();
+        // }
+    }
 }

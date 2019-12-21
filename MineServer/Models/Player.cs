@@ -2,28 +2,23 @@
 
 using Microsoft.AspNetCore.Identity;
 using MineServer.Resources;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 
-/**
-* @(#) Player.cs
-*/
 namespace MineServer.Models
 {
     public class Player : IdentityUser
     {
-
         //public int CurrentGame;
         public int TurnsLeft { get; set; }
 
         public Game currentGame { get; set; }
         public List<PlayerStrategy> strategies { get; set; }
         public MoveSet role { get; set; }
+
         public Player()
         {
-            new List<PlayerStrategy>();
+            strategies = new List<PlayerStrategy>();
         }
 
         /// <summary>
@@ -45,64 +40,64 @@ namespace MineServer.Models
                     strategies.Add(new MarkCell());
                     break;
             }
-
         }
 
         /// <summary>
         /// Does a player move if the move is in currently in the player set
         /// </summary>
         /// <param name="move"></param>
+        /// <param name="currentGame"></param>
         /// <returns>Result of the move</returns>
-        public Result DoMove(Move move, ref Game CurrentGame)
+        public Result DoMove(Move move, ref Game currentGame)
         {
-            Result result = new Result();
+            var result = new Result();
             if (TurnsLeft > 0)
                 switch (move.Type)
                 {
                     case MoveType.Reveal:
-                        foreach (PlayerStrategy strategy in strategies)
+                        foreach (var strategy in strategies.OfType<RevealCell>())
                         {
-                            if (strategy is RevealCell)
-                            {
-                                TurnsLeft--;
-                                return strategy.OnActivation(move.X, move.Y, ref CurrentGame);
-                            }
+                            TurnsLeft--;
+                            result = strategy.OnActivation(move.X, move.Y, ref currentGame);
+                            SetGameStatus(result.status, ref currentGame);
+                            return result;
                         }
+
                         break;
                     case MoveType.Mark:
-                        foreach (PlayerStrategy strategy in strategies)
+                        foreach (var strategy in strategies.OfType<MarkCell>())
                         {
-                            if (strategy is MarkCell)
-                            {
-                                return strategy.OnActivation(move.X, move.Y, ref CurrentGame);
-                            }
+                            result = strategy.OnActivation(move.X, move.Y, ref currentGame);
+                            SetGameStatus(result.status, ref currentGame);
+                            return result;
                         }
+
                         break;
                     case MoveType.Set:
-                        foreach (PlayerStrategy strategy in strategies)
+                        foreach (var strategy in strategies.OfType<SetMine>())
                         {
-                            if (strategy is SetMine)
-                            {
-                                TurnsLeft--;
-                                return strategy.OnActivation(move.X, move.Y, ref CurrentGame);
-                            }
+                            TurnsLeft--;
+                            result = strategy.OnActivation(move.X, move.Y, ref currentGame);
+                            SetGameStatus(result.status, ref currentGame);
+                            return result;
                         }
+
                         break;
                     case MoveType.Unset:
-                        foreach (PlayerStrategy strategy in strategies)
+                        foreach (var strategy in strategies.OfType<UnsetMine>())
                         {
-                            if (strategy is UnsetMine)
-                            {
-                                result = strategy.OnActivation(move.X, move.Y, ref CurrentGame);
-                                if (result.success)
-                                    TurnsLeft++;
-                                return result;
-                            }
+                            result = strategy.OnActivation(move.X, move.Y, ref currentGame);
+                            SetGameStatus(result.status, ref currentGame);
+                            if (result.success)
+                                TurnsLeft++;
+                            return result;
                         }
+
                         break;
                 }
             else
                 result.turn = false;
+
             result.success = true;
             return result;
         }
@@ -110,11 +105,29 @@ namespace MineServer.Models
 
         public Result Surrender(ref Game game)
         {
-            bool mineSweeper = true;
-            if (strategies.OfType<SetMine>().Any())//If the player can set mines, he is a minesetter
-                mineSweeper = false;
-            return game.GameMap.Surrender(mineSweeper);
+            var mineSweeper = !strategies.OfType<SetMine>().Any();
+            var result = game.GameMap.Surrender(mineSweeper);
+            SetGameStatus(result.status, ref game);
+            return result;
+        }
+
+        public override string ToString()
+        {
+            return UserName + "\t" + role.ToString();
+        }
+
+        // public Result ResetState(ref Game currentGame)
+        // {
+        //     return currentGame.ResetState(Id);
+        // }
+
+        private void SetGameStatus(GameStatus status, ref Game currentGame)
+        {
+            if (status == GameStatus.Won)
+                currentGame.Status = currentGame.players[0].Id.Equals(this.Id) ? GameStatus.Won : GameStatus.Lost;
+            else if (status == GameStatus.Lost)
+                currentGame.Status = currentGame.players[0].Id.Equals(this.Id) ? GameStatus.Lost : GameStatus.Won;
         }
     }
-	
+
 }

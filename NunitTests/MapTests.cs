@@ -1,6 +1,3 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using MineServer;
 using MineServer.Models;
 using MineServer.Resources;
 using NUnit.Framework;
@@ -26,7 +23,7 @@ namespace NunitTests
         public void MapCreationTest()
         {
             map = new Map();
-            foreach (var cell in map._cells)
+            foreach (var cell in map.Cells)
             {
                 Assert.IsTrue(cell is Unknown);
             }
@@ -43,8 +40,8 @@ namespace NunitTests
         {
             for (int i = 0; i < 10; i++)
             {
-                map._cells[i] = new Tnt();
-                map._cells[i].number = i;
+                map.Cells[i] = new Tnt();
+                map.Cells[i].number = i;
             }
 
             var result = map.RevealCell(x, y);
@@ -54,10 +51,10 @@ namespace NunitTests
             switch (expected)
             {
                 case 'e':
-                    Assert.IsTrue(map._cells[x * 10 + y] is ExplodedTnt);
+                    Assert.IsTrue(map.Cells[x * 10 + y] is ExplodedTnt);
                     break;
                 default:
-                    Assert.IsTrue(map._cells[x * 10 + y] is Revealed);
+                    Assert.IsTrue(map.Cells[x * 10 + y] is Revealed);
                     break;
             }
         }
@@ -71,15 +68,15 @@ namespace NunitTests
         {
             for (int i = 0; i < 10; i++)
             {
-                map._cells[i] = new Tnt();
-                map._cells[i].number = i;
+                map.Cells[i] = new Tnt();
+                map.Cells[i].number = i;
             }
 
             var result = map.MarkCell(x,y);
             
             Assert.IsNotNull(result.map);
             Assert.AreEqual('m', result.map[x, y]);
-            Assert.IsTrue(map._cells[x*10+y].marked);
+            Assert.IsTrue(map.Cells[x*10+y].marked);
         }
         
         [TestCase(0, 0)]
@@ -94,7 +91,7 @@ namespace NunitTests
 
             Assert.IsNotNull(result.map);
             Assert.AreEqual('t', result.map[x, y]);
-            Assert.IsTrue(map._cells[x * 10 + y] is Tnt);
+            Assert.IsTrue(map.Cells[x * 10 + y] is Tnt);
         }
         
         [TestCase(0, 0)]
@@ -109,7 +106,7 @@ namespace NunitTests
             var result = map.UnsetMine(x, y);
             Assert.IsNotNull(result.map);
             Assert.AreEqual('u', result.map[x, y]);
-            Assert.IsTrue(map._cells[x * 10 + y] is Unknown);
+            Assert.IsTrue(map.Cells[x * 10 + y] is Unknown);
         }
 
         [TestCase(0, 0)]
@@ -120,7 +117,7 @@ namespace NunitTests
         [TestCase(9, 0,true)]
         public void UpdateTest(int x, int y, bool mineSweeper = false)
         {
-            map._cells[x * 10 + y] = new Tnt();
+            map.Cells[x * 10 + y] = new Tnt();
             var result = map.Update(mineSweeper);
             Assert.AreEqual(!mineSweeper, 't'.Equals(result.map[x, y]));
         }

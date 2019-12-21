@@ -9,8 +9,11 @@ namespace MineServer.Models
         public bool marked { get; set; }
         public int bombs { get; set; }
         public Map map { get; set; }
+
+        public MapMemento Memento { get; set; }
         public int number { get; set; }
-        public Cell()
+
+        protected Cell()
         {
             marked = false;
             bombs = 0;

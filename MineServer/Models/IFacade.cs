@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MineServer.Resources;
 
 namespace MineServer.Models
@@ -19,5 +16,9 @@ namespace MineServer.Models
         Task<GameData> StartGame(string userId);
 
         Task<Result> Update(string userId, int id);
+
+        Task<string> GetPlayers();
+        
+        //Task<Result> ResetState(int id, string userId);
     }
 }
