@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Isminuotojai.Classes
 {
@@ -14,8 +15,9 @@ namespace Isminuotojai.Classes
         void Surrender();
         void StartGame();
 
-        void PreviousState();
+        void PreviousState(Button sender, Button button);
 
-        void ForwardState();
+        void ForwardState(Button button, Button btnBack);
+        void HighScore(Button sender);
     }
 }

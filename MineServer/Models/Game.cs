@@ -24,6 +24,8 @@ namespace MineServer.Models
 
         public List<Player> Players { get; set; }
 
+        public virtual ICollection<GamePlayer> GamePlayers { get; set; }
+
         public Game()
         {
             GameMap = new Map();

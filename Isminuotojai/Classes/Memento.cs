@@ -1,9 +1,12 @@
+using System;
+using System.Collections.Generic;
+
 namespace Isminuotojai.Classes
 {
     public class Memento
     {
         private List<char[,]> maps;
-        private int current = 0;
+        private int current = -1;
 
         public Memento()
         {
@@ -12,7 +15,8 @@ namespace Isminuotojai.Classes
 
         public void SetState(char[,] map)
         {
-            this.maps = map;
+            this.maps.Add(map);
+            current++;
         }
 
         public char[,] GetState()
@@ -25,7 +29,7 @@ namespace Isminuotojai.Classes
 
         public char[,] GetForwardState()
         {
-            if (current >= maps.Count) return null;
+            if (current >= maps.Count-1) return null;
 
             current++;
             return maps[current];

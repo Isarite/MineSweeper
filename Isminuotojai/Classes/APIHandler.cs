@@ -67,6 +67,27 @@ namespace Isminuotojai.Classes
             return response.StatusCode.Equals(HttpStatusCode.OK);
         }
 
+        public async Task<string> GetHighScores()
+        {
+            MineResult result = new MineResult();
+            // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
+
+            HttpResponseMessage response = await client.GetAsync(
+                requestUri + "GetPlayers/");
+            try
+            {
+                response.EnsureSuccessStatusCode();
+                return await response.Content.ReadAsStringAsync();
+            }
+            catch
+            {
+                //Catching
+                return "Something went wrong";
+            }
+
+        }
+
+
         public async Task<MineResult> DoMoveAsync(Move move)
         {
             MineResult result = new MineResult();

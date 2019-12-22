@@ -16,7 +16,7 @@ namespace Isminuotojai.Classes
         Task<MineResult> DoMoveAsync(Move move);
         Task<bool> CreatePlayerAsync(PlayerData player);
 
-        Task<string> GetPlayerDataStringAsync(PlayerData player);
+        Task<string> GetHighScores();
 
     }
 }

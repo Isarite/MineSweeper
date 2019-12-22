@@ -26,8 +26,8 @@ namespace MineServer.Models
 
         internal double CalculateRatio()
         {
-            int won = 0;
-            int total = 0;
+            double won = 0;
+            double total = 0;
             foreach (var game in _games)
             {
                 GameStatus comparator;
@@ -46,7 +46,7 @@ namespace MineServer.Models
                 total++;
             }
 
-            _ratio = won != 0 ? total / won : 0;
+            _ratio = total != 0 ? won / total : 0;
             return _ratio;
         }
 

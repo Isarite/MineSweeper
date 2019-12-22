@@ -167,6 +167,12 @@ namespace MineServer.Models
 
                     await _context.Cells.AddRangeAsync(game.GameMap.Cells);
                     game.AddPlayer(player);
+
+                    game.GamePlayers = new List<GamePlayer>
+                    {
+                        new GamePlayer {Game = game, GameId = game.Id, User = player, UserId = userId}
+                    };
+
                     await _context.Maps.AddAsync(game.GameMap);
                     await _context.Cells.AddRangeAsync(game.GameMap.Cells);
                     await _context.Games.AddAsync(game);
@@ -178,6 +184,13 @@ namespace MineServer.Models
                 else
                 {
                     _context.Games.LastOrDefault()?.AddPlayer(player);
+                    var game = _context.Games.LastOrDefault();
+                    if(game!=null && game.GamePlayers == null)
+                        game.GamePlayers = _context.GamePlayers
+                            .Where(g => g.GameId.Equals(game.Id)).ToList();
+                    game?.GamePlayers
+                        .Add(new GamePlayer
+                            { Game = game,GameId = game.Id, User = player, UserId = userId});
                     player.AddMoves(MoveSet.MineSweeper);
                     player.role = MoveSet.MineSweeper;
                     player.TurnsLeft = 0;
@@ -253,6 +266,13 @@ namespace MineServer.Models
         {
             var players = await _context.Users.ToListAsync();
             var games = await _context.Games.ToListAsync();
+            foreach (var game in games)
+            {
+                if (game == null || game.GamePlayers != null) continue;
+                game.GamePlayers = _context.GamePlayers
+                    .Where(g => g.GameId.Equals(game.Id)).ToList();
+                game.Players = game.GamePlayers.Select(g => g.User).ToList();
+            }
             var list = new PlayerDataList(players,games);
             list.BuildData();
             string result = "Player list\n";

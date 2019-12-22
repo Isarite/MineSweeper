@@ -34,7 +34,7 @@ namespace MineServer.Models
 
         protected virtual string HeaderLine()
         {
-            return "Player name\tCurrent Game Id";
+            return "Player name\tCurrent Role";
         }
 
         protected virtual string TransformPlayer(Player player)

@@ -13,6 +13,7 @@ namespace MineServer.Models
         public int TurnsLeft { get; set; }
 
         public Game currentGame { get; set; }
+        public virtual ICollection<GamePlayer> GamePlayers { get; set; }
         public List<PlayerStrategy> strategies { get; set; }
         public MoveSet role { get; set; }
 
@@ -123,10 +124,15 @@ namespace MineServer.Models
 
         private void SetGameStatus(GameStatus status, ref Game currentGame)
         {
-            if (status == GameStatus.Won)
-                currentGame.Status = currentGame.Players[0].Id.Equals(this.Id) ? GameStatus.Won : GameStatus.Lost;
-            else if (status == GameStatus.Lost)
-                currentGame.Status = currentGame.Players[0].Id.Equals(this.Id) ? GameStatus.Lost : GameStatus.Won;
+            switch (status)
+            {
+                case GameStatus.Won:
+                    currentGame.Status = this.role.Equals(MoveSet.MineSetter) ? GameStatus.Won : GameStatus.Lost;
+                    break;
+                case GameStatus.Lost:
+                    currentGame.Status = this.role.Equals(MoveSet.MineSetter) ? GameStatus.Lost : GameStatus.Won;
+                    break;
+            }
         }
     }
 

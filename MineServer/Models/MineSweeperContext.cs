@@ -10,6 +10,7 @@ namespace MineServer.Models
         public DbSet<PlayerStrategy> Strategies { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<Map> Maps { get; set; }
+        public DbSet<GamePlayer> GamePlayers { get; set; }
         
         //public DbSet<MapMemento> Mementoes { get; set; }
 
@@ -34,6 +35,17 @@ namespace MineServer.Models
             modelBuilder.Entity<Player>().HasMany(u => u.strategies).WithOne(s => s.player);
 
             modelBuilder.Entity<Game>().HasMany(g => g.Players);
+
+            modelBuilder.Entity<GamePlayer>()
+                .HasKey(pc => new { pc.UserId, pc.GameId });
+            modelBuilder.Entity<GamePlayer>()
+                .HasOne(pc => pc.Game)
+                .WithMany(c => c.GamePlayers)
+                .HasForeignKey(pc => pc.GameId);
+            modelBuilder.Entity<GamePlayer>()
+                .HasOne(pc => pc.User)
+                .WithMany(c => c.GamePlayers)
+                .HasForeignKey(pc => pc.UserId);
 
 
             modelBuilder.Entity<Game>().HasOne(d => d.GameMap);

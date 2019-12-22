@@ -13,16 +13,16 @@ namespace Isminuotojai.Classes
 {
     public class GameUI : IGameEngine
     {
-        private const string TntUri = "pack://application:,,,/Isminuotojai;component/Images/TNT.png";
-        private const string WrongTntUri = "pack://application:,,,/Isminuotojai;component/Images/WrongTNT.png";
-        private const string MarkedUri = "pack://application:,,,/Isminuotojai;component/Images/Marked.png";
-        private const string ExplodedUri = "pack://application:,,,/Isminuotojai;component/Images/ExplodedTNT.png";
+        protected const string TntUri = "pack://application:,,,/Isminuotojai;component/Images/TNT.png";
+        protected const string WrongTntUri = "pack://application:,,,/Isminuotojai;component/Images/WrongTNT.png";
+        protected const string MarkedUri = "pack://application:,,,/Isminuotojai;component/Images/Marked.png";
+        protected const string ExplodedUri = "pack://application:,,,/Isminuotojai;component/Images/ExplodedTNT.png";
 
         protected PlayerData pd;
         protected MoveSet role;
 
         protected Label label_turn, label_role;
-        protected StackPanel left_menu_not_in_game, left_menu_game_started;
+        protected StackPanel left_menu_not_in_game, left_menu_game_started, left_menu_game_ended;
 
         protected Grid mineGrid;
 
@@ -34,13 +34,14 @@ namespace Isminuotojai.Classes
         private static readonly Object obj = new Object();
 
 
-        public GameUI(Label label_turn, Label label_role, StackPanel NotInGameStackPanel, 
+        public GameUI(Label label_turn, Label label_role, StackPanel NotInGameStackPanel, StackPanel GameEndedPanel,
             StackPanel GameStartedPanel, Dispatcher dispatcher, Grid mineGrid)
         {
             this.label_turn = label_turn;
             this.label_role = label_role;
             this.left_menu_not_in_game = NotInGameStackPanel;
             this.left_menu_game_started = GameStartedPanel;
+            this.left_menu_game_ended = GameEndedPanel;
             this.dispatcher = dispatcher;
             this.mineGrid = mineGrid;
         }
@@ -128,6 +129,7 @@ namespace Isminuotojai.Classes
                         {
                             left_menu_not_in_game.Visibility = Visibility.Visible;
                             left_menu_game_started.Visibility = Visibility.Hidden;
+                            left_menu_game_ended.Visibility = Visibility.Visible; 
                         });
                         started = false;
                         return true;
@@ -292,12 +294,17 @@ namespace Isminuotojai.Classes
             started = true;
         }
 
-        public virtual void PreviousState()
+        public virtual void PreviousState(Button sender, Button button)
         {
             throw new NotImplementedException();
         }
 
-        public virtual void ForwardState()
+        public virtual void ForwardState(Button button, Button btnBack)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void HighScore(Button sender)
         {
             throw new NotImplementedException();
         }

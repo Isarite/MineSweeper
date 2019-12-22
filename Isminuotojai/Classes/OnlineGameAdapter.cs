@@ -1,12 +1,14 @@
 ﻿using Isminuotojai.Resources;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 namespace Isminuotojai.Classes
@@ -18,8 +20,8 @@ namespace Isminuotojai.Classes
         private Memento _memento = new Memento();
 
         public OnlineGameAdapter(Label label_turn, Label label_role, 
-            StackPanel NotInGameStackPanel, StackPanel GameStartedPanel, Dispatcher dispatcher, Grid mineGrid, IAPI api) 
-            : base(label_turn, label_role, NotInGameStackPanel, GameStartedPanel, dispatcher, mineGrid)
+            StackPanel NotInGameStackPanel,StackPanel GameEndedPanel, StackPanel GameStartedPanel, Dispatcher dispatcher, Grid mineGrid, IAPI api) 
+            : base(label_turn, label_role, NotInGameStackPanel,GameEndedPanel, GameStartedPanel, dispatcher, mineGrid)
         {
             this.api = api;
         }
@@ -54,7 +56,7 @@ namespace Isminuotojai.Classes
                 return;
             //DoMove(move);
             var response = Task.Run(async () => await api.DoMoveAsync(move));
-            _memento.SetState(response.Result);
+            _memento.SetState(response.Result.map);
 
             UpdateMap(response.Result);
 
@@ -95,28 +97,41 @@ namespace Isminuotojai.Classes
                 started = false;
                 MessageBox.Show("Jūs pralaimėjote...");
                 left_menu_not_in_game.Visibility = Visibility.Visible;
+                left_menu_game_ended.Visibility = Visibility.Visible;
                 left_menu_game_started.Visibility = Visibility.Hidden;
                 //mineGrid.Visibility = Visibility.Hidden;
             }
         }
 
-        public override void ForwardState()
+        public override void ForwardState(Button button, Button btnBack)
         {
-            var state = _memento.GetState();
+            var state = _memento.GetForwardState();
             if (state != null)
+            {
                 HistoryGrid(state);
+                btnBack.IsEnabled = true;
+            }
             else
                 button.IsEnabled = false;
             //TODO button
         }
 
-        public override void PreviousState()
+        public override void PreviousState(Button sender, Button button)
         {
             var state = _memento.GetState();
             if (state != null)
+            {
                 HistoryGrid(state);
+                button.IsEnabled = true;
+            }
             else
-                button.IsEnabled = false;        
+                sender.IsEnabled = false;        
+        }
+
+        public override void HighScore(Button sender)
+        {
+            var f = Task.Run(async () => await api.GetHighScores());
+            MessageBox.Show(f.Result);
         }
 
         protected void HistoryGrid(char[,] map)
@@ -200,7 +215,7 @@ namespace Isminuotojai.Classes
                         //Width = 24,
                         //Height = 24,
                         Tag = tag,//for testing mostly
-                        IsEnabled = enableButton,//change to false to disable                       
+                        IsEnabled = false,//change to false to disable                       
                         Content = content,
                     };
                     Grid.SetRow(b, i);//set row
