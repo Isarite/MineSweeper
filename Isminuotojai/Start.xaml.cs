@@ -23,8 +23,9 @@ namespace Isminuotojai
     {
         bool loginForm = true;
         ILogin loginUI;
-        
-        
+
+
+        Chain HelpChain;
 
         public Start()
         {
@@ -32,6 +33,20 @@ namespace Isminuotojai
 
             loginUI = new LoginAdapter(txt_username,txt_password,header1,header2);
             loginUI.SetLoginScreen();
+
+            EventManager.RegisterClassHandler(typeof(TextBox), Button.MouseDownEvent, new RoutedEventHandler(_MouseRightButton));
+            EventManager.RegisterClassHandler(typeof(Button), Button.MouseDownEvent, new RoutedEventHandler(_MouseRightButton));
+            EventManager.RegisterClassHandler(typeof(Label), Button.MouseDownEvent, new RoutedEventHandler(_MouseRightButton));
+
+            HelpChain = new ButtonHelp();
+            Chain login = new HeaderLoginHelp();
+            Chain register = new HeaderRegisterHelp();
+            Chain label = new TextBoxHelp();
+            label.SetNext(new NullableChain());
+            register.SetNext(label);
+            login.SetNext(register);
+            HelpChain.SetNext(login);
+
         }
 
         private void Header2_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -63,5 +78,20 @@ namespace Isminuotojai
             else
                 loginForm = loginUI.Register();
         }
+        private void _MouseRightButton(object sender, RoutedEventArgs e)
+        {
+            MouseButtonEventArgs mouse = (MouseButtonEventArgs)e;
+
+            if (mouse.RightButton == MouseButtonState.Pressed)
+            {
+                string answer = HelpChain.Process(sender);
+                if (answer != string.Empty)
+                {
+                    MessageBox.Show(answer, "Pagalbos sistema", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                e.Handled = true;
+            }
+        }
     }
+    
 }
