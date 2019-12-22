@@ -27,13 +27,18 @@
 
                 <StackPanel x:Name="left_menu_not_in_game" Visibility="Visible">
                     <Button Margin="5" x:Name="btn_play" Click="Btn_play_Click">Žaisti</Button>
+                    <Button Margin="5" x:Name="btn_score" Click="Btn_score_Click"  Visibility="Visible">Statistika</Button>
                 </StackPanel>
 
                 <StackPanel x:Name="left_menu_game_started" Visibility="Hidden">
                     <Button Margin="5" x:Name="btn_surrend" Click="Btn_surrend_Click"  Visibility="Visible">Pasiduoti</Button>
-                    <Button Margin="5" x:Name="btn_another" Click="Btn_another_Click"  Visibility="Hidden">btn__another</Button>
                     <Label x:Name="label_status4" FontWeight="Bold" HorizontalAlignment="Center" FontSize="10" Visibility="Hidden">Domas 5 : 4 Vytis</Label>
 
+                </StackPanel>
+
+                <StackPanel x:Name="left_menu_game_ended" Visibility="Hidden">
+                    <Button Margin="5" x:Name="btn_back" Click="Btn_back_Click"  Visibility="Visible">Atgal</Button>
+                    <Button Margin="5" x:Name="btn_forward" Click="Btn_forward_Click"  Visibility="Visible">Pirmyn</Button>
                 </StackPanel>
             </StackPanel>
             

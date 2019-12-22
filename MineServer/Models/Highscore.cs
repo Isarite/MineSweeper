@@ -31,12 +31,12 @@ namespace MineServer.Models
             foreach (var game in _games)
             {
                 GameStatus comparator;
-                if (game.players.Count < 2)
+                if (game.Players.Count < 2)
                     continue;
 
-                if (game.players[0].Id.Equals(_player.Id))
+                if (game.Players[0].Id.Equals(_player.Id))
                     comparator = GameStatus.Won;
-                else if (game.players[1].Id.Equals(_player.Id))
+                else if (game.Players[1].Id.Equals(_player.Id))
                     comparator = GameStatus.Lost;
                 else
                     continue;

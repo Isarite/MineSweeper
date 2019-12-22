@@ -124,9 +124,9 @@ namespace MineServer.Models
         private void SetGameStatus(GameStatus status, ref Game currentGame)
         {
             if (status == GameStatus.Won)
-                currentGame.Status = currentGame.players[0].Id.Equals(this.Id) ? GameStatus.Won : GameStatus.Lost;
+                currentGame.Status = currentGame.Players[0].Id.Equals(this.Id) ? GameStatus.Won : GameStatus.Lost;
             else if (status == GameStatus.Lost)
-                currentGame.Status = currentGame.players[0].Id.Equals(this.Id) ? GameStatus.Lost : GameStatus.Won;
+                currentGame.Status = currentGame.Players[0].Id.Equals(this.Id) ? GameStatus.Lost : GameStatus.Won;
         }
     }
 

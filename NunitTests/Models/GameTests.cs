@@ -29,10 +29,10 @@ namespace MineServer.Models.Tests
             game.SetPlayers(
                 new Player { UserName = username }
                 , new Player { UserName = username2 });
-            Assert.IsNotNull(game.players[0]);
-            Assert.IsNotNull(game.players[1]);
-            Assert.AreEqual(username, game.players[0].UserName);
-            Assert.AreEqual(username2, game.players[1].UserName);
+            Assert.IsNotNull(game.Players[0]);
+            Assert.IsNotNull(game.Players[1]);
+            Assert.AreEqual(username, game.Players[0].UserName);
+            Assert.AreEqual(username2, game.Players[1].UserName);
         }
 
         [TestCase("user", "user2")]
@@ -44,10 +44,10 @@ namespace MineServer.Models.Tests
                 new Player {UserName = username});
             game.AddPlayer(
                 new Player { UserName = username2 });
-            Assert.IsNotNull(game.players[0]);
-            Assert.IsNotNull(game.players[1]);
-            Assert.AreEqual(username, game.players[0].UserName);
-            Assert.AreEqual(username2, game.players[1].UserName);
+            Assert.IsNotNull(game.Players[0]);
+            Assert.IsNotNull(game.Players[1]);
+            Assert.AreEqual(username, game.Players[0].UserName);
+            Assert.AreEqual(username2, game.Players[1].UserName);
         }
 
         [TestCase("1", true)]
@@ -55,9 +55,9 @@ namespace MineServer.Models.Tests
         [TestCase("0", false)]
         public void AuthorizeTest(string id, bool expected)
         {
-            game.players.Add(
+            game.Players.Add(
                 new Player { Id = "1" });
-            game.players.Add(
+            game.Players.Add(
                 new Player { Id = "2" });
             Assert.AreEqual(expected, game.Authorize(id));
         }
@@ -67,12 +67,12 @@ namespace MineServer.Models.Tests
         [TestCase("3")]
         public void AddTurnsTest(string id)
         {
-            game.players.Add(
+            game.Players.Add(
                 new Player { Id = "1" });
-            game.players.Add(
+            game.Players.Add(
                 new Player { Id = "2" });
             game.AddTurns(id);
-            var player = game.players.Find(p => id.Equals(p.Id));
+            var player = game.Players.Find(p => id.Equals(p.Id));
             if (player != null)
                 Assert.AreEqual(player.TurnsLeft,game.Turns());
             else
@@ -84,9 +84,9 @@ namespace MineServer.Models.Tests
         [TestCase("3", false)]
         public void UpdateTest(string id, bool expectedSuccess)
         {
-            game.players.Add(
+            game.Players.Add(
                 new Player { Id = "1" });
-            game.players.Add(
+            game.Players.Add(
                 new Player { Id = "2" });
             var result = game.Update(id);
 
@@ -101,7 +101,7 @@ namespace MineServer.Models.Tests
         public void FindPlayerTest(int timesToAdd, bool expected)
         {
             for(int i = 0; i < timesToAdd; i++)
-                game.players.Add(
+                game.Players.Add(
                     new Player { Id = i.ToString() });
             var result = game.FindPlayer(0.ToString());
             Assert.AreEqual(expected, result != null);

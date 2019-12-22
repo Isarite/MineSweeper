@@ -33,7 +33,7 @@ namespace MineServer.Models
 
             modelBuilder.Entity<Player>().HasMany(u => u.strategies).WithOne(s => s.player);
 
-            modelBuilder.Entity<Game>().HasMany(g => g.players).WithOne(p => p.currentGame);
+            modelBuilder.Entity<Game>().HasMany(g => g.Players);
 
 
             modelBuilder.Entity<Game>().HasOne(d => d.GameMap);

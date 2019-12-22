@@ -29,6 +29,11 @@ namespace Isminuotojai.Tests
             return true;
         }
 
+        public Task<string> GetHighScores()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<MineResult> DoMoveAsync(Move move)
         {
             return result;

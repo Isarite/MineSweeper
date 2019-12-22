@@ -39,12 +39,12 @@ namespace MineServer
             }
             else
             {
-//                services.AddDbContext<MineSweeperContext>(options =>
-//                    options.UseInMemoryDatabase("TestingDB"));
+                services.AddDbContext<MineSweeperContext>(options =>
+                    options.UseInMemoryDatabase("TestingDB"));
                 //services.AddDbContext<MineSweeperContext>(options =>
                 //    options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
-                services.AddDbContext<MineSweeperContext>(options => 
-                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                //services.AddDbContext<MineSweeperContext>(options => 
+                //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             }
 
             services.AddIdentity<Player, IdentityRole>(options => { options.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultProvider; }).AddEntityFrameworkStores<MineSweeperContext>().AddDefaultTokenProviders();

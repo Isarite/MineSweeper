@@ -42,7 +42,7 @@ namespace Isminuotojai
         public MainWindow(PlayerData pd)
         {
             InitializeComponent();
-            engine = new OnlineGameAdapter(label_turn, label_role, left_menu_not_in_game,
+            engine = new OnlineGameAdapter(label_turn, label_role, left_menu_not_in_game, left_menu_game_ended,
                 left_menu_game_started, this.Dispatcher, mineGrid, ApiHandler.Instance);
             EventManager.RegisterClassHandler(typeof(Button), Button.MouseDownEvent, new RoutedEventHandler(engine.OnClick));
         }
@@ -83,6 +83,21 @@ namespace Isminuotojai
         {
             //Do actions before closing window
             engine.Surrender();
+        }
+
+        private void Btn_score_Click(object sender, RoutedEventArgs e)
+        {
+            engine.HighScore((Button)sender);
+        }
+
+        private void Btn_back_Click(object sender, RoutedEventArgs e)
+        {
+            engine.PreviousState((Button)sender, btn_forward);
+        }
+
+        private void Btn_forward_Click(object sender, RoutedEventArgs e)
+        {
+            engine.ForwardState((Button)sender, btn_back);
         }
     }
 }

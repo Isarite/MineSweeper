@@ -28,9 +28,9 @@ namespace MineServer.Models
         protected override string TransformPlayer(Player player)
         {
             _scores.Add(_games
-                .Count(g => (g.players.Count > 1)
-                            && (g.players[0].Id.Equals(player.Id)
-                                || g.players[1].Id.Equals(player.Id))));
+                .Count(g => (g.Players.Count > 1)
+                            && (g.Players[0].Id.Equals(player.Id)
+                                || g.Players[1].Id.Equals(player.Id))));
             return player.UserName + "\t" + _scores.Last();
         }
 

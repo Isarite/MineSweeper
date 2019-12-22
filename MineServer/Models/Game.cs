@@ -22,25 +22,25 @@ namespace MineServer.Models
 
         public GameStatus Status { get; set; }
 
-        public List<Player> players { get; set; }
+        public List<Player> Players { get; set; }
 
         public Game()
         {
             GameMap = new Map();
             Memento = new MapMemento();
-            players = new List<Player>();
+            Players = new List<Player>();
             _count = 0;
         }
 
         public void SetPlayers(Player player1, Player player2)
         {
-            players[0] = player1;
-            players[1] = player2;
+            Players[0] = player1;
+            Players[1] = player2;
         }
 
         public void AddPlayer(Player player)
         {
-            players.Add(player);
+            Players.Add(player);
             if (_count > 0)
             {
                 Started = true;
@@ -56,12 +56,12 @@ namespace MineServer.Models
 
         public bool Authorize(string id)
         {
-            return players.Any(w => w.Id.Equals(id));
+            return Players.Any(w => w.Id.Equals(id));
         }
 
         public  void AddTurns(string id)
         {
-            var player = players.First(w => w.Id.Equals(id));
+            var player = Players.First(w => w.Id.Equals(id));
             if(player != null)
                 player.TurnsLeft = TurnCount;
         }
@@ -77,23 +77,23 @@ namespace MineServer.Models
             {
                 success = true
             };
-            if (players[0].Id.Equals(id))//First player is a minesetter
+            if (Players[0].Id.Equals(id))//First player is a minesetter
             {
-                bool mineSweeper = players[0].role.Equals(MoveSet.MineSweeper);
+                bool mineSweeper = Players[0].role.Equals(MoveSet.MineSweeper);
                 result = GameMap.Update(mineSweeper);
                 //Checks if it's players turn yet
-                if(players[0]?.TurnsLeft > 0)
+                if(Players[0]?.TurnsLeft > 0)
                 {
                     //players[0].TurnsLeft = TurnCount;
                     //result = GameMap.Update(false);
                     result.turn = true;
                     // SetMemento();
                 }
-            }else if (players[1].Id.Equals(id))//Second player is a minesweeper
+            }else if (Players[1].Id.Equals(id))//Second player is a minesweeper
             {
-                bool mineSweeper = players[1].role.Equals(MoveSet.MineSweeper);
+                bool mineSweeper = Players[1].role.Equals(MoveSet.MineSweeper);
                 result = GameMap.Update(mineSweeper);//Checks if it's players turn yet
-                if (players[1]?.TurnsLeft > 0)
+                if (Players[1]?.TurnsLeft > 0)
                 {
                     //players[1].TurnsLeft = TurnCount;
                     result.turn = true;
@@ -129,10 +129,10 @@ namespace MineServer.Models
 
         public Player FindPlayer(string id)
         {
-            if (players[0].Id.Equals(id))
-                return players[0];
-            if (players[1].Id.Equals(id))
-                return players[1];
+            if (Players[0].Id.Equals(id))
+                return Players[0];
+            if (Players[1].Id.Equals(id))
+                return Players[1];
 
             return null;
         }

@@ -71,7 +71,7 @@ namespace MineServer.Models
                     player = game.FindPlayer(userId);
                     game.GameMap = await _context.Maps.Where(g => g.Id == id).FirstOrDefaultAsync();
                     int? gameId = game.Id;
-                    game.players = await _context.Users.Where(p => gameId.Equals(p.currentGame.Id)).ToListAsync();
+                    game.Players = await _context.Users.Where(p => gameId.Equals(p.currentGame.Id)).ToListAsync();
                     player.strategies = _context.Strategies.Where(s => s.player.Id.Equals(userId)).ToList();
                     int? mapId = game.GameMap.Id;
                     game.GameMap.Cells = _context.Cells.Where(c => mapId.Equals(c.map.Id)).OrderBy(d => d.number).ToList();
@@ -93,7 +93,7 @@ namespace MineServer.Models
                     result.turn = player.TurnsLeft != 0;
                     if (!result.turn)
                     {
-                        var player2 = game.players.FirstOrDefault(p => !p.Id.Equals(userId));
+                        var player2 = game.Players.FirstOrDefault(p => !p.Id.Equals(userId));
                         if (player2 != null)
                             game.AddTurns(player2.Id);
                     }
@@ -121,7 +121,7 @@ namespace MineServer.Models
                 //Get Map
                 game.GameMap = await _context.Maps.Where(g => g.Id == id).FirstOrDefaultAsync();
                 int? gameId = game.Id;
-                game.players = await _context.Users.Where(p => gameId.Equals(p.currentGame.Id)).ToListAsync();
+                game.Players = await _context.Users.Where(p => gameId.Equals(p.currentGame.Id)).ToListAsync();
                 //Get Player Strategies
                 player.strategies = _context.Strategies.Where(s => s.player.Id.Equals(userId)).ToList();
                 //Get Cells ordered by number
@@ -207,7 +207,7 @@ namespace MineServer.Models
                     //Get Player Strategies
                     int? gameId = game.Id;
 
-                    game.players = _context.Users.Where(p => gameId.Equals(p.currentGame.Id)).ToList();
+                    game.Players = _context.Users.Where(p => gameId.Equals(p.currentGame.Id)).ToList();
                     player.strategies = _context.Strategies.Where(s => s.player.Id.Equals(userId)).ToList();
                     //Get Cells ordered by number
                     if (game.GameMap != null)

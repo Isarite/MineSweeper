@@ -204,6 +204,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Classes\IDispatcher.cs" />
+    <Compile Include="Classes\Memento.cs" />
     <Compile Include="Classes\PlayerDataBuilder.cs" />
     <Compile Include="Classes\GameUI.cs" />
     <Compile Include="Classes\IAPI.cs" />
