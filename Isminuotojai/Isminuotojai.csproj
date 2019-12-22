@@ -203,6 +203,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\Caretaker.cs" />
     <Compile Include="Classes\IDispatcher.cs" />
     <Compile Include="Classes\Memento.cs" />
     <Compile Include="Classes\PlayerDataBuilder.cs" />

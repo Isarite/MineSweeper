@@ -7,12 +7,11 @@ namespace MineServer.Models
     public sealed class HighscoreList : PlayerList
     {
         private readonly List<double> _scores;
-        private readonly Highscore _highscore;
+        private readonly HighScoreFactory factory;
 
         public HighscoreList(IList<Player> list, IList<Game> games) : base(list)
         {
-            _highscore = new Highscore();
-            _highscore.SetGames(games);
+            factory = new HighScoreFactory(list,games);
             _scores = new List<double>();
         }
 
@@ -26,9 +25,9 @@ namespace MineServer.Models
 
         protected override string TransformPlayer(Player player)
         {
-            _highscore.SetPlayer(player);
-            _scores.Add(_highscore.CalculateRatio());
-            return _highscore.ToString();
+            var highScore = factory.GetHighScore(player.Id);
+            _scores.Add(highScore.CalculateRatio());
+            return highScore.ToString();
         }
 
         protected override string HeaderLine()

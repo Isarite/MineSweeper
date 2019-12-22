@@ -17,7 +17,7 @@ namespace Isminuotojai.Classes
     {
         private Task task;
         private IAPI api;
-        private Memento _memento = new Memento();
+        private Caretaker _mementoes = new Caretaker();
 
         public OnlineGameAdapter(Label label_turn, Label label_role, 
             StackPanel NotInGameStackPanel,StackPanel GameEndedPanel, StackPanel GameStartedPanel, Dispatcher dispatcher, Grid mineGrid, IAPI api) 
@@ -56,7 +56,7 @@ namespace Isminuotojai.Classes
                 return;
             //DoMove(move);
             var response = Task.Run(async () => await api.DoMoveAsync(move));
-            _memento.SetState(response.Result.map);
+            _mementoes.SetState(response.Result.map);
 
             UpdateMap(response.Result);
 
@@ -105,7 +105,7 @@ namespace Isminuotojai.Classes
 
         public override void ForwardState(Button button, Button btnBack)
         {
-            var state = _memento.GetForwardState();
+            var state = _mementoes.GetForwardState();
             if (state != null)
             {
                 HistoryGrid(state);
@@ -118,7 +118,7 @@ namespace Isminuotojai.Classes
 
         public override void PreviousState(Button sender, Button button)
         {
-            var state = _memento.GetState();
+            var state = _mementoes.GetState();
             if (state != null)
             {
                 HistoryGrid(state);
