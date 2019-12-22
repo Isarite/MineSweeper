@@ -204,6 +204,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Classes\Caretaker.cs" />
+    <Compile Include="Classes\Chain.cs" />
     <Compile Include="Classes\IDispatcher.cs" />
     <Compile Include="Classes\Memento.cs" />
     <Compile Include="Classes\PlayerDataBuilder.cs" />
@@ -215,6 +216,7 @@
     <Compile Include="Classes\LoginAdapter.cs" />
     <Compile Include="Classes\LoginUI.cs" />
     <Compile Include="Classes\OnlineGameAdapter.cs" />
+    <Compile Include="Classes\State.cs" />
     <Compile Include="Resources\GameData.cs" />
     <Compile Include="Resources\GameStatus.cs" />
     <Compile Include="Resources\MineResult.cs" />

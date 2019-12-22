@@ -25,7 +25,8 @@ namespace Isminuotojai
         ILogin loginUI;
 
 
-        Chain HelpChain;
+        Chain HelpChain;    // CHAIN OF RESPONSIBILITY
+
 
         public Start()
         {
@@ -74,6 +75,11 @@ namespace Isminuotojai
                 bool loggedIn = loginUI.Login();
                 if (loggedIn)
                     this.Close();
+                else
+                {
+                    // CHANGE STATE.
+
+                }
             }
             else
                 loginForm = loginUI.Register();
